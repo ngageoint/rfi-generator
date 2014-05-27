@@ -116,7 +116,7 @@ then you won't need to apply these migrations since the seed data should be up-t
 #### GeoQ Integration
 
 
-[GoeQ] (https://github.com/ngageoint/geoq) integration tasks will fail silently or be ignored completely if no GEOQ related URLs are in the application.conf file.
+[GeoQ] (https://github.com/ngageoint/geoq) integration tasks will fail silently or be ignored completely if no GEOQ related URLs are in the application.conf file.
 Pull down the latest GEOQ code and setup the system per the GEOQ install docs (includes installing/setting up geoserver).
 Running GeoQ on the default port *should* allow the rfi generator to hook in...ensure you are using
 a username/password that GEOQ will recognize (stored in application.conf) w/in the GeoQ settings:
