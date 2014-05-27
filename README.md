@@ -56,9 +56,13 @@ To submit an RFI in the map experience, simply choose the geospatial tool of cho
 
 
 ![First Responder Map Experience](https://cloud.githubusercontent.com/assets/5178768/3094961/f642754c-e5c1-11e3-81dc-91239e26b2d4.png) First Responder Map Experience
+
 ![Power User admin-tab experience](https://cloud.githubusercontent.com/assets/5178768/3094960/f64098c6-e5c1-11e3-978d-8af9f9ef331c.png) Power User Admin/Tabular Experience
+
 ![New Point-based RFI](https://cloud.githubusercontent.com/assets/5178768/3094963/f655f0a4-e5c1-11e3-888c-a919cc565777.png)Creating a new point-based spatial RFI in the map experience
+
 ![Reporting features](https://cloud.githubusercontent.com/assets/5178768/3094962/f64b6166-e5c1-11e3-9ab4-7f9b2d772312.png)Reporting Features
+
 ![New Spatial RFI with admin experience](https://cloud.githubusercontent.com/assets/5178768/3094964/f6577d20-e5c1-11e3-8a53-75e4d7f76787.png) Creating a new spatial RFI with the admin experience
 
 ### Developers
