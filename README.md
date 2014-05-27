@@ -34,7 +34,7 @@ Java under GPL license
 
 •	Open http://localhost:9000 to view the RFI Generator in your local web browser
 
-###Development Details and Integration
+##Development Details and Integration
 
 The application consists of two interfaces: a map-based experience as well as an admin experience.
 
@@ -52,7 +52,7 @@ nav will redirect the user to the map experience.
 
 To submit an RFI in the map experience, simply choose the geospatial tool of choice (from the right-hand tools) and draw the area of interest for the request.  After selecting an area, a popup will display with fields used to house RFI information.  After filling out the required fields, clicking "Create" will create the RFI and notify the associated event's administation that an RFI has been submitted. 
 
-##Screenshots
+###Screenshots
 
 
 ![First Responder Map Experience](https://cloud.githubusercontent.com/assets/5178768/3094961/f642754c-e5c1-11e3-81dc-91239e26b2d4.png) First Responder Map Experience
