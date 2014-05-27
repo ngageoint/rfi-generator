@@ -17,13 +17,20 @@ Java under GPL license
 
 ###Installation Instructions (for a *nix-based host):
 •	Clone the rfi_gen repo to your development machine
+
 •	Download and install the Play! Framework (version 1.2.4) at http://downloads.typesafe.com/releases/play-1.2.4.zip
-•	After unzipping, add the path to the unzipped location to your .bash_profile or .bashrc .
-•	Install MySQL (5+), and create a rfi_gen and rfi_gen_test database.
-•	By default, the root user is used w/ “rfi_gen” password for connections to the aforementioned databases.
-•	Run “play dependencies” from the root of the code’s download location to download required dependencies.
+
+•	After unzipping, add the path to the unzipped location to your .bash_profile or .bashrc
+
+•	Install MySQL (5+), and create a rfi_gen and rfi_gen_test database
+
+•	By default, the root user is used w/ “rfi_gen” password for connections to the aforementioned databases
+
+•	Run “play dependencies” from the root of the code’s download location to download required dependencies
+
 •	Run “./run.sh” to run the RFI Generator
-•	Open http://localhost:9000 to view the RFI Generator in your local web browser.
+
+•	Open http://localhost:9000 to view the RFI Generator in your local web browser
 
 ###Development Details and Integration
 
@@ -43,12 +50,12 @@ nav will redirect the user to the map experience.
 
 To submit an RFI in the map experience, simply choose the geospatial tool of choice (from the right-hand tools) and draw the area of interest for the request.  After selecting an area, a popup will display with fields used to house RFI information.  After filling out the required fields, clicking "Create" will create the RFI and notify the associated event's administation that an RFI has been submitted. 
 
-# Developers
+### Developers
 
 First thing, read through: http://www.playframework.com/documentation/1.2.4/home
 Doing the "Yet Another Blog Engine" tutorial will be invaluable
 
-#### TERMS
+#### Terms
 
 "Popover":
 An enhanced tooltip...used on the models lists as well as form labels, just used to display directional/informative text
@@ -92,7 +99,6 @@ will need to apply this migration to support a progressive development model.  I
 then you won't need to apply these migrations since the seed data should be up-to-date.
 
 #### GeoQ Integration
-
 
 
 [GoeQ] (https://github.com/ngageoint/geoq) integration tasks will fail silently or be ignored completely if no GEOQ related URLs are in the application.conf file.
