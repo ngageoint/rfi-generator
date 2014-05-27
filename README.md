@@ -65,7 +65,7 @@ To submit an RFI in the map experience, simply choose the geospatial tool of cho
 
 ![New Spatial RFI with admin experience](https://cloud.githubusercontent.com/assets/5178768/3094964/f6577d20-e5c1-11e3-8a53-75e4d7f76787.png) Creating a new spatial RFI with the admin experience
 
-### Developers
+### Background Reading
 
 First thing, read through: http://www.playframework.com/documentation/1.2.4/home
 Doing the "Yet Another Blog Engine" tutorial will be invaluable
