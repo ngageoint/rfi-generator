@@ -1,0 +1,29 @@
+Group(1):
+    name: Group 1
+    
+Group(2):
+    name: Group 2 (child of group 1)
+    parent: 1
+    
+Group(3):
+    name: Group 3 (child of group 2)
+    parent: 2
+    
+Group(4):
+    name: Group 4 (child of group 1)
+    parent: 1
+    
+Group(5):
+    name: Group 5 (child of group 3)
+    parent: 3
+    
+Group(6):
+    name: Group 6
+    
+Group(7):
+    name: Group 7 (child of group 3)
+    parent: 3
+    
+Group(8):
+    name: Group 8 (child of group 2)
+    parent: 2

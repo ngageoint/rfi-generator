@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" media="print" href="@{'/public/stylesheets/print.scss'}"/>
+</head>
+<body>
+
+%{
+
+_event = request.params.event ? Long.parseLong(request.params.event):0
+_group = request.params.group ? Long.parseLong(request.params.group):null
+if ( _event) {
+    _start = start ? start:(Date)models.Event.findById(_event).createdAt;
+}
+else {
+    _start = start ? start:(Date)models.RFI.getOldest().createdAt;
+}
+_end = end ? end: new Date()
+
+}%
+
+<h1>RFI Generator report</h1>
+<hr/>
+<h3>Report generated: ${helpers.ApplicationHelpers.formatDate(new Date())}</h3>
+
+<div class='filters'>
+    Event:
+    #{if request.params.event} 
+        #{list items:models.Event.findById((Long)request.params.event), as:'e'}
+            ${e.name}
+        #{/list}
+    #{/if}
+    #{else} All Events #{/else} 
+    <br/>
+    Group:
+    #{if request.params.group} 
+        #{list items:models.Group.findById((Long)request.params.group), as:'g'}
+            ${g.name}
+        #{/list}
+    #{/if}
+    #{else} All Groups #{/else} 
+    <br/>
+    From: <input type="date" name="start" rel="start" value="${_start.format('yyyy-MM-dd')}"/> #{if request.params.format == 'pdf'}${_start.format('yyyy-MM-dd')} <br/> #{/if}
+    To: <input type="date" name="end" rel="end" value="${_end.format('yyyy-MM-dd')}"/>  #{if request.params.format == 'pdf'}${_end.format('yyyy-MM-dd')} #{/if}
+</div>
+
+<h3 style='float:left;'>RFIs by assignee</h3>
+#{if request.params.assigneeArchived == 'true'}
+    <label style='float: left;margin: 18px 0 0 5px;'>(Include archived RFIs)</label>
+#{/if}
+<div style='clear:both;'>
+#{list items:assignees.keySet().sort(), as: 'a'}
+    <div>
+        <a href='mailto:${a}' style='clear: both;'>${a}:</a><br/>
+        <ul class='assigneeRFIs'>
+        #{list items:assignees.get(a), as: 'r'}
+            <li><a href='@{AdminController.edit(r.id)}'>${r.title}</a> - ${r.status}#{if r.isOverdue()} (OVERDUE)#{/if}</li>
+        #{/list}
+        </ul>
+    </div>
+#{/list}
+#{else}
+    No RFIs created during this period that are assigned
+#{/else}
+</div>
+<hr class='page-break'/>
+<div style='clear:both;'>
+    <h3 style='float:left;'>Average times</h3>
+    #{if request.params.avgArchived == 'true'}
+        <label style='float: left;margin: 18px 0 0 5px;'>(Include archived RFIs)</label>
+    #{/if}
+    <div style='clear: both; height: 0;width:100%;'></div>
+    <div style='clear:both;float:left;'>
+        Average time between creation and verification/approval: ${cv}<br/>
+        Average time between verification/approval and assignment: ${va}<br/>
+        Average time between assignment and completion: ${ac}<br/>
+        Average time between creation and completion: ${cc}<br/>
+    </div>
+</div>
+<div style='clear:both;'>
+    <h3 style='float: left;'>Count of product formats requested</h3>
+    #{if request.params.productArchived == 'true'}
+        <label style='float: left;margin: 18px 0 0 5px;'>(Include archived RFIs)</label>
+    #{/if}
+    <div style='clear:both; float:left;'>
+        #{list items:productFormats, as:'p'}
+            ${p.productFormat}: ${p.count}<br/>
+        #{/list}
+        #{else}
+            No RFIs created during this period/for this event
+        #{/else}
+    </div>
+</div>
+
+<div class='page-break' style='clear:both;'>
+    <h3 style='float:left;'>RFI totals</h3>
+    <a class='noprint' style='float: left; margin: 5px 0 0 5px;' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="RFI Totals" data-content="Aggregation of RFI counts over time, filtered by event/date range.<br/><strong>Does not include archived RFIs</strong>"><i class='icon-question-sign'></i></a><br/>
+    <div style='clear: both; height: 0;'></div>
+    <div id="byStatus">
+        <img src="${controllers.ReportingController.jfreeTotals(_event, _start, _end, _group)}" width="690" height="410" style='float:left;clear:left;'/><br/>
+    </div>
+</div>
+
+<div class='page-break' style='clear:both;'>
+    <h3 style='float: left;'>RFIs created by date</h3>
+    <a style='float: left; margin: 5px 0 0 5px;' class='noprint' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="RFI created by date" data-content="A view of RFI-creation activity over time/event."><i class='icon-question-sign'></i></a><br/>
+    <div style='clear: both; height: 0;'></div>
+    <div id="bycreated">
+        <img src="${controllers.ReportingController.jfreeByCreated(_event, _start, _end, _group)}" width="690" height="410" style='float:left;clear:left;'/>
+    </div>
+</div>
+
+<div class='page-break' style='clear:both;'>
+    <h3 style='float: left;'>RFI statuses by event</h3>
+    <a style='float: left; margin: 5px 0 0 5px;' class='noprint' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="RFI Statuses by event" data-content="<strong>Not affected by date range</strong><br/>&quot;RFI statuses by event&quot; is a current snapshot of the events' RFIs."><i class='icon-question-sign'></i></a>
+    #{if request.params.eventArchived == 'true'}
+    <label style='float: left;margin: 18px 0 0 5px;'>(Include archived RFIs)</label>
+    #{/if}
+    <div style='clear: both; height: 0;'></div>
+    <div id="byevent">
+        <img src="${controllers.ReportingController.jfreeByEvent(_event, false, _group)}" width="690" height="410" style='float:left;clear:left;'/>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+#{extends 'admin.html'/}
+#{set 'pageClass'}importExport#{/set}
+#{set 'moreScripts'}
+<script type='text/javascript'>
+$(function() {
+    $(".allNone").click(function() {
+        var $ths = $(this);
+        var v = function(val) {
+            $ths.parent().find(".items input[type='checkbox']").prop("checked", val);
+        };
+        
+        if ( $ths.prop("checked")) {
+            v(true);   
+        }
+        else {
+            v(false);
+        }
+    });
+});
+</script>
+#{/set}
+
+#{if flash.success}
+    <div class='alert alert-success alert-block'>
+        <a href='#' class='close' data-dismiss='alert'>&times;</a>
+        ${flash.success}
+    </div>
+#{/if}
+
+<h2>Import RFIs</h2>
+#{form @importRFIs(), id: 'importForm', enctype:'multipart/form-data', class: "edit form-horizontal"}
+    <label for='import'>Upload RFI JSON:</label><input type='file' name='rfi_file'/><br/>
+    <input type="submit" class='btn btn-primary' value='Import RFIs'/>
+#{/form}
+
+<hr/>
+<h2>Export RFIs to Excel file</h2>
+#{form @RFIController.exportXLS(), id: 'exportXLSForm', enctype:'multipart/form-data', class: "edit form-horizontal"}
+    <select name="filterEvent">
+        <option value="0">All events</option>
+        #{list items:models.Event.getAll(), as:'e'}
+            <option value="${e.id}">${e.name}</option>
+        #{/list}
+    </select>
+    <input type='submit' class='btn btn-primary' value='Export RFIs'/>
+#{/form}
+<hr/>
+<h2>Export RFIs (by event) to JSON</h2>
+#{form @RFIController.exportRFIsByEvent(), id: 'exportByEventForm', enctype:'multiparse/form-data', class: "edit form-horizontal"}
+    <select name="event">
+        <option value="0">All events</option>
+        #{list items:models.Event.getAll(), as:'e'}
+            <option value="${e.id}">${e.name}</option>
+        #{/list}
+    </select>
+    <input type='submit' class='btn btn-primary' value='Export RFIs'/>
+#{/form}
+<h2>Export Individual RFIs to JSON</h2>
+<input type='checkbox' id='allNone' class='allNone'/><label for='allNone'>Select all/none</label><br/>
+#{form @AdminController.exportRFIs(), id: 'exportForm', enctype:'multipart/form-data', class: "edit form-horizontal"}
+    <div class='items'>
+    #{list items:models.RFI.getAll(), as:'r'}
+        <input type="checkbox" name="ids" id="${r.id}" value="${r.id}"/><label for="${r.id}">${r.networkID}: ${r.title} (Status: ${r.status} - Event: ${r.event.name})</label><br/>
+    #{/list}
+    </div>
+    <input type='submit' class='btn btn-primary' value='Export RFIs'/>
+#{/form}

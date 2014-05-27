@@ -1,0 +1,878 @@
+#{extends 'main.html' /}
+
+#{set 'moreScripts'}
+
+#{templatesAndRoutes /}
+
+#{press.script 'map.js'/}
+#{press.script 'grid.js'/}
+#{press.script 'event_grid.js'/}
+#{press.script 'user_grid.js'/}
+
+<script type="text/javascript">
+$(function() {
+    var requestPins = [];
+    
+    var mapProjection = '${play.Play.configuration.get("mapProjection")}';
+    var layer1 = '${play.Play.configuration.get("mapLayer1")}';
+    var layer2 = '${play.Play.configuration.get("mapLayer2")}';
+    var map1Type = '${play.Play.configuration.get("map1Type")}';
+    var map2Type = '${play.Play.configuration.get("map2Type")}';
+    var layer1Name = '${play.Play.configuration.get("mapLayer1Name")}';
+    var layer2Name = '${play.Play.configuration.get("mapLayer2Name")}';
+    var layer1Token = '${play.Play.configuration.get("map1Token")}';
+    var layer2Token = '${play.Play.configuration.get("map2Token")}';
+    var baseEndpoint1 = '${play.Play.configuration.get("map1Endpoint")}';
+    var baseEndpoint2 = '${play.Play.configuration.get("map2Endpoint")}';
+    
+    globals.mobile = $(window).width() < 600;
+    
+    $(window).bind("resize", function() {
+        $("#map").height($(window).height() - $(".navbar").height());
+        if ( globals && globals.map) {
+            globals.map.updateSize();
+        }
+        if ( !globals.mobile) {
+            var newWidth = $(window).width() - 100;
+            var newHeight = $(window).height() - 200;
+            $("#grid_modal, #my_rfis_modal").css({width: newWidth, marginLeft: -newWidth/2});
+            
+            if ( $.browser.msie) {
+                $("#grid_modal, #my_rfis_modal").css({marginTop: -newHeight/2});
+                $("#grid_modal .modal-body, #my_rfis_modal .modal-body").css({height: newHeight-100});
+            }
+        }
+    });
+    
+    $(window).trigger("resize");
+    
+    $(".nav-collapse").on("hidden", function() {
+        $(window).trigger("resize");
+    });
+    
+    $.ajaxSetup({cache: false});
+    
+    $(document).ajaxError(function(evt,xhr,settings,err) {
+        *{ alert("Error: " + err); }*
+    });
+    
+    *{ MAP SETUP STUFF }*
+    
+    var map = new OpenLayers.Map({
+        div: "map",
+        // To illustrate on-the-fly reprojections of vector data in EPSG:4326
+        projection: new OpenLayers.Projection(mapProjection),
+        displayProjection: new OpenLayers.Projection("EPSG:4326")
+    });
+    globals.map = map;
+    
+    var base;
+    var base2;
+    var opt1 = {};
+    var opt2 = {};
+    if ( layer1Token) {
+        opt1.token = layer1Token;
+    }
+    if ( layer2Token) {
+        opt2.token = layer2Token;
+    }
+    opt1.layers = layer1;
+    opt2.layers = layer2;
+    if ( map1Type == "WMS") {
+        base = new OpenLayers.Layer.WMS( layer1Name, baseEndpoint1, opt1, {wrapDateLine: true});
+    }
+    else if ( map1Type == "ArcGIS93Rest") {
+        base = new OpenLayers.Layer.ArcGIS93Rest( layer1Name, baseEndpoint1, opt1);
+    }
+    map.addLayer(base);
+    if ( map2Type == "WMS") {
+        base2 = new OpenLayers.Layer.WMS( layer2Name, baseEndpoint2, opt2, { wrapDateLine: true});
+    }
+    else if ( map2Type == "ArcGIS93Rest") {
+        base2 = new OpenLayers.Layer.ArcGIS93Rest( layer2Name, baseEndpoint2, opt2);
+    }
+    map.addLayer(base2);
+    map.zoomToMaxExtent();
+    globals.mousePos = new OpenLayers.Control.MousePosition();
+    map.addControl(globals.mousePos);
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    
+    var mapClick = new OpenLayers.Control.Click();
+    map.addControl(mapClick);
+    globals.mapClick = mapClick;
+    mapClick.activate();
+    
+    var events = new OpenLayers.Layer.Vector("Events", {
+        style: globals.layer_style,
+        projection: globals.map.displayProjection,
+        displayInLayerSwitcher: false
+    });
+    
+    var rfis = new OpenLayers.Layer.Vector("RFIs",{
+        style: globals.layer_style,
+        projection: globals.map.displayProjection,
+        displayInLayerSwitcher: false
+    });
+    
+    var sketch = new OpenLayers.Layer.Vector("sketch",{
+        style: globals.layer_style,
+        projection: globals.map.displayProjection,
+        displayInLayerSwitcher: false,
+        transitionEffect: 'resize'
+    });
+    
+    map.addLayers([events,rfis,sketch]);
+    
+    var drawPolygon = new globals.DrawPolygon(sketch);
+    map.addControl(drawPolygon);
+    globals.drawPolygon = drawPolygon;
+    
+    var drawPolyline = new globals.DrawPolyline(sketch);
+    map.addControl(drawPolyline);
+    globals.drawPolyline = drawPolyline;
+    
+    var drawEventPolygon = new globals.DrawPolygon(sketch);
+    map.addControl(drawEventPolygon);
+    globals.drawEventPolygon = drawEventPolygon;
+    
+    var drawPoint = new OpenLayers.Control.DrawFeature(sketch, OpenLayers.Handler.Point);
+    map.addControl(drawPoint);
+    globals.drawPoint = drawPoint;
+    
+    var modify = new OpenLayers.Control.ModifyFeature(sketch);
+    map.addControl(modify);
+    modify.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
+    globals.modify = modify;
+    
+    *{ Super-duper ghetto }*
+    sketch.events.on({
+        sketchstarted: function(evt) {
+            if ( drawPolygon.active && drawPolygon.startPoint) {
+                drawPolygon.insertXY(drawPolygon.startPoint.lng, drawPolygon.startPoint.lat);
+            }
+            else if ( drawEventPolygon.active && drawEventPolygon.startPoint) {
+                drawEventPolygon.insertXY(drawEventPolygon.startPoint.lng, drawEventPolygon.startPoint.lat);
+            }
+            else if ( drawPolyline.active && drawPolyline.startPoint) {
+                drawPolyline.insertXY(drawPolyline.startPoint.lng, drawPolyline.startPoint.lat);
+            }
+        },
+        afterfeaturemodified: function(evt) {
+            alert("Modified");
+        }
+    });
+    
+    drawPolygon.featureAdded = function(f) {
+        newRFIFromRegion(f);
+    };
+    
+    drawEventPolygon.featureAdded = function(f) {
+        newEventFromRegion(f);
+    };
+    
+    drawPolyline.featureAdded = function(f) {
+        newRFIFromPolyline(f);
+    };
+    
+    drawPoint.featureAdded = function(f) {
+        globals.showNewModal(f.geometry.y, f.geometry.x);
+        globals.exitRegionMode();
+    };
+    
+    
+    
+    selectControl = new OpenLayers.Control.SelectFeature(
+        [rfis],
+        {
+            clickout: true, toggle: true,
+            multiple: false, hover: false
+        }
+    );
+    map.addControl(selectControl);
+    //selectControl.activate();
+    rfis.events.on({
+        "featureselected": globals.onRFISelected,
+        "featureunselected": globals.onRFIUnselected
+    });
+    
+    $.when(globals.refreshRFIs(), globals.refreshEvents()).then(function(r_res, e_res) {
+        globals.rfis = r_res[0];
+        globals.events = e_res[0];
+        if ( globals.rfi) {
+            globals._refreshEvents();
+            globals._refreshRFIs();
+            var r = _.first(_.where(globals.rfis, {id: globals.rfi.id}));
+            globals.moveToRFI(r);
+        }
+        else if ( globals.session.event) {
+            globals._refreshEvents(true);
+            globals._refreshRFIs();
+        }
+        else {
+            globals._refreshEvents();
+            globals.map.setCenter(new OpenLayers.LonLat(-91,38), 4);
+            globals._refreshRFIs();
+        }
+    });
+    
+    var $gotoControl = $(templates.gotoTemplate);
+    $("#map").append($gotoControl);
+    $gotoControl.find(".action a").click(function() {
+        $gotoControl.find(".content").toggle();
+        return false;
+    });
+    $gotoControl.find("a.go").click(function() {
+        var $b = $(this).parent();
+        var lat = $b.find("input[name='lat']").val();
+        var lng = $b.find("input[name='lng']").val();
+        var ok = !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng));
+        *{ can only go to ~85N/S on 900913 projection }*
+        ok &= parseFloat(lat) > -85 && parseFloat(lat) < 85 && parseFloat(lng) > -180 && parseFloat(lng) < 180;
+        if ( ok) {
+            var ct = new OpenLayers.LonLat(parseFloat(lng), parseFloat(lat)).transform(globals.map.displayProjection, globals.map.projection);
+            globals.map.setCenter(ct);
+            $gotoControl.find(".content").toggle();
+        }
+        else {
+            alert("Please enter a valid lat/lon");
+        }
+        return false;
+    });
+    $gotoControl.find("a.clear").click(function() {
+        var $b = $(this).parent();
+        $b.find("input").each(function(idx, el) {
+            $(el).val("");
+        });
+        return false;
+    });
+    
+    var $drawingControls = $(templates.mapDrawingTemplate);
+    $("#map").append($drawingControls);
+    $drawingControls.find(".drawPoly").click(function() {
+        if ( !$(this).hasClass("active")) {
+            globals.exitRegionMode();
+            globals.startRFIPolygonDrawing();
+        }
+        else {
+            globals.exitRegionMode();
+        }
+    });
+    $drawingControls.find(".drawPolyline").click(function() {
+        if ( !$(this).hasClass("active")) {
+            globals.exitRegionMode();
+            globals.startPolylineDrawing();
+        }
+        else {
+            globals.exitRegionMode();
+        }
+    });
+    $drawingControls.find(".drawPoint").click(function() {
+        if ( !$(this).hasClass("active")) {
+            globals.exitRegionMode();
+            globals.startPointCreation();
+        }
+        else {
+            globals.exitRegionMode();
+        }
+    });
+    
+    globals.myPosition = null;
+    globals.events = [];
+    globals.triggerSelection = ${showSelection};
+    globals.role = '${user.role.name}';
+    
+    #{if curRFI}
+        globals.rfi = {
+            lat: "${curRFI.coordinates?.lat}",
+            lng: "${curRFI.coordinates?.lon}"
+        };
+        #{if curRFI.region}
+            globals.rfi.region = ${curRFI.region.raw()};
+        #{/if}
+        #{if curRFI.polyline}
+            globals.rfi.polyline = ${curRFI.polyline.raw()};
+        #{/if}
+        globals.rfi.id = ${curRFI.id};
+    #{/if}
+    
+    getCurrentLocation(function(res) {
+        //TODO
+        /*var ll = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
+        if ( !globals.session.event && !globals.rfi) {
+            globals.moveTo({lat: res.coords.latitude, lng: res.coords.longitude, zoom: globals.getZoom(res.coords.accuracy)});
+        }
+        globals.myPosition = new google.maps.Marker({
+            map: globals.map,
+            draggable: false,
+            title: "My position (to w/in " + res.coords.accuracy + "m)",
+            animation: google.maps.Animation.DROP,
+            position: ll,
+            icon: new google.maps.MarkerImage(globals.assets.markers.yourposition,null,null, new google.maps.Point(10,10))
+        });
+        google.maps.event.addListener(globals.myPosition, "click", function() {
+            var t = _.template(templates.positionTemplate);
+            globals.rfiinfo.setContent(t(res));
+            globals.rfiinfo.setPosition(ll);
+            globals.rfiinfo.open(globals.map);
+        });*/
+    });
+    
+    var m = globals.mobile;
+    
+    $("#grid_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#my_rfis_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#new_rfi_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#bi_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#new_event_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#edit_event_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#select_event_modal").modal({backdrop: 'static', keyboard: false, show: globals.triggerSelection && !globals.rfi && globals.role != "Admin"});
+    $("#event_grid_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#create_admin_user").modal({backdrop: !m, keyboard: true, show: false});
+    $("#user_grid_modal").modal({backdrop: !m, keyboard: true, show: false});
+    $("#edit_user_modal").modal({backdrop: !m, keyboard: true, show: false});
+    
+    $("#grid_modal, #my_rfis_modal").on("show", function() {
+        $("body").addClass("rfiGrid");
+    });
+    
+    $("#grid_modal, #my_rfis_modal").on("hide", function() {
+        $(this).find(".details").popover("hide");
+    });
+    
+    $("#grid_modal, #my_rfis_modal").on("hidden", function() {
+        $("body").removeClass("rfiGrid");
+    });
+    
+    $('.exitRegionMode').click(globals.exitRegionMode);
+    
+    $('.newNonSpatial').click(function() {
+        newNonSpatial($("#new_rfi_modal"));
+        return false;
+    });
+    
+    $(".createRegionEvent").click(function() {
+        if ( globals.path.length > 2) {
+            newFromRegion($("#new_event_modal"));
+        }
+        else {
+            alert("A polygon must be drawn before creating a new Event");
+        }
+        return false;
+    });
+    
+    $(".newRFIRegion").click(function() {
+        $(this).closest(".dropdown").removeClass("open");
+        globals.exitRegionMode();
+        globals.startRFIPolygonDrawing();
+        return false;
+    });
+    
+    $(".newRFIPolyline").click(function() {
+        $(this).closest(".dropdown").removeClass("open");
+        globals.exitRegionMode();
+        globals.startPolylineDrawing();
+        return false;
+    });
+    
+    $(".newRFIPoint").click(function() {
+        $(this).closest(".dropdown").removeClass("open");
+        globals.exitRegionMode();
+        globals.startPointCreation();
+        return false;
+    });
+    
+    $(".nav .newNonSpatial").click(function() {
+        $(this).closest(".dropdown").removeClass("open");
+        newNonSpatial($("#new_rfi_modal"));
+        return false;
+    });
+    
+    $(".newEventRegion").click(function() {
+        $(this).closest(".dropdown").removeClass("open");
+        globals.startEventPolygonDrawing();
+        return false;
+    });
+    
+    $(".createAdminUser").click(function() {
+        $("#create_admin_user").modal("show");
+        return false;
+    });
+    
+    $("#create_admin_user").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        mbody.empty();
+        mbody.append("Loading...");
+        $.ajax({url: globals.route.UserManagement.adminCreateUser, type:"GET"})
+        .done(function(res,success,xhr) {
+            mbody.empty();
+            mbody.append(res);
+        });
+    });
+    
+    $("#bi_modal").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        mbody.empty();
+        mbody.append("Loading...");
+        $.ajax({url: globals.route.Application.bi, type: "GET"})
+        .done(function(res,success,xhr) {
+            mbody.empty();
+            mbody.append(res);
+        });
+    });
+    
+    $("#event_grid_modal").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        
+        mbody.empty();
+        mbody.append("Loading...");
+        $.ajax({url: globals.route.EventController.grid, type: "GET"})
+        .done(function(res,success,xhr) {
+            mbody.empty();
+            mbody.append(res);
+            bindEventGrid(ths);
+        });
+    });
+    
+    $("#user_grid_modal").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        mbody.empty();
+        mbody.append("Loading...");
+        $.ajax({url:globals.route.UserManagement.grid, type: "GET"})
+        .done(function(res,success,xhr) {
+            mbody.empty();
+            mbody.append(res);
+            bindUserGrid(ths);
+        });
+    });
+    
+    $("#my_rfis_modal").bind("show", function() {
+        var $ths = $(this);
+        var $b = $ths.find(".modal-body");
+        $b.empty();
+        $b.append("Loading...");
+        var route = globals.route.RFIController.myGrid;
+        $.ajax({url: route, type: "GET"})
+        .done(function(res, status, xhr) {
+            $b.empty();
+            $b.append(res);
+            bindGrid($ths);
+        });
+    });
+    
+    $("#grid_modal").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        mbody.empty();
+        mbody.append("Loading...");
+        var route = globals.route.RFIController.grid;
+        if ( globals.session.event) {
+            route += "?filterEvent=" + globals.session.event;
+        }
+        $.ajax({url: route, type: "GET"})
+        .done(function(res, success, xhr) {
+            mbody.empty();
+            mbody.append(res);
+            bindGrid(ths, true);
+        });
+    });
+    
+    $("#new_rfi_modal").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        mbody.empty();
+        mbody.append("Loading...");
+        $.ajax({url: globals.route.RFIController.newRFI, type: "GET"})
+        .done( function(res, status, xhr) {
+            mbody.empty();
+            mbody.append(res);
+            mbody.scrollTop(0);
+            var pt = ths.data("point");
+            if ( pt) {
+                var spt = JSON.parse(pt);
+                mbody.find("input[name='r.coordinates.lat']").val(spt.lat);
+                mbody.find("input[name='r.coordinates.lon']").val(spt.lng);
+                mbody.find("form").addClass("point");
+                ths.removeData("point");
+            }
+            
+            var region = ths.data("region");
+            if ( region) {
+                mbody.find("input[name='r.region']").val(region);
+                mbody.find("form").addClass("region");
+                ths.removeData("region");
+            }
+            
+            var polyline = ths.data("polyline");
+            if ( polyline) {
+                mbody.find("form").addClass("polyline");
+                mbody.find("input[name='r.polyline']").val(polyline);
+                ths.removeData("polyline");
+            }
+            
+            var nonspatial = ths.data("nonspatial");
+            if ( nonspatial) {
+                mbody.find("form").addClass("nonspatial");
+                mbody.find("input[name='r.nonSpatial']").val(1);
+            }
+        });
+    });
+    
+    $("#update_my_info_modal").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        mbody.empty();
+        mbody.append("Loading...");
+        $.ajax({url: globals.route.UserManagement.updateMyInfo, type: "GET"})
+        .done(function(res,success,xhr) {
+            mbody.empty();
+            mbody.append(res);
+        });
+    });
+    
+    $("#new_event_modal").bind("show", function() {
+        var ths = $(this);
+        var mbody = ths.find(".modal-body");
+        
+        $.ajax({url: globals.route.EventController.newEvent, type: "GET"})
+        .done(function(res,status,xhr) {
+            mbody.empty();
+            mbody.append(res);
+            mbody.scrollTop(0);
+            
+            var region = ths.data("region");
+            if ( region) {
+                mbody.find("input[name='e.region']").val(region);
+                ths.removeData("region");
+            }
+        });
+    });
+    
+    $(".eventFilter ul a").click(function() {
+        var id = $(this).attr("rel");
+        if ( id) {
+            var loc = globals.route.root + "?event=" + id;
+            window.location = loc;
+        }
+    });
+    
+    globals.shimInputs($("body"));
+    
+    $(document).on("click", "a[rel='popover']", function() {
+        var $me = $(this);
+        $("a[rel='popover']").not($me).popover("hide");
+        $me.popover("show");
+        
+        $(document).on("click", "*", function() {
+            $me.popover("hide");
+            $(document).off("click", "*");
+        });
+        return false;
+    });
+    
+    #{deadbolt.restrict roles:[['Management'],['Analyst']]}
+    if ( !globals.session.event && !globals.rfi) {
+        $("#grid_modal").modal("show");
+    }
+    #{/deadbolt.restrict}
+    
+    if ( window.location.hash && window.location.hash == "#popup" && globals.rfi)  {
+        if ( globals.role == "Field") {
+            globals.commentRFI(globals.rfi.id);
+        }
+        else {
+            globals.editRFI(globals.rfi.id);
+        }
+    }
+});
+</script>
+
+#{/set}
+
+#{nav.nav user:user, isAdmin:isAdmin, back:back/}
+
+<div id="map">
+</div>
+
+<section id="toast">
+</section>
+
+<div id="grid_modal" class="modal hide" data-grid-route="@{RFIController.grid}">
+    <div class="modal-header">
+        <a class="close" href="#" data-dismiss="modal">&times;</a>
+        
+        <h3>RFI List</h3>
+        <div class='row topRow'>
+            <div class='span4' style='padding-top: 8px;margin-left: 0;'>
+                <form name='listSearch'>
+                    <input type="text" name="filterSearch" style='margin-bottom: 0;' placeholder="Search..."/>
+                    <a class='btn small fullSearch' href='#'>Search</a><br/>
+                </form>
+                <a href='#' class='advSearch'>Advanced search...</a>
+            </div>
+            <div class='span6 filters' style='padding-top: 8px;'>
+                *{#{select 'filterRequestor', id:'fr', items: requestors, labelProperty: 'name', valueProperty: 'value', 'data-select2enabled':''/}}*
+                #{select 'filterEvent', items: events, labelProperty: 'name', valueProperty: 'id', value:session.get("event"), 'data-select2enabled':''}
+                    #{option value:''}Select event...#{/option}
+                #{/select}
+                #{select 'filterAssignee', items: helpers.RFIHelpers.getAllEmailAddresses(), 'data-select2enabled':''}
+                    #{option value: ""}Select assignee...#{/option}
+                #{/select}
+                <a class='btn clear small' href="#" style='margin-bottom: 9px;'>Clear Filter</a>
+            </div>
+            <div class='pull-right' style='padding-top: 8px;'>
+                #{deadbolt.restrict roles:[['Management'],['Analyst']]}
+                <a class='btn export small' href="#">Export Results</a>      
+                #{/deadbolt.restrict}
+            </div>
+        </div>
+        <div class='row hide advSearch'>
+            <div style='margin-left: 0;'>
+                <form id='filterForm' class='form-horizontal'>
+                    <div class='control-group'>
+                        <label class='control-label' for='startDate'>Date range:</label>
+                        <div class='controls'>
+                            <input type="date" name="startDate" value="${request.params.startDate}"/> - <input type="date" name="endDate" value="${request.params.endDate}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterOrganization'>Organization:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterOrganization" value="${request.params.filterOrganization}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterTitle'>Title:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterTitle" value="${request.params.filterTitle}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterInstructions'>Instructions:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterInstructions" value="${request.params.filterInstructions}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterCity'>City name:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterCity" value="${request.params.filterCity}"/><br/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterComment'>Comment text:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterComment" value="${request.params.filterComment}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterRequestorFirstName'>Requestor First Name:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterRequestorFirstName" value="${request.params.filterRequestorFirstName}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterRequestorLastName'>Requestor Last Name:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterRequestorLastName" value="${request.params.filterRequestorLastName}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterAssignee'>Assigned to:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterAssignee" value="${request.params.filterAssignee}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterID'>ID:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterID" value="${request.params.filterID}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterCountry'>Country/Region:</label>
+                        <div class='controls'>
+                            #{select "filterCountry", items:models.Country.all().fetch().sort({a,b->a.sortOrder<=>b.sortOrder}), value: request.params.filterCountry, labelProperty:"name", valueProperty:'code', 'data-select2enabled':''}
+                                #{option value:''}All Countries/Regions#{/option}
+                            #{/select}
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterStatus'>Status:</label>
+                        <div class='controls'>
+                            #{select "filterStatus", items:helpers.ApplicationHelpers.getStatuses(), value: request.params.filterStatus, 'data-select2enabled':''}
+                                #{option value:''}All Statuses#{/option}
+                            #{/select}
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterBE'>BE #:</label>
+                        <div class='controls'>
+                            <input type="text" name="filterBE" value="${request.params.filterBE}"/>
+                        </div>
+                    </div>
+                    <div class='control-group' style='float: left;'>
+                        <label class='control-label' for='filterProduct'>Product Format:</label>
+                        <div class='controls'>
+                            #{select "filterProduct", items:helpers.RFIHelpers.getAllProductFormats(), value: request.params.filterProduct, 'data-select2enabled':''}
+                                #{option value:''}Select one...#{/option}
+                            #{/select}
+                            
+                        </div>
+                    </div>
+                    <input type='submit' class='submit btn' value='Search' style='float: left; clear: both;margin-bottom: 8px;'/>
+                    <a href='#' class='clear btn' style='float: left; margin-left:8px;'>Clear</a>
+                </form>
+            </div>
+        </div>
+        <div style='clear: both;'></div>
+    </div>
+    <div class="modal-body">
+        Loading...
+    </div>    
+</div>
+
+<div id="new_rfi_modal" class="modal hide">
+    <div class="modal-header clearfix">
+        <a class="close" href="#" data-dismiss="modal">&times;</a>
+        <h3>New RFI</h3>
+    </div>
+    <div class="modal-body clearfix overthrow">
+        Loading...
+    </div>
+</div>
+
+<div id="edit_rfi_modal" class="modal hide">
+    <div class="modal-header clearfix">
+        <a class="close" href="#" data-dismiss="modal">&times;</a>
+        <h3>Update RFI</h3>
+    </div>
+    <div class="modal-body clearfix overthrow">
+        Loading...
+    </div>
+</div>
+
+<div id="comment_rfi_modal" class="modal hide">
+    <div class="modal-header clearfix overthrow">
+        <a class="close" href="#" data-dismiss="modal">&times;</a>
+        <h3>Comment on RFI</h3>
+    </div>
+    <div class="modal-body clearfix">
+        Loading...
+    </div>
+</div>
+
+<div id='bi_modal' class="modal hide">
+    <div class="modal-header clearfix overthrow">
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>Business Intelligence</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>
+
+<div id='new_event_modal' class='modal hide'>
+    <div class="modal-header clearfix overthrow">
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>New Event</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>
+
+<div id='edit_event_modal' class='modal hide'>
+    <div class="modal-header clearfix overthrow">
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>Event Edit</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>
+
+<div id='event_grid_modal' class='modal hide'>
+    <div class="modal-header clearfix overthrow">
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>Event List</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>
+
+<div id='select_event_modal' class='modal hide'>
+    <div class="modal-header clearfix overthrow">
+        <h3>Choose the event to work in</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        #{list items:controllers.EventController.getActiveEvents(), as: 'e'}
+            <a class='btn btn-primary' href='@{Application.index(e.id)}'>${e.name}</a> - ${e.description}<br/><br/>
+        #{/list}
+        <a class='btn btn-primary' href='@{Application.index()}?noRedirect=true'>Show all events</a>
+    </div>
+</div>
+
+<div id="create_admin_user" class="modal hide">
+    <div class="modal-header clearfix">
+        <a class="close" href="#" data-dismiss="modal">&times;</a>
+        <h3>Create a user</h3>
+    </div>
+    <div class="modal-body clearfix">
+        Loading...
+    </div>
+</div>
+
+<div id='user_grid_modal' class='modal hide'>
+    <div class='modal-header clearfix'>
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>User List</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>
+
+<div id='edit_user_modal' class='modal hide'>
+    <div class='modal-header clearfix'>
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>Edit User</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>
+
+<div id='update_my_info_modal' class='modal hide'>
+    <div class='modal-header clearfix'>
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>Edit User</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>
+
+<div id='copyright_modal' class='modal hide'>
+    <div class='modal-header clearfix'>
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>RFI Generator - Information</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        #{helpers.copyright/}
+    </div>
+</div>
+
+<div id='my_rfis_modal' class='modal hide' data-grid-route="@{RFIController.myGrid}">
+    <div class='modal-header clearfix'>
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>My RFIs</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        Loading...
+    </div>
+</div>

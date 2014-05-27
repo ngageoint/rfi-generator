@@ -1,0 +1,85 @@
+<fieldset>
+    <input type="hidden" value="${_g?.id}" name="g.id"/>
+    <div class='control-group'>
+        <label for="g.name" class='control-label'>Name:</label>
+        <div class='controls'>
+            <input type="text" name="g.name" value="${_g?.name}"/>
+        </div>
+    </div>
+    
+    <hr/>
+    <div class='row'>
+        <div class='control-group' style='float: left;clear: left;'>
+            <label for="g.groupManagers" class='control-label'>Group managers:</label>
+            <div class='controls multiselect'>
+                %{
+                    _groupManagers = _g?.groupManagers;
+                    _everyone = models.User.all().fetch().sort({a,b->a.userName.toLowerCase()<=>b.userName.toLowerCase()});
+                }%
+                <input type="hidden" name="g.groupManagers.id" value=""/>
+                <div class='inp show'>
+                    <table>
+                        <tr>
+                            <td align="center">
+                                Available Group Managers
+                            </td>
+                            <td>
+                            </td>
+                            <td align="center">
+                                Selected Group Managers
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select multiple class='availableGroupManagers'>
+                                    #{list items:_everyone, as:'gm'}
+                                        #{ifnot gm.id in _groupManagers.collect({it.id})}
+                                            <option value="${gm.id}">${gm.userName}</option>
+                                        #{/ifnot}
+                                    #{/list}
+                                </select>
+                            </td>
+                            <td>
+                                <a href='#' class='btn selectMove' data-src="availableGroupManagers" data-dest="destinationGroupManagers"><i class='icon-arrow-right'></i></a><br/>
+                                <a href='#' class='btn selectMove' data-src="destinationGroupManagers" data-dest="availableGroupManagers"><i class='icon-arrow-left'></i></a>
+                            </td>
+                            <td>
+                                <select multiple name='g.groupManagers.id' class="destinationGroupManagers">
+                                    #{list items:_groupManagers?.sort({a,b->a.userName.toLowerCase()<=>b.userName.toLowerCase()}), as:'gm'}
+                                        #{if gm.id in _everyone.collect({it.id})}
+                                            <option value="${gm.id}">${gm.userName}</option>
+                                        #{/if}
+                                    #{/list}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='control-group' style='float: left;clear: left;'>
+            <label for="g.parent" class='control-label'>Parent group:</label>
+            <div class='controls'> 
+                <select name='g.parent.id' style='float: left;' data-select2enabled>
+                    <option value=''>(No parent)</option>
+                    #{list 'g.parent.id', items: models.Group.all().fetch().sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name}), as:'g'}
+                        #{if g.id != _g?.id}
+                        <option value='${g.id}' #{if g.id==_g?.parent?.id}selected#{/if}>${g.name}</option>
+                        #{/if}
+                    #{/list}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='control-group' style='float: left;clear: left;'>
+            <label for="g.defaultGroup" class='control-label'>Default group:</label>
+            <div class='controls'> 
+                <input type="checkbox" name="g.defaultGroup" ${_g?.defaultGroup ? "checked":''}/>
+                <input type="hidden" name="g.defaultGroup" value="0"/>
+            </div>
+        </div>
+    </div>
+</fieldset>

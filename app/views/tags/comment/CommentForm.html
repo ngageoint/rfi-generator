@@ -1,0 +1,13 @@
+<input type="hidden" name="full" value="${request.params.full}"/>
+
+<input type="hidden" name="c.rfi.id" value="${_rfi.id}"/>
+<input type="hidden" name="c.point.lat" value=""/>
+<input type="hidden" name="c.point.lon" value=""/>
+<div class='clearfix required'>
+    <label for="c.text"><a href='#' rel='popover' data-trigger="manual" data-original-title="Comment" data-content="Add your informational contribution to this RFI">Your comment:</a></label>
+    <div class='input'>
+        <textarea required='required' placeholder="Comment..." name="c.text" rows="10">${_c?.text}</textarea>
+    </div>
+</div>
+<hr/>
+<input type="submit" class="btn btn-primary" value="Add comment"/>

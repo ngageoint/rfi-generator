@@ -1,0 +1,8 @@
+ApplicationRole(Analyst):
+    name: Analyst
+    
+ApplicationRole(Field):
+    name: Field
+    
+ApplicationRole(Management):
+    name: Management

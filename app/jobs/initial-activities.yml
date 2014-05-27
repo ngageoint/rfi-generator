@@ -1,0 +1,83 @@
+Activity(1):
+    rfi: 1
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #1 (CREATED: 1)
+    type: CREATED
+    createdAt: 2012-03-26
+    
+Activity(2):
+    rfi: 1
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #2 (STARTED: 2)
+    type: VERIFIED
+    createdAt: 2012-03-28
+    
+Activity(3):
+    rfi: 1
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #3 (COMPLETED: 3)
+    type: ASSIGNED
+    createdAt: 2012-03-29
+    
+Activity(4):
+    rfi: 1
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #4 (COMMENT: 4)
+    type: COMMENTED
+    createdAt: 2012-03-30
+    
+Activity(5):
+    rfi: 1
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #5 (COMMENT: 2)
+    type: STARTED
+    createdAt: 2012-04-01
+    
+Activity(6):
+    rfi: 1
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #4 (COMMENT: 4)
+    type: COMPLETED
+    createdAt: 2012-04-03
+    
+Activity(7):
+    rfi: 2
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #5 (COMMENT: 2)
+    type: CREATED
+    createdAt: 2012-03-25
+    
+Activity(8):
+    rfi: 2
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #4 (COMMENT: 4)
+    type: COMMENTED
+    createdAt: 2012-03-25
+    
+Activity(9):
+    rfi: 2
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #5 (COMMENT: 2)
+    type: VERIFIED
+    createdAt: 2012-03-26
+    
+Activity(10):
+    rfi: 14
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #6
+    type: CREATED
+    createdAt: 2012-12-15
+    
+Activity(11):
+    rfi: 14
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #6
+    type: VERIFIED
+    createdAt: 2012-12-16 12:00:00
+    
+Activity(12):
+    rfi: 14
+    user: joe
+    message: BOOTSTRAPPED ACTIVITY #6
+    type: COMPLETED
+    createdAt: 2012-12-17

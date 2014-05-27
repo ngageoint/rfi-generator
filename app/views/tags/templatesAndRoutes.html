@@ -1,0 +1,260 @@
+<script type="text/template" id="rfiPopupTemplate">
+    <div class='popup'>
+        <div>
+            <h3><%= networkID %>: <%= title %></h3>
+            <p><b>Event:</b> <%= event.name %></p>
+            <p><b>Instructions:</b> <%= linkify(instructions) %></p>
+            <p><b>Status:</b> <%= status %></p>
+            <p><b>Organization:</b> <%= organization %></p>
+            <p><b>Created:</b> <%= new Date(createdAt).toUTCString() %></p>
+            <p><b>Date Requested:</b> <%= (new Date(dateRequested).getUTCMonth()+1) + "/" + new Date(dateRequested).getUTCDate() + "/" + new Date(dateRequested).getUTCFullYear() %></p>
+            <p><b>Date Required:</b> <% if (dateRequired) { %><%= (new Date(dateRequired).getUTCMonth()+1) + "/" + new Date(dateRequired).getUTCDate() + "/" + new Date(dateRequired).getUTCFullYear() %><% } %></p>
+            <p><b># of Comments:</b> <%= comments.length %></p>        
+            <% if(comments.length != 0){ %>
+                <p><b>Last Commented On: </b> <%= new Date(comments[comments.length -1].createdAt).toUTCString() %></p>
+            <% } %>
+            <br/>
+            <a class='btn' href='#' onclick='javascript:globals.commentRFI(<%= id %>);'>Comment/View</a>
+            #{deadbolt.restrict roles:[['Analyst'],['Management']]}
+                &nbsp;<a class='btn' href='#' onclick='globals.editRFI(<%= id %>)'>Edit RFI</a>
+                &nbsp;<a class='btn' href='#' onclick='globals.adminEditRFI(<%= id %>)'>Admin Edit</a>
+                &nbsp;<a class='btn btn-danger' href='#' onclick='globals.deleteRFI(<%= id %>);'>Delete RFI</a>
+            #{/deadbolt.restrict}
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="adminCommentTemplate">
+    <div class='alert alert-block alert-info' rel='<%= c.id %>'>
+        <button type="button" class='close deleteAdminComment'>&times;</button>
+        <h4><%= linkify(c.text) %></h4>
+        Created by: <%= c.createdBy %> <abbr><%= $.timeago(new Date(c.createdAt)) %></abbr>
+    </div>
+</script>
+
+<script type="text/template" id="relatedItemTemplate">
+    <%= linkify(rel.text) %> - added by: <%= rel.createdBy %> @ <abbr><%= $.timeago(new Date(rel.createdAt)) %></abbr><br/>
+</script>
+
+<script type="text/template" id="positionClickTemplate">
+    <p>My position (accurate to <%= coords.accuracy %> meters)</p>
+    <a class='btn' onclick='javascript:globals.moveTo({lat: <%= coords.latitude %>, lng: <%= coords.longitude %>, zoom: 17});'>Zoom to this location</a>
+</script>
+
+<script type="text/template" id="mapClickTemplate">
+    <% if ( hits.length > 0) { %>
+        RFIs at this point: <%= hits.length %><br/>
+        <% var sorted = _.sortBy(hits, function(r) { return r.rfi.nonSpatial == true ? 1:-1}); %>
+        <% for ( var i in sorted) {
+            var cur = sorted[i]; %>
+            <a href='#' onclick='javascript:globals.selectRFI(<%= cur.rfi.id %>, <%= lat %>, <%= lng %>);'><%= cur.rfi.networkID %>: <%= cur.rfi.title %></a><br/>
+        <% } %>
+    <% } %>
+    <a class='btn' onclick='javascript:globals.startPolylineDrawing(<%= lat %>, <%= lng %>);return false;'>Draw polyline for new RFI</a><br/><br/>
+    <a class='btn' onclick='javascript:globals.startRFIPolygonDrawing(<%= lat %>, <%= lng %>);return false;'>Draw polygon for new RFI</a><br/><br/>
+    <a class='btn' onclick='javascript:globals.showNewModal(<%= lat %>, <%= lng %>); return false;'>Add new RFI at this point</a><br/><br/>
+    #{deadbolt.restrict roles:[['Analyst'],['Management']]}
+    <a class='btn' onclick='javascript:globals.startEventPolygonDrawing(<%= lat %>, <%= lng %>);return false;'>Draw polygon for new Event</a><br/><br/>
+    #{/deadbolt.restrict}
+    <span>DD Lat/Lon: <%= lat %>, <%= lng %></span><br/>
+</script>
+
+<script type="text/template" id="sortTemplate">
+    <span class='sortarrow'>
+    </span>
+</script>
+
+<script type="text/template" id="toastTemplate">
+    <section class='alert alert-<%= type %>'>
+        <a href='#' class='close' data-dismiss='alert'>x</a>
+        <%= msg %>
+    </section>
+</script>
+
+<script type="text/template" id="graphTooltip">
+    <% if ( first ) { %>
+        <%= date %><br/>
+    <% } %>
+    <span style='color: <%= val.color %>'>&#9679;</span><%= title %>: 
+    <% if ( hasData) {
+        if ( val.y % 1 == 0) { %>
+            <%= val.y %>
+        <% } else { %>
+            ~<%= Math.round(val.y) %>
+        <% }
+    } else { %>
+        No data
+    <% } %>
+    <br/>
+</script>
+
+<script type="text/template" id="oneDayOverview">
+    <p>Only 1 day of aggregations is available: <%= date %></p>
+    <ul class='informational'>
+        <li class='green'>
+            <a href='#'>
+            <% if ( total % 1 == 0) { %>
+                <%= total %>
+            <% } else { %>
+                ~<%= Math.round(total) %>
+            <% } %></a>
+                <span>Total</span>
+            </li>
+        <li class='blue'>
+            <a href='#'>
+            <% if ( open % 1 == 0) { %>
+                <%= open %>
+            <% } else { %>
+                ~<%= Math.round(open) %>
+            <% } %></a>
+            <span>Open</span>
+        </li>
+        <li>
+            <a href='#'>
+            <% if ( closed % 1 == 0) { %>
+                <%= closed %>
+            <% } else { %>
+                ~<%= Math.round(closed) %>
+            <% } %></a>
+            <span>Closed</span>
+        </li>
+    </ul>
+</script>
+
+<script type="text/template" id='gotoTemplate'>
+    <div class='gotoControl'>
+        <div class='action'>
+            <a href='#'>Go to DD lat/lon</a>
+        </div>
+        <div class='content'>
+            Latitude: <input type='text' name='lat' class='span2' placeholder='Latitude'/>
+            Longitude: <input type='text' name='lng' class='span2' placeholder='Longitude'/>
+            <a href='#' class='btn go'>Go</a>
+            <a href='#' class='btn clear' style='margin-left: 3px;'>Clear</a>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id='mapDrawingTemplate'>
+    <div class='drawingContainer big'>
+        <a href='#' title='Draw polygon for RFI' class='drawPoly'></a>
+        <a href='#' title='Draw polyline for RFI' class='drawPolyline'></a>
+        <a href='#' title='Create RFI at point' class='drawPoint'></a>
+    </div>
+</script>
+
+<script type="text/template" id='rfiDrawingTemplate'>
+    <div class='drawingContainer rfiEdit'>
+        <a href='#' title='Draw polygon for RFI' class='drawPoly'></a>
+        <a href='#' title='Draw polyline for RFI' class='drawPolyline'></a>
+        <a href='#' title='Create RFI at point' class='drawPoint'></a>
+    </div>
+</script>
+
+<script type="text/template" id='eventDrawingTemplate'>
+    <div class='drawingContainer eventEdit'>
+        <a href='#' title='Draw polygon for RFI' class='drawPoly'></a>
+    </div>
+</script>
+
+<script type="text/javascript">
+    *{ TODO: Redo all of this w/ Backbone }*
+    var globals = globals || {};
+    #{deadbolt.restrict roles:[['Management'],['Analyst']]}
+    globals.admin = 1;
+    #{/deadbolt.restrict}
+    
+    globals.session = globals.session || {};
+    globals.session.event = "${session.get('event')}";
+    
+    globals.assets = globals.assets || {};
+    globals.assets.arrowDown = "@{'/public/images/arrow_down.png'}";
+    globals.assets.arrowUp = "@{'/public/images/arrow_up.png'}";
+    globals.SMTS_URL = "${helpers.ConfigurationHelpers.smtsURL().raw()}";
+    globals.route = globals.route || {};
+    globals.route.root = "@{Application.index}";
+    globals.route.EventController = globals.route.EventController || {};
+    globals.route.EventController.newEvent = "@{EventController.newEvent}";
+    globals.route.EventController.getAll = "@{EventController.getAll}";
+    globals.route.EventController.get = #{jsAction @EventController.get(':id')/};
+    globals.route.EventController.grid = "@{EventController.grid}";
+    globals.route.EventController.updateRegion = #{jsAction @EventController.updateRegion(':id', ':region') /};
+    globals.route.RFIController = globals.route.RFIController || {};
+    globals.route.RFIController.comment = #{jsAction @RFIController.comment(':id')/};
+    globals.route.RFIController.createComment = #{jsAction @RFIController.createCommentJSON()/};
+    globals.route.RFIController.adminComment = #{jsAction @RFIController.createAdminComment() /};
+    globals.route.RFIController.deleteAdminComment = #{jsAction @RFIController.deleteAdminComment(':id') /};
+    globals.route.RFIController.edit = #{jsAction @RFIController.edit(':id')/};
+    globals.route.RFIController.get = #{jsAction @RFIController.get(':id')/};
+    globals.route.RFIController.getAll = "@{RFIController.getAll}";
+    globals.route.RFIController.grid = "@{RFIController.grid}";
+    globals.route.RFIController.myGrid = "@{RFIController.myGrid}";
+    globals.route.RFIController.exportXLS = "@{RFIController.exportXLS}";
+    globals.route.RFIController.newRFI = "@{RFIController.newRFI}";
+    globals.route.RFIController.verify = #{jsAction @RFIController.verify(':id') /};
+    globals.route.RFIController.deleteRFI = #{jsAction @RFIController.delete(':id') /};
+    globals.route.RFIController.addLink = #{jsAction @RFIController.addLink() /};
+    globals.route.RFIController.addProduct = #{jsAction @RFIController.addProduct() /};
+    globals.route.UserManagement = globals.route.UserManagement || {};
+    globals.route.UserManagement.grid = "@{UserManagement.grid}";
+    globals.route.UserManagement.updateMyInfo = "@{UserManagement.updateMyInfo}";
+    globals.route.Application = globals.route.Application || {};
+    globals.route.Application.index = #{jsAction @Application.index(':event', ':rfi')/};
+    globals.route.Application.bi = "@{ReportingController.bi}";
+    globals.route.Services = globals.route.Services || {};
+    globals.route.Services.geonames = "@{Services.geonames}";
+    globals.route.Services.rfisearch = #{jsAction @Services.rfiSearch(':searchKey', ':filter') /};
+    globals.route.Admin = {};
+    globals.route.Admin.index = #{jsAction @AdminController.index() /};
+    globals.route.Admin.editrfi = #{jsAction @AdminController.edit(':id') /};
+    globals.route.Admin.rfiListDefault = #{jsAction @AdminController.rfis() /};
+    globals.route.Admin.rfiList = #{jsAction @AdminController.rfis(':active', ':sort', ':sortDirection', ':filterRequestorFirstName', ':filterRequestorLastName', ':filterEvent', ':filterOrganization', ':filterAssignee', ':filterSearch', ':filterTitle', ':startDate', ':endDate', ':filterInstructions', ':filterCity', ':filterComment', ':filterID') /};
+    globals.route.Admin.dashboardOverview = #{jsAction @ReportingController.dashboardOverview(':event', ':startDate', ':endDate', ':group') /};
+    globals.route.Admin.rfiTotals = #{jsAction @ReportingController.rfiTotals(':event', ':start', ':end', ':group')/};
+    globals.route.Admin.byCreated = #{jsAction @ReportingController.byCreated(':start', ':end', ':event', ':group')/};
+    globals.route.Admin.byEvent = #{jsAction @ReportingController.byEvent(':event', ':eventArchived', ':group')/};
+    globals.route.Admin.createAdminNote = #{jsAction @AdminController.createAdminNote() /};
+    globals.route.Admin.deleteAdminNote = #{jsAction @AdminController.deleteAdminNote(':id') /};
+    globals.route.Admin.deleteGroup = #{jsAction @AdminController.deleteGroup(':id') /};
+    globals.assets.markers = globals.assets.markers || {};
+    globals.assets.markers.completed = "@{'/public/images/marker_sprite_green.png'}";
+    globals.assets.markers.inprogress = "@{'/public/images/marker_sprite_yellow.png'}";
+    globals.assets.markers.accepted = "@{'/public/images/marker_sprite_gray.png'}";
+    globals.assets.markers.notverified = "@{'/public/images/marker_sprite.png'}";
+    globals.assets.markers.yourposition = "@{'/public/images/marker_dot.png'}";
+    globals.assets.markers.shadow = "@{'/public/images/marker_shadow.png'}";
+    globals.statuses = ${helpers.ApplicationHelpers.serialize(helpers.ApplicationHelpers.getStatuses()).raw()};
+    globals.status_colors = function(status) {
+        var colors = {"Completed": "#00ff00", "In Work": "#F89406", "Accepted": "#333333", "Pending": "#ff0000", "Persistent": "#cccccc", "Canceled": "#333333", "On Hold": "#eeeeee", "With Customer": "#333333"};
+        var ret = colors[status];
+        if ( _.isUndefined(ret)) {
+            ret = "#cccccc";
+        }
+        return ret;
+    };
+    globals.status_markers = function(status) {
+        var markers = { "Completed": globals.assets.markers.completed, "In Work":globals.assets.markers.inprogress, "Accepted": globals.assets.markers.notstarted, "Pending": globals.assets.markers.notverified, "Persistent": globals.assets.markers.inprogress};
+        var ret = markers[status];
+        if ( _.isUndefined(ret)) {
+            ret = markers["Not Started"];
+        }
+        return ret;
+    };
+    
+    
+    var templates = templates || {};
+    templates.rfiPopup = $("#rfiPopupTemplate").html();
+    templates.mapClick = $("#mapClickTemplate").html();
+    templates.sortTemplate = $("#sortTemplate").html();
+    templates.positionTemplate = $("#positionClickTemplate").html();
+    templates.toast = $("#toastTemplate").html();
+    templates.adminComment = $("#adminCommentTemplate").html();
+    templates.graphTooltip = $("#graphTooltip").html();
+    templates.oneDayOverview = $("#oneDayOverview").html();    
+    templates.commentTemplate = $("#adminCommentTemplate").html();
+    templates.gotoTemplate = $("#gotoTemplate").html();
+    templates.mapDrawingTemplate = $("#mapDrawingTemplate").html();
+    templates.rfiDrawingTemplate = $("#rfiDrawingTemplate").html();
+    templates.eventDrawingtemplate = $("#eventDrawingTemplate").html();
+    templates.relatedItemTemplate = $("#relatedItemTemplate").html();
+</script>

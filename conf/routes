@@ -1,0 +1,112 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Regular webapp routes
+GET     /                                       Application.index
+GET     /bi                                     ReportingController.bi
+GET     /grid                                   RFIController.grid
+GET     /eventgrid                              EventController.grid
+GET     /exportXLS                              RFIController.exportXLS
+GET     /rfi/edit/{id}                          RFIController.edit
+POST    /rfi/edit                               RFIController.update
+GET     /rfi/new                                RFIController.newRFI
+POST    /rfi/new                                RFIController.create
+DELETE  /rfi/delete/{id}                        RFIController.delete
+GET     /rfi/comment/{id}                       RFIController.comment
+POST    /rfi/comment                            RFIController.createComment
+POST    /rfi/verify/{id}                        RFIController.verify
+POST    /upload.htm                             RFIController.upload
+GET     /event/new                              EventController.newEvent
+POST    /event/new                              EventController.create
+GET     /event/edit/{id}                        EventController.edit
+POST    /event/edit                             EventController.update
+GET     /updatemyinfo                           UserManagement.updateMyInfo
+POST    /updatemyinfo                           UserManagement.submitUpdateMyInfo
+
+# Admin stuff
+GET     /admin/?                                AdminController.index
+GET     /admin/rfis                             AdminController.rfis
+GET     /admin/my_rfis                          AdminController.myRFIs
+GET     /admin/edit/{id}                        AdminController.edit
+POST    /admin/edit                             AdminController.update
+GET     /admin/new                              AdminController.newRFI
+GET     /admin/importexport                     AdminController.importExport
+POST    /admin/import                           AdminController.importRFIs
+POST    /admin/export                           AdminController.exportRFIs
+POST    /admin/exportByEvent                    RFIController.exportRFIsByEvent
+POST    /admin/exportExcel                      RFIController.exportXLS
+GET     /admin/exportSingle                     RFIController.exportSingle
+GET     /admin/importchoices                    AdminController.importChoices
+GET     /admin/doimport                         AdminController.doImport
+GET     /admin/events                           AdminController.events
+GET     /admin/newEvent                         AdminController.newEvent
+GET     /admin/editEvent/{id}                   AdminController.editEvent
+POST    /admin/updateEvent                      AdminController.updateEvent
+GET     /admin/users                            AdminController.users
+GET     /admin/editUser/{id}                    AdminController.editUser
+POST    /admin/updateUser                       AdminController.updateUser
+GET     /admin/dashboard                        AdminController.dashboard
+GET     /admin/rfiTotals                        ReportingController.rfiTotals
+GET     /admin/groups                           AdminController.groups
+GET     /admin/editGroup/{id}                   AdminController.editGroup
+POST    /admin/updateGroup                      AdminController.updateGroup
+GET     /admin/newGroup                         AdminController.newGroup
+DELETE  /admin/group                            AdminController.deleteGroup
+POST    /admin/createNote                       AdminController.createAdminNote
+DELETE  /admin/deleteNote                       AdminController.deleteAdminNote
+GET     /admin/editMyInfo                       AdminController.editMyInfo
+POST    /admin/editMyInfo                       AdminController.updateMyInfo
+
+# Reporting stuff
+GET     /admin/reports                          ReportingController.reports
+GET     /admin/dashboardOverview                ReportingController.dashboardOverview
+
+# Admin PDF reports
+GET     /admin/generate                         ReportingController.generate
+GET     /admin/jfreeTotals/                     ReportingController.jfreeTotals
+GET     /admin/jfreeByCreated/                  ReportingController.jfreeByCreated
+GET     /admin/jfreeByEvent/                    ReportingController.jfreeByEvent
+
+# JSON reports
+GET     /admin/byEvent                          ReportingController.byEvent
+GET     /admin/byCreated                        ReportingController.byCreated
+
+# Attachment handler
+GET     /renderAttachment                       Application.renderAttachment
+
+# REST-ish services
+GET     /bi/activities                          ReportingController.biActivities
+GET     /events                                 EventController.getAll
+GET     /event/{id}.json                        EventController.get
+POST    /event                                  EventController.createJSON
+PUT     /event/{id}                             EventController.updateJSON
+GET     /rfis                                   RFIController.getAll
+POST    /rfi                                    RFIController.createJSON
+PUT     /rfi/{id}                               RFIController.updateJSON
+GET     /rfi/{id}.json                          RFIController.get
+GET     /services/geonames/{searchKey}          Services.geonames
+GET     /services/rfisearch/{searchKey}         Services.rfiSearch
+GET     /groups                                 AdminController.groupsJSON
+POST    /rfi/weblink                            RFIController.addlink
+POST    /rfi/product                            RFIController.addProduct
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+GET     /setUser                                Master.setUser
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/javascripts/libs/img/           staticDir:public/img
+GET     /public/                                staticDir:public
+
+*       /rfi/{action}                           RFIController.{action}
+*       /services/{action}                      Services.{action}
+*       /event/{action}                         EventController.{action}
+*       /user/{action}                          UserManagement.{action}
+
+*       /                                       module:press
+GET     /img/                                   staticDir:public/img
+GET     /press/img/                             staticDir:public/img
+GET     /press/css/images/                      staticDir:public/stylesheets/images
+GET     /theme/                                 staticDir:public/javascripts/libs/theme

@@ -1,0 +1,332 @@
+/* //TODO: REFACTOR ALL OF THIS! */
+
+.popover-inner {
+    width: 600px;
+}
+
+.popover-bottom-left {
+    .popover-inner {
+        width: 330px;
+    }
+    .popover .arrow {
+        left: 89%;
+    }
+}
+
+tr.selected {
+    border: 2px solid #33cc33;
+}
+
+.dateSelection {
+     input {
+        margin-top: 9px;
+     }
+     
+     float: left;
+}
+
+.classification {
+    width: 100%;
+    background: #ccc;
+    
+    td {
+        padding: 8px;
+        border-bottom: 2px solid white;
+        border-right: 2px solid white;
+    }
+    
+    label {
+        display: inline;
+    }
+}
+
+.row.map {
+    margin-bottom: 20px;
+}
+
+#map {
+    width: 60%;
+    height: 400px;
+    position: relative;
+    border: 1px solid #ccc;
+}
+
+.rfiList {
+}
+
+.filters {
+    margin-top: 8px;
+}
+
+.advSearch {
+    margin-top: 8px;
+}
+
+.importExport {
+    label {
+        display: inline;
+    }
+}
+
+.import {
+    label {
+        display: inline;
+    }
+}
+
+h2 span {
+    font-size: 70%;
+}
+
+.table tbody tr:hover td,
+.table tbody tr:hover th {
+    background-color: inherit;
+}
+
+@mixin status-shim {
+    a {
+        color: black;
+        text-decoration: underline;
+    }
+}
+
+.collapser {
+    position: relative;
+    overflow: visible;
+    &.small {
+        .handle {
+            font-size: 15px;
+            left: -22px;
+            top: 4px;
+        }
+    }
+    
+    .handle {
+        position: absolute;
+        left: -25px;
+        top: 7px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+    h2 {
+        float: left;
+        margin-right: 20px;
+    }
+    h3 {
+        float: left;
+        margin-right: 15px;
+    }
+}
+
+$bs-red: #9d261d;
+$bs-green: #468847;
+$bs-blue: #3A87AD;
+$bs-gray: #999999;
+$bs-muted-red: #F2DEDE;
+$bs-muted-green: #DFF0D8;
+$bs-muted-gray: #F7F7F9;
+$bs-muted-blue: #D9EDF7;
+
+ul.informational {
+    float: left;
+    margin-left: 0;
+    
+    li {
+        list-style: none;
+        text-align: center;
+        margin-right: 10px;
+        float: left;
+        line-height: 18px;
+        
+        &.huge {
+            margin-right: 15px;
+            a {
+                padding: 7px 12px;
+                font-size: 35px;
+                line-height: 35px;
+                border: none;
+            }
+        }
+        
+        &.blue {
+            a,span {
+                color: $bs-blue;
+                border-color: $bs-blue;
+            }
+        }
+        
+        &.green {
+            a,span {
+                color: $bs-green;
+                border-color: $bs-green;
+            }
+        }
+        
+        &.red {
+            a,span {
+                color: $bs-red;
+                border-color: $bs-red;
+            }
+        }
+        
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+            
+            font-size: 22px;
+            font-weight: bold;
+            color: $bs-gray;
+            border: 1px solid $bs-gray;
+            margin-right: 0px;
+            line-height: 22px;
+            display: block;
+            cursor: default;
+            padding: 8px 12px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+        
+        span {
+            color: #999999;
+        }
+    }
+}
+
+.overdue {
+    background-color: $bs-muted-red !important;
+    @include status-shim;
+}
+
+.inwork, .InWork {
+    background-color: $bs-muted-blue !important;
+    @include status-shim;
+}
+
+.Pending, .pending {
+    background-color: $bs-muted-gray !important;
+    @include status-shim;
+}
+
+.Accepted {
+    background-color: $bs-muted-red !important;
+    @include status-shim;
+}
+
+.Completed, .completed {
+    background-color: $bs-muted-green !important;
+    @include status-shim;
+}
+
+.form-horizontal .control-group {
+    margin-bottom: 5px;
+}
+
+.adminForm {
+    .row {
+        margin-left: 0;
+    }
+}
+
+table.sortable th {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.jqplot-xaxis-tick {
+    font-size: 12px;
+}
+
+.jqplot-yaxis-tick {
+    font-size: 12px;
+}
+
+.jqplot-table-legend {
+    font-size: 12px;
+}
+
+#byevent, #bycreated {
+    width: 100%;
+    height: 400px;
+    table {
+        width: auto;
+    }
+}
+
+.graphContainer {
+    float: left;
+    position: relative;
+    > a {
+        position: absolute;
+        top: 0;
+        right: -15px;
+    }
+}
+
+.dynamicSparkline {
+    width: 360px;
+    height: 80px;
+    display: block;
+    margin-left: 20px;
+    position: relative;
+    display: block;
+    float: left;
+    
+    span.endDate, span.startDate {
+        position: absolute;
+        display: block;
+        bottom: -14px;
+    }
+    
+    .startDate {
+        left: 0;
+    }
+    
+    .endDate {
+        right: 0;
+    }
+}
+
+.assigneeRFIs li {
+    float: left;
+    list-style: none;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.collapser .noRightMargin {
+    margin-right: 0;
+}
+
+.userInfo {
+    float: right;
+}
+
+#banner {
+    background: transparent url(../images/banner.png);
+    height: 90px;
+}
+
+.emptyGraph {
+    height: 300px;
+    background: #eeeeee;
+    line-height: 300px;
+    text-align: center;
+    font-size: 25px;
+}
+
+.print {
+    display: none;
+}
+
+.olControlDrawFeatureActive {
+    cursor: crosshair;
+}
+

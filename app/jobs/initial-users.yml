@@ -1,0 +1,23 @@
+User(r3_admin):
+    userName: admin
+    firstName: R3
+    lastName: Admin
+    email: joseph.mctester@njvc.com
+    role: Management
+    activated: 1
+    groups: [1]
+    
+User(r3_analyst):
+    userName: analyst
+    firstName: R3
+    lastName: Analyst
+    email: analyst@mail.com
+    role: Analyst
+    activated: 1
+    
+User(r3_user):
+    userName: user
+    fullName: R3 Field User
+    email: joseph.mctester@njvc.com
+    role: Field
+    activated: 1

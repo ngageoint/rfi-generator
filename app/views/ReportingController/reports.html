@@ -1,0 +1,463 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{press.script 'libs/plugins/jqplot.barRenderer.min.js', compress:false/}
+#{press.script 'libs/plugins/jqplot.categoryAxisRenderer.min.js', compress:false/}
+#{press.script 'libs/plugins/jqplot.pointLabels.min.js', compress:false/} 
+#{press.script 'libs/plugins/jqplot.dateAxisRenderer.js', compress:false/}
+#{press.script 'libs/plugins/jqplot.highlighter.min.js', compress:false/}
+#{press.script 'libs/plugins/jqplot.cursor.min.js', compress:false/}
+<script type="text/javascript">
+$(function() {
+    $("select[name='filterEvent']").bind("change", function() {
+        var cur = $(this).val();
+        qs.qs["event"] = [cur];
+        qs.qs["start"] = "";
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    $("select[name='filterGroup']").bind("change", function() {
+        var cur = $(this).val();
+        qs.qs["group"] = [cur];
+        qs.qs["start"] = "";
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    
+    $(document).on("click", "a[rel='popover']", function() {
+        var $me = $(this);
+        $("a[rel='popover']").not($me).popover("hide");
+        $me.popover("show");
+        $(document).on("click", "*", function() {
+            $me.popover("hide");
+            $(document).off("click", "*");
+        });
+        return false;
+    });
+
+    function drawByEvent()
+    {
+        $("#byevent").empty();
+        $.ajax({url: globals.route.Admin.byEvent({event: qs.qs["event"] || "", eventArchived: qs.qs["eventArchived"] || "", group:qs.qs["group"] || ""}), type: "GET"})
+        .done(function(res,status,xhr) {
+            var not_verified = [];
+            var accepted = [];
+            var on_hold = [];
+            var in_progress = [];
+            var completed = [];
+            var canceled = [];
+            var persistent = [];
+            var events = [];
+            var with_customer = [];
+            
+            if ( _.isEmpty(res)) {
+                $("#byevent").addClass("emptyGraph").append("No data available - no non-archived RFIs associated with this event filter");
+            }
+            else {
+                _.each(res, function(r) {
+                    not_verified.push(r.not_verified);
+                    accepted.push(r.accepted);
+                    in_progress.push(r.in_progress);
+                    on_hold.push(r.on_hold);
+                    completed.push(r.completed);
+                    canceled.push(r.canceled);
+                    persistent.push(r.persistent);
+                    with_customer.push(r.with_customer);
+                    events.push(r.event_name);
+                });
+                
+                var ticks  = events;
+
+                var plot1 = $.jqplot('byevent', [not_verified, accepted,in_progress, completed, canceled, persistent, on_hold, with_customer], {
+                    *{ The "seriesDefaults" option is an options object that will
+                     be applied to all series in the chart. }*
+                    stackSeries: true,
+                    seriesColors:["#cccccc", "#cc3333", "#f89406", "#468847", "#999", "#666", "#333", "#000"],
+                    seriesDefaults:{
+                        renderer:$.jqplot.BarRenderer,
+                        rendererOptions: {
+                            *{ Put a 30 pixel margin between bars. }*
+                            barMargin: 30,
+                            highlightMouseOver: false
+                        }
+                    },
+                    *{ Custom labels for the series are specified with the "label"
+                     option on the series option.  Here a series option object
+                     is specified for each series. }*
+                    series:[
+                        {label:'RFIs Pending'},
+                        {label:'RFIs Accepted'},
+                        {label:'RFIs In Work'},
+                        {label:'RFIs Completed'},
+                        {label:'RFIs Canceled'},
+                        {label:'RFIs Persistent'},
+                        {label:'RFIs On Hold'},
+                        {label:'RFIs With Customer'}
+                    ],
+                    *{ Show the legend and put it outside the grid, but inside the
+                     plot container, shrinking the grid to accomodate the legend.
+                     A value of "outside" would not shrink the grid and allow
+                     the legend to overflow the container. }*
+                    legend: {
+                        show: true,
+                        placement: 'insideGrid'
+                    },
+                    axes: {         
+                        *{ Use a category axis on the x axis and use our custom ticks. }*
+                        xaxis: {
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            label: '',
+                            ticks: ticks
+                        },
+                        *{ Pad the y axis just a little so bars can get close to, but
+                         not touch, the grid boundaries.  1.2 is the default padding. }*
+                        yaxis: {
+                            pad: 0,
+                            min: 0,
+                            label:'Total RFIs',
+                            tickInterval: 1 
+                        }
+                    }
+                });
+            }
+        })
+        .fail(function(err,xhr) {
+            alert("Error loading chart data");
+        });
+    }
+    
+    function drawByCreated() {
+        $("#bycreated").empty();
+        
+        var future = new Date();
+        $.ajax({url: globals.route.Admin.byCreated({event:qs.qs["event"], start:qs.qs["start"], end:qs.qs["end"], group:qs.qs["group"]}), type: "GET"})
+        .done(function(res,status,xhr) {
+            var series = [];
+            var events = [];
+            var labels = [];
+            
+            var colors = ["#A4AAFC", "#373E9E", "#379E69", "#ADE394", "#cccccc", "#333333", "#E37D76"];
+            var curcolor = 0;
+            if (_.isEmpty(res)) {
+                $("#bycreated").addClass("emptyGraph").append("No data - No RFIs created during this date range/event filter");
+            }
+            else if (res.length == 1) {
+                $("#bycreated").addClass("emptyGraph").css({lineHeight: "40px"}).append(_.template("Only data available is for: <%= date %><br/>RFIs Created: <%= count %>", {date:res[0].date, count: res[0].count}));
+            }
+            else {
+                _.each(res, function(r) {
+                    var e = _.find(events, function(e) {
+                        return e.name == r.event;
+                    });
+                    if ( !e) {
+                        e = {name: r.event, activities:[]};
+                        events.push(e);
+                    }
+                    e.activities.push([$.datepicker.parseDate('yy-mm-dd', r.date), r.count]);
+                });
+                
+                _.each(events, function(e) {
+                    labels.push({label: e.name, color: colors[curcolor]});
+                    curcolor += 1;
+                    curcolor %= colors.length;
+                    series.push(e.activities);
+                });
+                
+                var createdPlot = $.jqplot('bycreated', series, {
+                    *{ The "seriesDefaults" option is an options object that will 
+                     be applied to all series in the chart. }*
+                    seriesColors:["#cccccc"],
+                    seriesDefaults:{
+                        *{renderer:$.jqplot.BarRenderer, }*
+                        rendererOptions: {
+                            *{ Put a 30 pixel margin between bars. }*
+                            barMargin: 30,
+                            *{ Highlight bars when mouse button pressed.
+                             Disables default highlighting on mouse over.
+                            highlightMouseDown: true }*
+                        }
+                    },
+                    *{ Custom labels for the series are specified with the "label"
+                     option on the series option.  Here a series option object
+                     is specified for each series. }*
+                    series:labels,
+                    *{ Show the legend and put it outside the grid, but inside the
+                     plot container, shrinking the grid to accomodate the legend.
+                     A value of "outside" would not shrink the grid and allow
+                     the legend to overflow the container. }*
+                    legend: {
+                        show: true,
+                        placement: 'insideGrid'
+                    },
+                    axes: {         
+                        *{ Use a category axis on the x axis and use our custom ticks. }*
+                        xaxis: {
+                            renderer: $.jqplot.DateAxisRenderer,
+                            label: '',
+                            tickOptions: {
+                                formatString: "%Y-%m-%d %H:%M"
+                            },
+                            numberTicks: 5
+                        },
+                        *{ Pad the y axis just a little so bars can get close to, but
+                         not touch, the grid boundaries.  1.2 is the default padding. }*
+                        yaxis: {
+                            pad: 0,
+                            min: 0,
+                            label:'Number created'
+                        }
+                    },
+                    highlighter: {
+                        show: true,
+                        formatString: "%s: %s RFI(s) created",
+                        tooltipLocation: "n"
+                    },
+                    cursor: {
+                        show: false
+                    }
+                });
+            }
+        })
+        .fail(function(err,xhr) {
+            alert("Error loading chart data");
+        });
+    }
+    
+    function drawTotals() {
+        $("#byStatus").empty();
+        $.ajax({url: globals.route.Admin.rfiTotals({event: qs.qs["event"], start: qs.qs["start"], end:qs.qs["end"], group:qs.qs["group"]}), type: "GET"})
+        .done(function(res,status,xhr) {
+            var colors = ["#A4AAFC", "#373E9E", "#379E69", "#ADE394", "#cccccc", "#333333", "#E37D76"];
+            var curcolor = 0;
+            
+            var days = _.groupBy(res, function(i) {
+                return i[3];
+            });
+            
+            var dates = _.map(days, function(i,idx) {
+                return idx;
+            });
+            *{ Map-reduce to find the totals across all events for a particular day }*
+            var getTotals = function(idx) {
+               var ret = _.map(days, function(i) {
+                    return _.reduce(
+                        _.map(i, function(j) {
+                            return j[idx];
+                        }),
+                        function(memo, j) {
+                            return memo + j;
+                        }, 0);
+                    });
+                return ret;
+            }
+            
+            var tot = getTotals(0);
+            var open = getTotals(1);
+            var closed = getTotals(2);
+            
+            var labels = [];
+            labels.push({label: "Total", color: colors[0]});
+            labels.push({label: "Open", color: colors[1]});
+            labels.push({label: "Closed", color: colors[2]});
+            
+            console.log(_.zip(dates, tot));
+            console.log(_.zip(dates, open));
+            console.log(_.zip(dates, closed));
+            
+            if ( _.isEmpty(tot)) {
+                $("#byStatus").addClass("emptyGraph").append("No data - either no RFIs existed during this period (or all RFIs were archived)");
+            }
+            else if ( tot.length == 1) {
+                $("#byStatus").addClass("emptyGraph").css({lineHeight: "40px"}).append(_.template("Data only available for 1 day: <%= date %><br/>Total = <%= total %>, Open = <%= open %>, Closed = <%= closed %>",
+                    {date: dates[0], total: tot[0], open: open[0], closed: closed[0]}));
+            }
+            else {
+                var createdPlot = $.jqplot('byStatus', [_.zip(dates, tot), _.zip(dates, open), _.zip(dates, closed)], {
+                    seriesColors:["#cccccc"],
+                    seriesDefaults:{
+                        rendererOptions: {
+                            barMargin: 30,
+                        }
+                    },
+                    series: labels,
+                    legend: {
+                        show: true,
+                        placement: 'insideGrid'
+                    },
+                    axes: {         
+                        xaxis: {
+                            renderer: $.jqplot.DateAxisRenderer,
+                            label: '',
+                            tickOptions: {
+                                formatString: "%Y-%m-%d"
+                            },
+                            numberTicks: 5
+                        },
+                        yaxis: {
+                            pad: 0,
+                            min: 0,
+                            label:'Count'
+                        }
+                    },
+                    highlighter: {
+                        show: true,
+                        formatString: "%s: %s RFI(s)",
+                        tooltipLocation: "n"
+                    },
+                    cursor: {
+                        show: false
+                    }
+                });
+            }
+        })
+        .fail(function(err,xhr) {
+            alert("Error loading chart data");
+        });
+    }
+    
+    $(".printMe").click(function() {
+        window.print();
+    });
+    
+    $(".filters a").bind("click", function(a) {
+        qs.qs["start"] = [$("input[name='start']").val()];
+        qs.qs["end"] = [$("input[name='end']").val()];
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    
+    $("input[rel='archiveSwitch']").change(function() {
+        console.log($(this));
+        if ( $(this).get(0).checked) {
+            qs.qs[$(this).attr("name")] = "true";
+        }
+        else {
+            qs.qs[$(this).attr("name")] = "false";
+        }
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    
+    drawByEvent();
+    drawByCreated();
+    drawTotals();
+});
+</script>
+#{/set}
+
+%{
+
+_event = request.params.event ? Long.parseLong(request.params.event):0
+_group = request.params.group ? Long.parseLong(request.params.group):null
+if ( _event) {
+    _start = start ? start:(Date)models.Event.findById(_event).createdAt;
+}
+else {
+    _start = start ? start:(Date)models.RFI.getOldest().createdAt;
+}
+_end = end ? end: new Date()
+
+}%
+
+<ul class='nav nav-pills pull-right noprint'>
+    <li>
+        <a href='#' class='printMe btn'><i class='icon-print'></i> Print</a>
+    </li>
+    <li>
+        <a class='btn' href="@{generate('pdf', request.params.event, request.params.start, request.params.end, request.params.productArchived, request.params.assigneeArchived, request.params.eventArchived, request.params.avgArchived, request.params.group)}">PDF</a>
+    </li>
+</ul>
+<div class='adminFilters'>
+Event:
+<select name="filterEvent" data-select2enabled>
+    <option value="">All Events</option>
+    #{list items:models.Event.getAll(), as:'e'}
+        <option value="${e.id}" #{if request.params.event.equals(e.id.toString())}selected#{/if}>${e.name}</option>
+    #{/list}
+</select>
+<br/>
+Group (including child groups):
+<select name="filterGroup" data-select2enabled>
+    <option value="">All Groups</option>
+    #{list items:models.Group.all().fetch().sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name}), as:'g'}
+        <option value="${g.id}" #{if request.params.group.equals(g.id.toString())}selected#{/if}>${g.name}</option>
+    #{/list}
+</select>
+<br/>
+From: <input type="date" name="start" rel="start" value="${_start.format('yyyy-MM-dd')}"/>
+To: <input type="date" name="end" rel="end" value="${_end.format('yyyy-MM-dd')}"/>
+<a class='btn noprint' href='#' style='margin-bottom: 10px;'>Update</a>
+</div>
+
+#{helpers.collapser text:"RFIs by assignee", rel:"assignee", small:true, noClear: true, noRightMargin: true/}
+<a class='noprint' style='float: left; margin: 5px 0 0 5px;' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="RFIs by assignee" data-content="Overview of RFIs with assignees that were created over the specified period/event."><i class='icon-question-sign'></i></a>
+<input class='noprint' style='float: left; margin: 8px 0 0 5px;' type='checkbox' rel='archiveSwitch' name='assigneeArchived' #{if request.params.assigneeArchived && request.params.assigneeArchived == "true"}checked#{/if}/>
+<label class='noprint' style='float: left;margin: 5px 0 0 5px;' for='assigneeArchived'>Include archived RFIs</label><br/>
+<div style='clear:both;height:0;'></div>
+<div data-collapser='assignee' class='hide'>
+#{list items:assignees.keySet().sort(), as: 'a'}
+    <a href='mailto:${a}' style='clear: both;'>${a}:</a><br/>
+    <ul class='assigneeRFIs'>
+    #{list items:assignees.get(a), as: 'r'}
+        <li><a href='@{AdminController.edit(r.id)}'>${r.networkID} - ${r.title}</a> - ${r.status}#{if r.isOverdue()} (OVERDUE)#{/if}</li>
+    #{/list}
+    </ul>
+    <div style='clear: both; height: 100;'></div>
+#{/list}
+#{else}
+    No RFIs created during this period that are assigned
+#{/else}
+</div>
+<br/>
+<h3 style='float:left;'>Average times</h3>
+<a class='noprint' style='float: left; margin: 5px 0 0 5px;' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="Average times" data-content="Calculated the average times between status changes for RFIs over the specified event, the date range filter is used to include only RFIs created within the specified range.<br/><strong>Includes archived RFIs</strong>"><i class='icon-question-sign'></i></a>
+<input style='float: left; margin: 8px 0 0 5px;' type='checkbox' rel='archiveSwitch' name='avgArchived' #{if request.params.avgArchived && request.params.avgArchived == "true"}checked#{/if}/>
+<label style='float: left;margin: 5px 0 0 5px;' for='avgArchived'>Include archived RFIs</label><br/>
+<div style='clear: both; height: 0;'></div>
+Average time between creation and verification/approval: ${cv}<br/>
+Average time between verification/approval and assignment: ${va}<br/>
+Average time between assignment and completion: ${ac}<br/>
+Average time between creation and completion: ${cc}<br/>
+<div style='clear: both; height: 0;'></div>
+<h3 style='float: left;'>Count of product formats requested</h3>
+<a class='noprint' style='float: left; margin: 5px 0 0 5px;' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="Count of product formats requested" data-content="<strong>Not affected by date range filter</strong><br/>&quot;Count of product formats requested&quot; is a snapshot of the current (not affected by date ranges) events' product formats.<br/>"><i class='icon-question-sign'></i></a>
+<input style='float: left; margin: 8px 0 0 5px;' type='checkbox' rel='archiveSwitch' name='productArchived' #{if request.params.productArchived && request.params.productArchived == "true"}checked#{/if}/>
+<label style='float: left;margin: 5px 0 0 5px;' for='productArchived'>Include archived RFIs</label>
+<div style='clear: both; height: 0;'></div>
+#{list items:productFormats, as:'p'}
+    ${p.productFormat}: ${p.count}<br/>
+#{/list}
+#{else}
+    No RFIs created during this period/for this event
+#{/else}
+
+<hr style='clear: both;'/>
+<div class='print page-break'></div>
+<h3 style='float:left;'>RFI totals</h3>
+<a class='noprint' style='float: left; margin: 5px 0 0 5px;' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="RFI Totals" data-content="Aggregation of RFI counts over time, filtered by event/date range.<br/><strong>Does not include archived RFIs</strong>"><i class='icon-question-sign'></i></a><br/>
+<div style='clear: both; height: 0;'></div>
+<div id="byStatus">
+    <div class="noprint">
+        Loading...
+    </div>
+</div>
+
+<hr style='clear: both;'/>
+<h3 style='float: left;'>RFIs created by date</h3>
+<a style='float: left; margin: 5px 0 0 5px;' class='noprint' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="RFI created by date" data-content="A view of RFI-creation activity over time/event."><i class='icon-question-sign'></i></a><br/>
+<div style='clear: both; height: 0;'></div>
+<div id="bycreated">
+    <div class="noprint">
+        Loading...
+    </div>
+</div>
+
+<div class='print page-break'></div>
+<hr style='clear: both;'/>
+<h3 style='float: left;'>RFI statuses by event</h3>
+<a style='float: left; margin: 5px 0 0 5px;' class='noprint' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="RFI Statuses by event" data-content="<strong>Not affected by date range</strong><br/>&quot;RFI statuses by event&quot; is a current snapshot of the events' RFIs."><i class='icon-question-sign'></i></a>
+<input style='float: left; margin: 8px 0 0 5px;' type='checkbox' rel='archiveSwitch' name='eventArchived' #{if request.params.eventArchived && request.params.eventArchived == "true"}checked#{/if}/>
+<label style='float: left;margin: 5px 0 0 5px;' for='eventArchived'>Include archived RFIs</label>
+<div style='clear: both; height: 0;'></div>
+<div id="byevent">
+    <div class="noprint">
+        Loading...
+    </div>
+</div>
+

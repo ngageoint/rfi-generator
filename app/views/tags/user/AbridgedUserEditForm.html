@@ -1,0 +1,51 @@
+<fieldset>
+    <input type="hidden" value="${_u?.id}" name="u.id"/>
+    <div class='control-group'>
+        <label for="u.userName" class='control-label'>Username:</label>
+        <div class='controls'>                
+            <input type="text" disabled value="${_u?.userName}"/>
+        </div>
+    </div>
+    <hr/>
+    <div class='control-group' style='float: left;'>
+        <label for="u.firstName" class='control-label'>First name:</label>
+        <div class='controls'>                
+            <input type="text" required placeholder="Your first name *" name="u.firstName" value="${_u?.firstName}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label for="u.lastName" class='control-label'>Last name:</label>
+        <div class='controls'>                
+            <input type="text" required placeholder="Your last name *" name="u.lastName" value="${_u?.lastName}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label for="u.email" class='control-label'>Email:</label>
+        <div class='controls'>                
+            <input type="text" required email placeholder="Email *" name="u.email" value="${_u?.email}"/>
+        </div>
+    </div>
+    
+    <div class='control-group agency' style='float: left;clear: left;'>
+        <label for="u.agency" class='control-label'>Organization/Agency:</label>
+        <div class='controls'> 
+            #{select 'u.agency', items: helpers.ConfigurationHelpers.getAgencies(), value: _u?.agency, style: 'float:left;', 'data-select2enabled':''}
+                #{option ''}Select agency...#{/option}
+            #{/select}
+            <span style='float: left;margin-left: 20px; margin-right: 20px;'>- OR -</span>
+            <input type="text" name="u.agency" placeholder="Organization/Agency *" value="${helpers.ConfigurationHelpers.getAgencies().contains(_u?.agency) ? '': _u?.agency}" style='float: left;'/>               
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label for="u.openPhone" class='control-label'>Open phone #:</label>
+        <div class='controls'>                
+            <input type="text" placeholder="Open phone # *" name="u.openPhone" value="${_u?.openPhone}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label for="u.groups" class='control-label'>Group:</label>
+        <div class='controls'>                
+            <input type="text" disabled placeholder="(No group assigned)" name="u.groups" value="${_u?.groups?.collect({it.name}).join(',')}"/>
+        </div>
+    </div>
+</fieldset>

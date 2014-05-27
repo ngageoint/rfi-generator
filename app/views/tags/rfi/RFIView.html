@@ -1,0 +1,12 @@
+<p><strong>Network ID: ${_r.networkID}</strong></p>
+<p><strong>RFI subject: ${_r.title}</strong></p>
+<p>Date requested: ${_r.dateRequested.format('MM/dd/yyyy')}</p>
+#{if _r.dateRequired}
+<p>Date required: ${_r.dateRequired.format('MM/dd/yyyy')}</p>
+#{/if}
+<p>Status: ${_r.status}</p>
+<p>Organization: ${_r.organization}</p>
+<p>Instructions:</p>
+<blockquote>
+    <p>${helpers.ApplicationHelpers.sanitize(_r.instructions).raw()}</p>
+</blockquote>

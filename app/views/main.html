@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>#{get 'title'}RFI Generator#{/get}</title>
+        <meta charset="${_response_encoding}">
+        <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1,maximum-scale=1, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+        #{press.stylesheet 'bootstrap.min.css'/}
+        #{press.stylesheet 'bootstrap-responsive.min.css'/}
+        <link rel="stylesheet" media="screen" href="@{'/public/javascripts/libs/theme/default/style.tidy.css'}"/>
+        #{press.stylesheet 'jquery-ui.min.css'/}
+        #{press.stylesheet 'jquery.jqplot.css'/}
+        #{press.stylesheet 'fileuploader.css'/}
+        <link rel="stylesheet" media="screen" href="@{'/public/javascripts/libs/select2-3.4.0/select2.css'}"/>
+        #{press.compressed-stylesheet/}
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.scss'}"/>
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}"/>
+        #{press.script 'libs/OpenLayers.min.js', compress:false/}
+        #{press.script 'libs/jquery-1.10.1.min.js', compress:false/}
+        #{press.script 'libs/jquery-migrate-1.2.1.min.js', compress:false/}
+        #{press.script 'libs/excanvas.min.js', compress:false/}
+        #{press.script 'libs/jquery.jqplot.min.js', compress:false/}
+        #{press.script 'libs/jquery-ui.min.js', compress:false/}
+        #{press.script 'libs/json2.js' /}
+        #{press.script 'libs/jquery.watermark.min.js', compress:false/}
+        #{press.script 'libs/jquery-linkify.min.js', compress:false/}
+        #{press.script 'libs/jquery.timeago.js'/}
+        #{press.script 'libs/underscore-min.js', compress:false/}
+        #{press.script 'libs/bootstrap.min.js', complress:false /}
+        #{press.script 'libs/plugins/jqplot.barRenderer.min.js', compress:false/}
+        #{press.script 'libs/plugins/jqplot.categoryAxisRenderer.min.js', compress:false/}
+        #{press.script 'libs/plugins/jqplot.pointLabels.min.js', compress:false/}
+        #{press.script 'libs/fileuploader.js'/}
+        #{press.script 'libs/select2-3.4.0/select2.js'/}
+        #{press.script 'xhrShim.js' /}
+        #{press.script 'util.js' /}
+        #{press.script 'geocoding.js' /}
+        #{press.compressed-script/}
+        
+        <!--[if lt IE 9]>
+        #{script 'libs/html5.js' /}
+        <![endif]-->
+        
+        <!--[if lte IE 9]>
+        <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}"/>
+        <!<![endif]-->
+        #{get 'moreScripts' /}
+        #{helpers.tracking/}
+    </head>
+    <body>
+        #{doLayout /}
+    </body>
+</html>

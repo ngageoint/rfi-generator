@@ -1,0 +1,82 @@
+<div class='navbar' style='margin-bottom: 10px;'>
+<div class='navbar-inner'>
+<div class='container'>
+<a href='@{Application.index()}' class='nga'>
+    <img src="@{'/public/images/nga_logo_40.png'}" class='pull-left' alt="NGA"/>
+</a>
+<a class='brand' href='@{AdminController.index()}'>RFI Generator</a>
+<ul class='nav'>
+    <li #{if request.action == "AdminController.dashboard"}class='active'#{/if}>
+        <a href='@{AdminController.dashboard(session.get("event"))}'>Dashboard</a>
+    </li>
+    <li #{if request.action == "AdminController.myRFIs"}class='active'#{/if}>
+        <a href='@{AdminController.myRFIs()}?event=${session.get("event")}'>My RFIs</a>
+    </li>
+    <li #{if request.action == "AdminController.rfis"}class='active'#{/if}>
+        <a href='@{AdminController.rfis()}?filterEvent=${session.get("event")}'>RFIs</a>
+    </li>
+    #{deadbolt.restrict roles:[["Analyst"], ["Management"]]}
+    <li #{if request.action == "AdminController.events"}class='active'#{/if}>
+        <a href='@{AdminController.events()}'>Events</a>
+    </li>
+    #{/deadbolt.restrict}
+    #{deadbolt.restrict roles:[["Management"]]}
+    <li #{if request.action == "AdminController.users"}class='active'#{/if}>
+        <a href='@{AdminController.users()}'>Users</a>
+    </li>
+    #{/deadbolt.restrict}
+    <li #{if request.action == "ReportingController.reports"}class='active'#{/if}>
+        <a href='@{ReportingController.reports(session.get("event"))}'>Reports</a>
+    </li>
+    #{deadbolt.restrict roles:[["Management"]]}
+    <li #{if request.action == "AdminController.groups"}class='active'#{/if}>
+        <a href='@{AdminController.groups()}'>Groups</a>
+    </li>
+    #{/deadbolt.restrict}
+    <li>
+        <a href='@{Application.index(request.params.event ? request.params.event: session.get("event"), null, true)}'>Go to map view</a>
+    </li>
+    <li>
+        <a href='${helpers.ConfigurationHelpers.getFeedbackUrl(request)}' target="_blank">Feedback</a>
+    </li>
+    #{if _back}
+    <li>
+        <a href='${_back}'>Back</a>
+    </li>
+    #{/if}
+</ul>
+<form class='navbar-search pull-left mobileHide'>
+    <div class='controls'>
+        <div class='input-prepend input-append'>
+            <span class='add-on hideOverride' style='margin-right: -4px;'><img src="@{'/public/images/ajax-loader.gif'}" /></span>
+            <input class='search-query span2' type="text" placeholder="Search" value='${request.params.filterSearch}'/>
+            <a href='#' class='add-on submit' style='margin-left: -5px;'><i class='icon-search'></i></a>
+        </div>
+    </div>
+</form>
+<ul class='nav pull-right'>
+    %{
+        u = controllers.Master.getUser()
+    }%
+    <li>
+        <li>
+            <a href='#copyright_modal' data-toggle="modal"><i class='icon-question-sign icon-white'></i></a>
+        </li>
+    </li>
+    <li class='dropdown'>
+        <a class='dropdown-toggle' data-toggle="dropdown" href='#'>${u} - ${u.role.name}<b class='caret'></b></a>
+        <ul class='dropdown-menu'>
+            <li>
+                #{deadbolt.restrict roles:[['Analyst'], ['Field']]}   
+                <a href='@{AdminController.editMyInfo(request.path + "?" + request.querystring)}'>Edit my information</a>
+                #{/deadbolt.restrict}
+                #{deadbolt.restrict roles:[['Management']]}
+                <a href='@{AdminController.editUser(u.id, request.path + "?" + request.querystring)}'>Edit my information</a>
+                #{/deadbolt.restrict}
+            </li>
+        </ul>
+    </li>
+</ul>
+</div>
+</div>
+</div>

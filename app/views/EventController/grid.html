@@ -1,0 +1,47 @@
+<input type="hidden" name="params" value="${_params}"/>
+
+<table class='condensed-table'>
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th class='sortable'><a href='#' rel='id'><span>ID</span></a></th>
+        <th class='sortable'><a href='#' rel='name'><span>Name</span></a></th>
+        <th class='sortable'><a href='#' rel='description'><span>Description</span></a></th>
+        <th class='sortable'><a href='#' rel='createdAt'><span>Created</span></a></th>
+    </tr>
+    </thead>
+    <tbody>
+#{list items:events, as:'e'}
+    <tr class='${e_parity}'>
+        <td style='width: 70px;'>
+            <div class='btn-group'>
+                <a class='dropdown-toggle btn' data-toggle='dropdown' href='#'>Actions<b class='caret'></b></a>
+                <ul class='dropdown-menu'>
+                    <li>
+                        <a class='edit' href='@{EventController.edit(e.id)}'>Edit</a>
+                    </li>
+                    <li class='divider'></li>
+                    #{if e.region != "[]"}
+                    <li>
+                        <a class='panto' href='#' rel="${e.id}">Show on map (switch filter)</a>
+                    </li>
+                    #{/if}
+                </ul>
+            </div>
+        </td>
+        <td>${e.id}</td>
+        <td>${e.name}</td>
+        <td>${e.description}</td>
+        <td>${e.createdAt}</td>
+    </tr>
+#{/list}
+#{else}
+    <tr>
+        <td colspan="5" style='text-align: center;' class="no-items">No items to display</td>
+    </tr>
+#{/else}
+    <tr>
+        <td colspan="5">Displaying: ${totalCount}</td>
+    </tr>
+    </tbody>
+</table>

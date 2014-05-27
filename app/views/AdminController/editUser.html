@@ -1,0 +1,44 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{get 'moreScripts'/}
+<script type="text/javascript">
+$(function() {
+$(".selectMove").click(function() {
+    var $t = $(this);
+    var $src = $(_.template(".<%= src %> option:selected", {src: $t.data("src")}));
+    var $dst = $(_.template(".<%= dest %>", { dest: $t.data("dest")}));
+    $src.remove();
+    $src.each(function() {
+        var $me = $(this);
+        var pos = $me.text();
+        var $higherItems = $dst.children().filter(function() {
+            return $(this).text().toLowerCase() < pos;
+        });
+        if ( $higherItems.length == 0) {
+            $dst.prepend($me);
+        }
+        else {
+            $me.insertAfter($higherItems.last());
+        }
+    });
+    return false;
+});
+
+$("#userForm").bind("submit", function() {
+    $(".destinationGroups").find("option").attr("selected", "selected");
+});
+
+});
+</script>
+#{/set}
+
+#{form @updateUser(), id: 'userForm', enctype:'multipart/form-data', class: "edit form-horizontal adminForm"}
+<input type="hidden" name="ret" value="${ret}"/>
+#{user.AdminUserForm u:u /}
+<br/>
+<div class='input left clear'>
+    <input type="submit" value="Update User" class='btn btn-primary'/>
+    <a href='#{if ret}${ret}#{/if}#{else}@{users()}#{/else}' class='btn btn'>Cancel</a>
+</div>
+#{/form}

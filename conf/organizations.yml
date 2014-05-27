@@ -1,0 +1,32 @@
+# Include uid of people who should be admins when their account is first created (YAML format)
+# ex. - demo
+- FEMA
+- DHS
+- FBI
+- NGA
+- CIA
+- DEA
+- DHS
+- DIA
+- DOE
+- DOS
+- DOT
+- NRO
+- NSA
+- USCG
+- USACE
+- ODNI
+- NORTHCOM
+- SOCOM
+- EUCOM
+- SOUTHCOM
+- CENTCOM
+- PACOM
+- AFRICOM
+- STRATCOM
+- TRANSCOM
+- CYBERCOM
+- USARMY
+- USAF
+- USMC
+- USNAVY

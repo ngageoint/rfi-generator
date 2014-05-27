@@ -1,0 +1,14 @@
+<div class='navbar' style='margin-bottom: 8px;'>
+    <div class='navbar-inner'>
+        <div class='container'>
+            <a href='@{Application.index()}' class='nga'>
+                <img src="@{'/public/images/nga_logo_40.png'}" class='pull-left' alt="NGA"/>
+            </a>
+            <ul class='nav'>
+                #{if _back}
+                <li><a href='${_back}'>Back</a></li>
+                #{/if}
+            </ul>
+        </div>
+    </div>
+</div>

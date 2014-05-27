@@ -1,0 +1,82 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{press.script 'sortable.js'/}
+<script type="text/javascript">
+$(function() {
+    $("td").not(":first-child").linkify();
+    $("#archivedFilter").bind("change", function() {
+        window.location = $(this).find(":selected").val();
+    });
+});
+</script>
+#{/set}
+
+<div style='margin-bottom: 0;'>
+    %{
+        request.params.put("page", 0.toString())
+        q = request.params.all().clone()
+        q.remove("active")
+        q.remove("body")
+        qs = q.collect { k,v -> "$k="+v.flatten() }.join('&')
+    }%
+    <select id='archivedFilter' style='margin-bottom: 0;' data-select2enabled>
+        <option value='@{events(null)}?${qs}'>All events</option>
+        <option value='@{events(true)}&${qs}' #{if request.params.active == "true"}selected#{/if}>Non-Archived events</option>
+        <option value='@{events(false)}&${qs}' #{if request.params.active == "false"}selected#{/if}>Archived events</option>
+    </select>
+    <a class='btn' href='@{newEvent()}'><strong>New Event</strong></a>
+</div>
+
+<h2>Events <span>- (total: ${totalCount} events#{if totalPages > 0}, page ${page+1} of ${totalPages}#{/if})</span></h2>
+<table class='sortable eventList table table-striped' rel='@{events(null)}'>
+    <thead>
+        <tr>
+            <th class='sortable'><div><a href='#' rel='id'>ID</a></div></th>
+            <th class='sortable'><div><a href='#' rel='name'>Name</a></div></th>
+            <th>Group</th>
+            <th>Admins</th>
+            <th>Archived</th>
+            <th>RFIs (total/not archived/completed)</th>
+        </tr>
+    </thead>
+    <tbody>
+#{list items:events, as: 'e'}
+    <tr>
+        <td>
+            <a href='@{editEvent(e.id, request.path + "?" + request.querystring)}'>${e.networkID}</a>
+        </td>
+        <td>
+            <a href='@{editEvent(e.id, request.path + "?" + request.querystring)}'>${e.name}</a>
+        </td>
+        <td>
+            #{if e.groups}
+                #{list items:e.groups, as:'g'}
+                <a href='@{editGroup(g.id, request.path + "?" + request.querystring)}'>${g.name}</a><br/>
+                #{/list}
+            #{/if}
+        </td>
+        <td>
+            #{if e.adminEmailAddresses}
+            ${e.adminEmailAddresses.split(helpers.ApplicationHelpers.mailSplit).join("<br/>").raw()}
+            #{/if}
+        </td>
+        <td>
+            ${e.archived?.yesno("yes", "no")}
+        </td>
+        <td>
+            ${e.rfis.size()} / ${models.Event.getActiveRFICount(e)} / ${models.Event.getCompletedRFICount(e)}
+        </td>
+    </tr>
+#{/list}
+#{else}
+    <tr>
+        <td colspan="5">
+            No events found
+        </td>
+    </tr>
+#{/else}
+    </tbody>
+</table>
+
+#{helpers.pager totalPages:totalPages, curPage:page, pageSize:pageSize, route: @events() /}

@@ -1,0 +1,100 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{press.script 'sortable.js'/}
+<script type="text/javascript">
+$(function() {
+    $(".rfiList td").not(":first-child, :nth-child(2), .nolinkify").linkify();
+    $("#filterForm select[name='event']").bind("change", function() {
+        $(this).closest("form").submit();
+    });
+});
+</script>
+#{/set}
+
+<div style='margin-bottom: 0;'>
+    %{
+        request.params.put("page", 0.toString())
+        q = request.params.all().clone()
+        q.remove("active")
+        q.remove("body")
+        qs = q.collect { k,v -> "$k="+v.flatten() }.join('&')
+    }%
+    <a class='btn' href='@{newRFI()}'><strong>New RFI</strong></a>
+    #{deadbolt.restrict roles:[["Analyst"],["Management"]]}
+    <a class='btn' href='@{importExport()}'><strong>Import/export RFIs</strong></a><br/>
+    #{/deadbolt.restrict}
+    <form id='filterForm' class='form-horizontal'>
+        <div style='margin-top: 8px;'>
+            Event:
+            #{select "event", items:models.Event.getAll(), value:request.params.event, labelProperty:"name", 'data-select2enabled':''}
+                #{option value:''}All Events#{/option}
+            #{/select}
+        </div>
+    </form>
+</div>
+
+%{
+directAssigned_pending_overdue = directAssigned_pending.findAll { it.isOverdue() }
+directAssigned_active_overdue = directAssigned_active.findAll { it.isOverdue() }
+}%
+<h2>RFIs assigned to/submitted by you</h2>
+#{helpers.collapser text:"Pending", rel:"my_pending", small: true,
+    boxes: [
+        [text:directAssigned_pending.size(), subText: "Total"],
+        [text:directAssigned_pending_overdue.size(), subText: "Past", class: "red"]
+    ]/}
+<div data-collapser="my_pending">
+#{rfi.RFIList items:directAssigned_pending, rel:actionBridge.myRFIs(null), showMyIcon:false /}
+</div>
+#{helpers.collapser text:"Active", rel:"my_active", small: true,
+    boxes: [
+        [text:directAssigned_active.size(), subText: "Total"],
+        [text:directAssigned_active_overdue.size(), subText: "Past", class: "red"]
+    ]/}
+<div data-collapser="my_active">
+#{rfi.RFIList items:directAssigned_active, rel:actionBridge.myRFIs(null), showMyIcon:false /}
+</div>
+#{helpers.collapser text:"Completed", rel:"my_completed", small: true,
+    boxes: [
+        [text:directAssigned_completed.size()]
+    ]/}
+<div data-collapser="my_completed">
+#{rfi.RFIList items:directAssigned_completed, rel:actionBridge.myRFIs(null), showMyIcon:false /}
+</div>
+
+%{
+myGroups = controllers.Master.getUser().groups
+inMyGroup_pending_overdue = inMyGroup_pending.findAll { it.isOverdue() }
+inMyGroup_active_overdue = inMyGroup_active.findAll { it.isOverdue() }
+}%
+#{if myGroups}
+<hr/>
+<h2>RFIs in my group #{if myGroups}(${myGroups.collect({it.name}).join(",").raw()})#{/if}</h2>
+#{helpers.collapser text:"Pending", rel:"group_pending", small: true,
+    boxes: [
+        [text:inMyGroup_pending.size(), subText: "Total"],
+        [text:inMyGroup_pending_overdue.size(), subText: "Past", class: "red"]
+    ]/}
+<div data-collapser="group_pending">
+#{rfi.RFIList items:inMyGroup_pending, rel:actionBridge.myRFIs(null), showMyIcon:false/}
+</div>
+#{helpers.collapser text:"Active", rel:"group_active", small: true,
+    boxes: [
+        [text:inMyGroup_active.size(), subText: "Total"],
+        [text:inMyGroup_active_overdue.size(), subText: "Past", class: "red"]
+    ]/}
+<div data-collapser="group_active">
+#{rfi.RFIList items:inMyGroup_active, rel:actionBridge.myRFIs(null), showMyIcon:false/}
+</div>
+#{helpers.collapser text:"Completed", rel:"group_completed", small: true,
+    boxes: [
+        [text:inMyGroup_completed.size(), subText: "Total"]
+    ]/}
+<div data-collapser="group_completed">
+#{rfi.RFIList items:inMyGroup_completed, rel:actionBridge.myRFIs(null), showMyIcon:false/}
+</div>
+#{/if}
+#{else}
+    <h2>You aren't assigned to a group</h2>
+#{/else}

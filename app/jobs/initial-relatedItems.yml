@@ -1,0 +1,29 @@
+RelatedRFIItem(1):
+    rfi: 1
+    text: http://www.google.com <- web link
+    itemType: WEBLINK
+    createdBy: admin
+    
+RelatedRFIItem(2):
+    rfi: 1
+    text: http://www.google.com <- product url
+    itemType: PRODUCT
+    createdBy: admin
+    
+RelatedRFIItem(3):
+    rfi: 3
+    text: http://www.google.com <- web link
+    itemType: WEBLINK
+    createdBy: admin
+    
+RelatedRFIItem(4):
+    rfi: 3
+    text: http://www.google.com <- product url
+    itemType: PRODUCT
+    createdBy: admin
+    
+RelatedRFIItem(5):
+    rfi: 3
+    text: http://www.google2.com <- product url
+    itemType: PRODUCT
+    createdBy: admin

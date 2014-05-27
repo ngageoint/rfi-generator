@@ -1,0 +1,9 @@
+AdminComment(1):
+    text: Admin status 1
+    rfi: 1
+    createdBy: joseph.mctester
+
+AdminComment(2):
+    text: Admin status 2
+    rfi: 1
+    createdBy: joseph.mctester

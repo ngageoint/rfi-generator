@@ -1,0 +1,59 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{script 'sortable.js'/}
+<script type="text/javascript">
+$(function() {
+    $("td").not(":first-child").linkify();
+});
+</script>
+#{/set}
+
+<h2>Users <span>- (total: ${totalCount} users#{if totalPages > 0}, page ${page+1} of ${totalPages}#{/if})</span></h2>
+<form id='searchForm'>
+    <input type="text" name="search" value="${request.params.search}" style='margin-bottom: 0;'/>
+    <input type="submit" class='btn' value="Search"/>
+</form>
+<table class='sortable userList table table-striped' rel='@{users()}'>
+    <thead>
+        <tr>
+            <th class='sortable'><div><a href='#' rel='userName'>Username</a></div></th>
+            <th class='sortable'><div><a href='#' rel='email'>Email</a></div></th>
+            <th class='sortable'><div><a href='#' rel='firstName'>First Name</a></div></th>
+            <th class='sortable'><div><a href='#' rel='lastName'>Last Name</a></div></th>
+            <th>Role</th>
+            <th>Group</th>
+        </tr>
+    </thead>
+    <tbody>
+#{list items:users, as: 'u'}
+    <tr>
+        <td>
+            <a href='@{editUser(u.id, request.path + "?" + request.querystring)}'>${u.userName}</a>
+        </td>
+        <td>
+            ${u.email}
+        </td>
+        <td>
+            ${u.firstName}
+        </td>
+        <td>
+            ${u.lastName}
+        </td>
+        <td>
+            ${u.role.name}
+        </td>
+        <td>
+            ${u.groups.collect({it.getHierarchy()}).join("<br/>").raw()}
+        </td>
+    </tr>
+#{/list}
+#{else}
+    <tr>
+        <td colspan="5">No users found</td>
+    </tr>
+#{/else}
+    </tbody>
+</table>
+
+#{helpers.pager totalPages:totalPages, curPage: page, pageSize: pageSize, route: @users()/}

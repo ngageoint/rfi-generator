@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+    <title>#{get 'title'}RFI Generator#{/get}</title>
+        <meta charset="${_response_encoding}">
+        <meta name="viewport" content="width=1280"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+        #{get 'moreStyles' /}
+        #{press.stylesheet "bootstrap.min.css"/}
+        #{press.stylesheet "bootstrap-responsive.min.css"/}
+        #{press.stylesheet "jquery-ui.min.css"/}
+        #{press.stylesheet "jquery.jqplot.css"/}
+        #{press.stylesheet "fileuploader.css"/}
+        #{press.compressed-stylesheet /}
+        <link rel="stylesheet" href="@{'/public/stylesheets/main.scss'}"/>
+        <link rel="stylesheet" href="@{'/public/stylesheets/admin.scss'}"/>
+        <link rel="stylesheet" media="print" href="@{'/public/stylesheets/print.scss'}"/>
+        <link rel="stylesheet" media="screen" href="@{'/public/javascripts/libs/select2-3.4.0/select2.css'}"/>
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+
+        #{press.script 'libs/jquery-1.10.1.min.js', compress:false/}
+        #{press.script 'libs/jquery-migrate-1.2.1.min.js', compress:false/}
+        #{press.script 'libs/excanvas.min.js', compress:false/}
+        #{press.script 'libs/jquery.jqplot.min.js', compress:false/}
+        #{press.script 'libs/jquery-ui.min.js', compress:false/}
+        #{press.script 'libs/json2.js' /}
+        #{press.script 'libs/jquery.watermark.min.js', compress:false/}
+        #{press.script 'libs/jquery-linkify.min.js', compress:false/}
+        #{press.script 'libs/underscore-min.js', compress:false/}
+        #{press.script 'libs/bootstrap.min.js', compress:false/}
+        #{press.script 'libs/jquery.timeago.js'/}
+        #{press.script 'libs/fileuploader.js'/}
+        #{press.script 'libs/jquery.sparkline.min.js', compress:false/}
+        #{press.script 'libs/select2-3.4.0/select2.js'/}
+        #{press.script 'xhrShim.js' /}
+        #{press.script 'util.js' /}
+        #{press.script 'admin.js'/}
+        #{press.compressed-script/}
+        #{templatesAndRoutes /}
+        <!--[if lt IE 9]>
+        #{script 'libs/html5.js' /}
+        *{ Argh, tried multiple polyfills to make bootstrap responsive in IE8, no dice }*
+        <script type="text/javascript">
+            $(function() {
+                $(window).bind("resize", function() {
+                    var $t = $(window);
+                    console.log($t.width());
+                    if ( $t.width() > 1000) {
+                        $(".container").eq(0).width($t.width()-100);
+                    }
+                    else {
+                        $(".container").eq(0).width(980);
+                    }
+                });
+                
+                $(window).trigger("resize");
+            });
+        </script>
+        <![endif]-->
+        
+        <!--[if lte IE 9]>
+        <link rel="stylesheet" href="@{'/public/stylesheets/ie.css'}"/>
+        <!<![endif]-->
+        <script type="text/javascript">
+        *{ Ad-hoc collapser setup }*
+        $(function() {
+            $(".collapser").each(function(idx,el) {
+                var $ths = $(el);
+                var rel = $ths.attr("rel");
+                var $target = $ths.nextAll("*[data-collapser='"+rel+"']").eq(0);
+                
+                if ( $target.hasClass("hide")) {
+                    $ths.find(".handle").text("[+]");
+                }
+                
+                $ths.find(".handle").click(function() {
+                    if ( $target.hasClass("hide")) {
+                        $(this).text("[-]");
+                    }
+                    else {
+                        $(this).text("[+]");
+                    }
+                    $target.toggleClass("hide");
+                });
+            });
+            
+            $(".navbar-search input.search-query").autocomplete({
+                minLength: 2, 
+                customSources: [globals._rfis],
+                source: globals.search,
+                filter: globals.session.event,
+                open: function(evt,ui) {
+                    $(evt.target).parent().find(".add-on:first-child").addClass("hideOverride");
+                },
+                close: function(evt,ui) {
+                },
+                delay: 1000,
+                select: function(event, ui) {
+                    if ( ui.item.value) {
+                        var id = ui.item.otherdata.id;
+                        #{deadbolt.restrict roles:[['Analyst'], ['Management']]}
+                        window.location = globals.route.Admin.editrfi({id:id});
+                        #{/deadbolt.restrict}
+                        #{deadbolt.restrict roles:[['Field']]}
+                        window.location = globals.route.Admin.rfiListDefault() + "#" + ui.item.otherdata.networkID;
+                        #{/deadbolt.restrict}
+                    }
+                },
+                search: function(evt, ui) {
+                    $(evt.target).parent().find(".add-on:first-child").removeClass("hideOverride");
+                }
+            });
+            
+            $(".navbar-search input.search-query").watermark("Search RFIs");
+            *{  NOTE: bug in Play framework prevents correct replacement when a substring
+                of another key is used BEFORE the other, ex. page & pageSize }*
+            $("form.navbar-search").bind("submit", function() { 
+                window.location = globals.route.Admin.rfiList({
+                    active: '',
+                    pageSize: 0,
+                    page: 0,
+                    'sort': '',
+                    sortDirection: '',
+                    filterEvent: '${session.get("event")}',
+                    filterRequestorFirstName: '',
+                    filterRequestorLastName: '',
+                    filterOrganization: '',
+                    filterAssignee: '',
+                    filterSearch: $("input.search-query").val(),
+                    filterTitle: '',
+                    startDate: '',
+                    endDate: '',
+                    filterInstructions: '',
+                    filterCity: '',
+                    filterComment: '',
+                    filterID: '',
+                    filterEventName: ''
+                });
+                return false;
+            });
+            
+            globals.shimInputs($("body"));
+            
+            $("form.navbar-search .submit").click(function() {
+                $(this).closest("form").submit();
+            });
+        });
+        </script>
+        #{get 'moreScripts'/}
+        #{helpers.tracking/}
+    </head>
+    <body class="#{get 'pageClass'/}">
+        <div class='container'>
+            #{nav.adminNav back:back/}
+            
+            #{if flash.contains("success")}
+                <div class='alert alert-success alert-block'>
+                    <a href='#' class='close' data-dismiss='alert'>&times;</a>
+                    ${flash.success}
+                </div>
+            #{/if}
+            #{if flash.contains("error")}
+                <div class='alert alert-error alert-block'>
+                    <a href='#' class='close' data-dismiss='alert'>&times;</a>
+                    ${flash.error}
+                </div>
+            #{/if}
+            #{ifErrors}
+                <div class='alert alert-error alert-block'>
+                    <ul>
+                        #{errors}
+                            <li>&{error.getKey()}</li>
+                        #{/errors}
+                    </ul>
+                </div>
+            #{/ifErrors}
+            
+            #{doLayout /}
+        </div>
+        <div id='copyright_modal' class='modal hide noprint'>
+            <div class='modal-header clearfix'>
+                <a class='close' href='#' data-dismiss="modal">&times;</a>
+                <h3>RFI Generator - Information</h3>
+            </div>
+            <div class='modal-body clearfix'>
+                #{helpers.copyright/}
+            </div>
+        </div>
+    </body>
+</html>

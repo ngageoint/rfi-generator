@@ -1,0 +1,76 @@
+*{
+Requires:
+
+r - RFI reference
+rfi_parity - "odd" or "even" for the row
+
+}*
+
+%{
+
+rfi_parity = _rfi_parity
+rfi = _rfi
+
+}%
+
+<tr class='${helpers.ApplicationHelpers.statusToCssClass(rfi)}' data-rfi='${rfi.id}' data-event="${rfi.event.id}">
+    <td style='width: 70px;'>
+        <div class='btn-group'>
+            <a class='dropdown-toggle btn' data-toggle='dropdown' href='#'>Actions<b class='caret'></b></a>
+            <ul class='dropdown-menu'>
+                <li>
+                    <a class='comment' href='@{RFIController.comment(rfi.id)}' data-rfi='${rfi.id}'>Comment/View</a>
+                </li>
+                #{deadbolt.restrict roles:[['Analyst'],['Management']]}
+                <li>
+                    <a class='edit' href='@{RFIController.edit(rfi.id)}' data-rfi='${rfi.id}'>Edit</a>
+                </li>
+                <li>
+                    <a class='editAdmin' href='@{AdminController.edit(rfi.id)}' data-rfi='${rfi.id}'>Admin edit (can change spatial component)</a>
+                </li>
+                <li>
+                    <a class='delete' href='${rfi.id}'>Delete</a>
+                </li>
+                #{if rfi.status.equals(helpers.ApplicationHelpers.PENDING)}
+                <li>
+                    <a class='verify' href='@{RFIController.verify(rfi.id)}'>Mark as verified</a>
+                </li>
+                #{/if}
+                #{/deadbolt.restrict}
+                #{if rfi.nonSpatial == null || rfi.nonSpatial == false}
+                <li class='divider'></li>
+                <li>
+                    <a class='panto' href='#' data-point-lat="${rfi.coordinates?.lat}" data-point-lon="${rfi.coordinates?.lon}" data-region="${rfi.region}" data-polyline="${rfi.polyline}">Show on map</a>
+                </li>
+                #{/if}
+                %{
+                    products = rfi.relatedItems.findAll { it.itemType == "PRODUCT" }
+                }%
+                #{if products}
+                <li class='divider'></li>
+                    #{list items:products, as: 'u'}
+                        <li>
+                            <a target="_blank" href='${helpers.ApplicationHelpers.extractURL(u.text)}'>Download product: ${helpers.ApplicationHelpers.trim(u.text,50)}</a>
+                        </li>
+                    #{/list}
+                </li>
+                #{/if}
+            </ul>
+        </div>
+    </td>
+    <td width="5%"><strong>${rfi.networkID}</strong></td>
+    <td>${rfi.title}</td>
+    <td>${rfi.requestorFirstName + " " + rfi.requestorLastName}</td>
+    <td>${rfi.organization}</td>
+    <td><span class='label ${helpers.ApplicationHelpers.statusToCssClass(rfi)}'>${rfi.status}</span></td>
+    <td>${rfi.dateRequested ? rfi.dateRequested.format('MM/dd/yyyy'): ''}</td>
+    <td>${rfi.dateRequired ? rfi.dateRequired.format('MM/dd/yyyy'):''}</td>
+    <td>${rfi.dateCompleted ? rfi.dateCompleted.format('MM/dd/yyyy'): ""}</td>
+</tr>
+<tr class='rfiBottom ${helpers.ApplicationHelpers.statusToCssClass(rfi)}' style='border-top: 1px solid #eeeeee;'>
+    <td colspan="3"><strong>Instructions: </strong><a href='#' title="${rfi.title}" class='details' data-content="${helpers.ApplicationHelpers.sanitize(helpers.ApplicationHelpers.linkify(rfi.instructions))}">${helpers.ApplicationHelpers.trim(rfi.instructions, 100)}</a></td>
+    <td><strong>Requestor(s) email: </strong>${rfi.emailAddress?.split(helpers.ApplicationHelpers.mailSplit).join("<br/>").raw()}</td>
+    <td><strong>Requestor(s) phone: </strong>${rfi.phoneOpen}</td>
+    <td colspan="2"><strong>Assigned to: </strong>#{if rfi.assignedTo}${rfi.assignedTo.split(helpers.ApplicationHelpers.mailSplit).join("<br/>").raw()}#{/if}</td>
+    <td colspan="2"><strong>Event: </strong>${rfi.event?.name}</td>
+</tr>

@@ -1,0 +1,48 @@
+# You can specialize this file for each language.
+# For example, for French create a messages.fr file
+#
+r.organization = Please specify an organization
+r.title = Title is required
+r.instructions = Instructions are required
+r.dateRequested = Date requested is required
+r.productFormat = Product Format is required
+r.productSize = Product Size is required
+r.requestorFirstName = Requestor's first name is required
+r.requestorLastName = Requestor's last name is required
+r.emailAddress = Email address is required
+r.region = Polygon/polyline/coordinate required for georeferenced rfi
+r.dateRequired = The required date must be on or after the date requested
+r.emailAddressInvalid = The email address(es) provided in the 'Email Address' field is/are invalid
+r.assignedToInvalid = The email address(es) provided in the 'Assigned To' field is/are invalid
+r.country = Please select at least one country/region for the RFI
+r = Validation for creating/editing the RFI failed
+c.text = Please enter a comment
+
+g = Validation for creating/editing the Group failed
+g.name = Group name is required
+
+secure.title = RFI Generator
+
+e = Validation for creating/editing the Event failed
+e.name = Name is required
+e.region = Polygon is required
+e.description = Description is required
+e.adminEmailAddresses = Admin email address(es) is required
+
+u = Validation for creating your user failed
+u.email = Please enter a valid email address
+u.fullName = Please enter your full name
+u.openPhone = Open phone number is required
+u.agency = Agency is required
+u.emailExists = This email address is already in use
+
+password = Passwords must match
+
+rfi_json_missing = Please specify a RFI JSON export file
+group_json_missing = Please specify a Group JSON export file
+rfi_json_invalid = RFI JSON export file not valid
+group_json_invalid = Group JSON export file not valid
+
+export_ids = Please specify at least one RFI to export
+
+invalid_email = Invalid email address

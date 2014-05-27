@@ -1,0 +1,40 @@
+<html>
+    <head></head>
+    <body>
+        <pre>${helpers.EventHelpers.gatherClassificationEmailStrings(e).join("\n")}</pre><br/><br/>
+        <strong style='font-family: arial;'>${message}</strong><br/><br/>
+        <table style='font-family: arial; border: 1px solid #eee; width: 100%;' cellpadding="5" cellspacing="0">
+            <tr>
+                <td><strong>Name:</strong></td>
+                <td>${e.name}</td>
+            </tr>
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Description:</strong></td>
+                <td style='border-top:1px solid #ccc'>${e.description.split("\n").join("<br/>").raw()}</td>
+            </tr>
+            #{if e.groups && e.groups.size() > 0}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Associated group(s):</strong></td>
+                <td style='border-top:1px solid #ccc'>
+                ${e.groups.collect({it.name}).join(", ")}
+                </td>
+            </tr>
+            #{/if}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Admin Email Address(es):</strong></td>
+                <td style='border-top:1px solid #ccc'>${helpers.ApplicationHelpers.linkify(e.adminEmailAddresses).raw()}</td>
+            </tr>
+            #{if e.eventActivities && e.eventActivities.size() > 0}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Admin Email Address(es):</strong></td>
+                <td style='border-top:1px solid #ccc'>
+                ${e.eventActivities.collect({it.name}).join(", ")}
+                </td>
+            </tr>
+            #{/if}
+        </table>
+        <a style='font-family: arial;' href='${baseUrl}@{Application.index(e.id,null)}'>View the event (map view)</a><br/>
+        <a style='font-family: arial;' href='${baseUrl}@{AdminController.editEvent(e.id)}'>View the event in the admin view</a>
+        <br/><br/><pre>${helpers.EventHelpers.gatherClassificationEmailStrings(e).reverse().join("\n")}</pre>
+    </body>
+</html>

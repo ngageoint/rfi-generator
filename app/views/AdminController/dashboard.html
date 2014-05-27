@@ -1,0 +1,350 @@
+#{extends 'admin.html'/}
+
+%{
+
+//TODO: Figure out a better way to bootstrap the page so we don't
+//      have 2 sets of logic doing the same thing
+
+_event = request.params.event ? Long.parseLong(request.params.event):0
+_activity = request.params.activity ? Long.parseLong(request.params.activity):0
+_group = request.params.group ? Long.parseLong(request.params.group):null
+
+if ( _event) {
+    _start = startDate ? startDate: models.Event.findById(_event).createdAt;
+}
+else {
+    _oldestRFI = models.RFI.getOldest()
+    if ( _oldestRFI) {
+        _start = startDate ? startDate: _oldestRFI.createdAt;
+    }
+    else {
+        _start = startDate ? startDate: new Date()
+    }
+}
+_end = endDate ? endDate: new Date()
+
+_created = helpers.ReportingHelpers.RFIsCreatedOverPeriod(_start, _end, _event, _group)
+_avgValidation = helpers.ReportingHelpers.averageCreatedToValidationTime(_start, _end, _event, null, _group, false)
+if ( _avgValidation != null) {
+    _avgValidation /= 60*60
+    _avgValidation = _avgValidation.round(2)
+}
+_avgCompletion = helpers.ReportingHelpers.averageCreationToCompletionTime(_start, _end, _event, null, _group, false)
+if ( _avgCompletion != null) {
+    _avgCompletion /= 60*60
+    _avgCompletion = _avgCompletion.round(2)
+}
+
+}%
+
+<script type="text/javascript">
+var locals = {};
+locals.startDate = moment("${_start.format('yyyy-MM-dd')}");
+locals.endDate = moment("${_end.format('yyyy-MM-dd')}");
+</script>
+
+#{set 'moreScripts'}
+#{press.script 'sortable.js'/}
+#{press.script 'libs/moment.min.js', compress:false/}
+<script type="text/javascript">
+$(function() {
+    globals.shimInputs($("body"));
+    
+    $("select[name='filter']").bind("change", function() {
+        var cur = $(this).val();
+        qs.qs["event"] = [cur];
+        qs.qs["startDate"] = "";
+        qs.qs["activity"] = "";
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    
+    $("select[name='groupFilter']").bind("change", function() {
+        var cur = $(this).val();
+        qs.qs["group"] = [cur];
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    
+    $("select[name='activity']").bind("change", function() {
+        var cur = $(this).val();
+        qs.qs["activity"] = [cur];
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    
+    $("td").not(":first-child, :nth-child(2), .nolinkify").linkify();
+    
+    $(".dateSelection .btn").click(function() {
+        qs.qs["startDate"] = [$("input[name='startDate']").val()];
+        qs.qs["endDate"] = [$("input[name='endDate']").val()];
+        window.location = "?" + qs.serialize(qs.qs);
+    });
+    
+    $("#notes_modal").on("click", ".deleteAdminComment", function() {
+        var $p = $(this).closest(".alert");
+        var id = $p.attr("rel");
+        if ( confirm("Are you sure you want to permanently delete this note?")) {
+            $.ajax({url: globals.route.Admin.deleteAdminNote({id:id}), type: "DELETE"})
+            .done(function(res, status, xhr) {
+                $p.fadeOut(500, function() {
+                    $p.remove();
+                });
+            });
+        }
+        return false;
+    });
+    
+    function dateStringArray(start,end) {
+        var ret = [];
+        for ( var cur = start; cur <= end; cur.add('days', 1)) {
+            ret.push(cur.format("YYYY-MM-DD"));
+        }
+        return ret;
+    }
+    
+    function zeros(num) {
+        var ret = [];
+        for ( var i = 0; i < num; i++) {
+            ret.push(0);
+        }
+        return ret;
+    }
+    
+    function drawOverview()
+    {
+        var $overview = $(".dynamicSparkline");
+        $overview.empty();
+        var url = globals.route.Admin.dashboardOverview({event: qs.qs["event"] || "", startDate: qs.qs["startDate"] || "", endDate: qs.qs["endDate"] || "", group: qs.qs["group"] || ""});
+        $.ajax({url: url, type: "GET"})
+        .done(function(res,status,xhr) {
+            var $sl = $(".dynamicSparkline");
+            var days = _.groupBy(res, function(i) {
+                return i[3];
+            });
+            
+            var dates = _.map(days, function(i,idx) {
+                return idx;
+            });
+            *{ Map-reduce to find the totals across all events for a particular day }*
+            var getTotals = function(idx) {
+               var ret = _.map(days, function(i) {
+                    return _.reduce(
+                        _.map(i, function(j) {
+                            return j[idx];
+                        }),
+                        function(memo, j) {
+                            return memo + j;
+                        }, 0);
+                    });
+                return ret;
+            }
+            
+            var tot = getTotals(0);
+            var range = [0, _.max(tot)];
+            var open = getTotals(1);
+            var closed = getTotals(2);
+            
+            *{ Fallback in case there is no data yet }*
+            if ( dates.length == 0) {
+                $overview.append("<h2>No data available for graph</h2><p>Either no RFIs existed during this period or the reporting service hadn't run during this timeframe</p>");
+            }
+            *{ Fallback for when there's only 1 day (since graph won't display w/ only 1 point) }*
+            else if ( dates.length == 1) {
+                $overview.append(_.template(templates.oneDayOverview, { date: dates[0], total: tot[0], open:open[0], closed:closed[0]}));
+            }
+            else {
+                *{ TODO: Shim reports here w/ full date range }*
+                allDates = dateStringArray(locals.startDate, locals.endDate);
+                var _tot = zeros(allDates.length);
+                var _open = zeros(allDates.length);
+                var _closed = zeros(allDates.length);
+                var _hasData = zeros(allDates.length);
+                _.each(allDates, function(e, aidx) {
+                    var idx = _.indexOf(dates, e);
+                    if ( idx >= 0) {
+                        _tot[aidx] = tot[idx];
+                        _open[aidx] = open[idx];
+                        _closed[aidx] = closed[idx];
+                        _hasData[aidx] = 1;
+                    }
+                });
+                
+                tot = _tot;
+                open = _open;
+                closed = _closed;
+                dates = allDates;
+                *{ Draw total }*
+                $sl.sparkline(tot, {
+                    width: '360px',
+                    height: '80px',
+                    type: 'line',
+                    lineColor: "green",
+                    chartRangeMin: range[0],
+                    chartRangeMax: range[1],
+                    fillColor: false,
+                    tooltipFormatter: function(el,opt,val) {
+                        return _.template(templates.graphTooltip, { first: true, date: dates[val.x], val: val, hasData: _hasData[val.x], title: "Total"});;
+                    }
+                });
+                
+                var sl = function(data,title,color) {
+                    $sl.sparkline(data, {
+                        type: 'line',
+                        fillColor: false,
+                        composite: true,
+                        height: '80px',
+                        *{ Wow, you would assume that the range of the subsequent charts would also be the same as the base,
+                          apparently not... }*
+                        chartRangeMin: range[0],
+                        chartRangeMax: range[1],
+                        lineColor: color,
+                        defaultPixelsPerValue: 10,
+                        tooltipFormatter: function(el, opt, val) {
+                            return _.template(templates.graphTooltip, {first: false, val:val, hasData: _hasData[val.x], title: title });
+                        }
+                    });
+                }
+                
+                *{ Draw others }*
+                sl(open, "Open", "blue");
+                sl(closed, "Closed", "gray");
+                
+                $sl.prepend(_.template("<span class='startDate'><%= date %></span>", {date:dates[0]}));
+                $sl.prepend(_.template("<span class='endDate'><%= date %></span>", {date:dates[dates.length-1]}));
+            }
+        })
+        .fail(function(err,xhr) {
+            alert("Error loading chart data");
+        });
+    }
+    
+    drawOverview();
+    
+    $("#notes_modal form").bind("submit", function() {
+        var $txt = $(this).find("textarea");
+        if (!$txt.val()) {
+            alert("Please enter some note text");
+            return false;
+        }
+        
+        $.ajax({url:globals.route.Admin.createAdminNote(), type:"POST", data:{c:{text:$txt.val()}}})
+        .done(function(res,status,xhr) {
+            if ( !xhr.getResponseHeader("FormErrors")) {
+                $(".notes").prepend(_.template(templates.adminComment, { c: res}));
+                $txt.val("");
+            }
+            else {
+                alert("Error creating note");
+            }
+        });
+        
+        return false;
+    });
+});
+</script>
+#{/set}
+
+#{helpers.informationalBoxes class:'huge', boxes:[
+    [text:"${_created == null ? "0":_created}", subText:"RFIs created", class:"huge"],
+    [text:"${_avgValidation == null ? 'N/A':_avgValidation.toString() + 'h'}", subText:"Avg Validation", class:"huge"],
+    [text:"${_avgCompletion == null ? 'N/A':_avgCompletion.toString() + 'h'}", subText:"Avg Completion", class:"huge"]]/}
+<div class='dateSelection'>
+    Start Date: <input type="date" name="startDate" value="${_start.format('yyyy-MM-dd')}"/>
+    <a href='#' rel='popover' data-placement="bottom" data-trigger='manual' data-original-title="Start/End date filtering" data-content="By default, the start/end date will encompass the entire range of RFIs submitted for the selected event (if specified in the 'Event Filter' dropdown) or all events by default.  The metrics on the left/right are the only items that will recalculate when modifying the start/end date, the RFI grids below will display ALL RFIs for the selected event.  The graph on the right takes multiple snapshots per day for RFI counts and data points are &lt;strong&gt;averaged&lt;/strong&gt; over each day."><i class='icon-question-sign'></i></a><br/>
+    End Date: <input type="date" name="endDate" value="${_end.format('yyyy-MM-dd')}"/>
+    <a class='btn' href='#'>Update</a>
+</div>
+<div class='graphContainer'>
+<span class='dynamicSparkline'>
+    Loading...
+</span>
+<a href='#' rel='popover' data-placement='bottom' data-animation="false" data-trigger='manual' data-adv-position="popover-bottom-left" data-original-title="RFIs over time" data-content="Non-archived RFIs will be tracked within the graph, regardless of status:&lt;br/&gt;&lt;strong&gt;Total&lt;/strong&gt;: sum of open and closed RFIs&lt;br/&gt;&lt;strong&gt;Open RFIs&lt;/strong&gt;: includes RFIs in statuses non consider 'closed', including Pending, Assigned, Persistent and In Work&lt;br/&gt;&lt;strong&gt;Closed RFIs&lt;/strong&gt;: includes RFIs that are considered Cancelled or Completed&lt;br/&gt;&lt;strong&gt;When RFIs are archived, the total/open/closed stats will drop off&lt;/strong&gt;"><i class='icon-question-sign'></i></a>
+</div>
+
+<hr style='clear:both;margin:10px 0;'/>
+
+Event filter:
+<select name='filter' style='margin-bottom: 0;' data-select2enabled>
+    <option value=''>All RFIs</option>
+    #{list items:models.Event.getActive().sort({a,b->a.name<=>b.name}), as: 'e'}
+        <option value='${e.id}' #{if request.params.event.equals(e.id.toString())}selected#{/if}>${e.name}</option>
+    #{/list}
+</select>
+#{if _event && models.Event.findById(_event).eventActivities.size() > 0}
+Activity filter:
+    <select name='activity' style='margin-bottom: 0;' data-select2enabled>
+        <option value=''>All Activities</option>
+        #{list items:models.EventActivity.all().fetch().sort({a,b->a.name<=>b.name}), as: 'a'}
+            <option value='${a.id}' #{if request.params.activity.equals(a.id.toString())}selected#{/if}>${a.name}</option>
+        #{/list}
+    </select>
+#{/if}
+
+Group filter:
+<select name='groupFilter' style='margin-bottom: 0;' data-select2enabled>
+    <option value=''>All groups</option>
+    #{list items:models.Group.all().fetch().sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name}), as: 'g'}
+        <option value='${g.id}' #{if request.params.group.equals(g.id.toString())}selected#{/if}>${g.name}</option>
+    #{/list}
+</select>
+
+<div class='pull-right' style='margin-bottom: 0;'>
+    #{deadbolt.restrict roles:[["Analyst"], ["Management"]]}
+    <a class='btn' href='#notes_modal' data-toggle="modal"><strong>Notes</strong></a>
+    #{/deadbolt.restrict}
+    <a class='btn' href='@{newRFI()}'><strong>New RFI</strong></a>
+    #{deadbolt.restrict roles:[["Analyst"], ["Management"]]}
+    <a class='btn' href='@{importExport()}'><strong>Import/Export</strong></a>
+    #{/deadbolt.restrict}
+</div>
+<hr style='clear:both;margin:10px 0;'/>
+
+#{helpers.collapser text:"Pending", rel:"pending",
+    boxes:[
+        [text:pending_rfis.size(), subText: "Total"],
+        [text:pending_rfis.findAll {it.isOverdue()}.size(), subText: "Past", class: "red"]
+    ]/}
+<div data-collapser='pending'>
+#{rfi.RFIList items:pending_rfis, showMyIcon:true /}
+</div>
+
+%{
+overdueCount = active_rfis.findAll { it.isOverdue()}.size()
+}%
+
+#{helpers.collapser text:"Active", rel:"active",
+    boxes:[
+        [text:active_rfis.size(),subText:"Total"],
+        [text:overdueCount, subText:"Past",class:"red"]
+    ]
+/}
+<div data-collapser="active">
+#{rfi.RFIList items:active_rfis, showMyIcon:true /}
+</div>
+
+#{helpers.collapser text:"Completed", rel:"completed",
+    boxes: [
+        [text:completed_rfis.size()]
+    ]/}
+<div data-collapser="completed">
+#{rfi.RFIList items:completed_rfis, showMyIcon:true /}
+</div>
+
+<div id='notes_modal' class='modal hide noprint'>
+    <div class='modal-header clearfix'>
+        <a class='close' href='#' data-dismiss="modal">&times;</a>
+        <h3>Admin notes</h3>
+    </div>
+    <div class='modal-body clearfix'>
+        <div class='notes'>
+            #{list items:models.AdminComment.find("rfi is null").fetch().sort({a,b->b.createdAt<=>a.createdAt}), as:'c'}
+                <div class='alert alert-info' rel='${c.id}'>
+                    <button type='button' class='close deleteAdminComment'>&times;</button>
+                    #{comment.CommentView c:c/}
+                </div>
+            #{/list}
+        </div>
+        <form>
+            <label for="note">Notes:</label><textarea name="note"></textarea>
+            <input type="submit" value="Submit"/>
+        </form>
+    </div>
+</div>

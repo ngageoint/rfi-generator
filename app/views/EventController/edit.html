@@ -1,0 +1,83 @@
+<script type="text/javascript">
+$(function() {
+    // This code is executed after the HTML has been loaded into the popup
+    var $parent = $("#edit_event_modal");
+    
+    $parent.find("form").bind("submit", function() {
+        $parent.find(".destinationGroups").find("option").attr("selected", "selected");
+        var data = $(this).serialize();
+        $.ajax({
+            url: "@{EventController.update}",
+            type: "POST", data: data
+        })
+        .done(function(res,status,xhr) {
+            var $body = $parent.find(".modal-body");
+            var warning = xhr.getResponseHeader("FormErrors") ;
+            if ( warning) {
+                $body.empty();
+                $body.append(res);
+                $body.scrollTop(0);
+            }
+            else {
+                $parent.modal("hide");
+                
+                globals.exitRegionMode();
+                globals.refreshEvents().done(function(res,status,xhr) {
+                    globals.events = res;
+                    globals._refreshEvents(true);
+                });
+                globals.addToast("Event updated", "success");
+            }
+        })
+        .fail(function(err,xhr) {
+            alert("Error creating the event");
+        });
+        
+        return false;
+    });
+    
+    $parent.find(".selectMove").click(function() {
+        var $t = $(this);
+        var $src = $parent.find(_.template(".<%= src %> option:selected", {src: $t.data("src")}));
+        var $dst = $parent.find(_.template(".<%= dest %>", { dest: $t.data("dest")}));
+        $src.remove();
+        $src.each(function() {
+            var $me = $(this);
+            var pos = $me.text();
+            var $higherItems = $dst.children().filter(function() {
+                return $(this).text().toLowerCase() < pos;
+            });
+            if ( $higherItems.length == 0) {
+                $dst.prepend($me);
+            }
+            else {
+                $me.insertAfter($higherItems.last());
+            }
+        });
+        return false;
+    });
+    
+    $parent.find("select[data-select2enabled]").select2();
+});
+</script>
+
+#{ifErrors}
+<div class='alert alert-error error'>
+    <p><strong>There were some validation errors submitting the Event, please see below for details</strong></p>
+    <ul>
+    #{errors}
+        <li>&{error.getKey()}</li>
+    #{/errors}
+    </ul>
+</div>
+#{/ifErrors}
+
+#{form @EventController.update(), id: 'EventForm', enctype:'multipart/form-data', class: "form-horizontal"}
+#{event.EventForm e: e, oldGroupId:oldGroupId/}
+
+<div class='input left clear'>
+    <input type="submit" value="Update Event" class='btn btn-primary'/>
+</div>
+
+#{/form}
+

@@ -1,0 +1,100 @@
+Alabama:
+    value: AL
+Alaska:
+    value: AK
+Arizona:
+    value: AZ
+Arkansas:
+    value: AR
+California:
+    value: CA
+Colorado:
+    value: CO
+Connecticut:
+    value: CT
+Delaware:
+    value: DE
+Florida:
+    value: FL
+Georgia:
+    value: GA
+Hawaii:
+    value: HI
+Idaho:
+    value: ID
+Illinois:
+    value: IL
+Indiana:
+    value: IN
+Iowa:
+    value: IA
+Kansas:
+    value: KS
+Kentucky:
+    value: KY
+Louisiana:
+    value: LA
+Maine:
+    value: ME
+Maryland:
+    value: MD
+Massachusetts:
+    value: MA
+Michigan:
+    value: MI
+Minnesota:
+    value: MN
+Mississippi:
+    value: MS
+Missouri:
+    value: MO
+Montana:
+    value: MT
+Nebraska:
+    value: NE
+Nevada:
+    value: NV
+New Hampshire:
+    value: NH
+New Jersey:
+    value: NJ
+New Mexico:
+    value: NM
+New York:
+    value: NY
+North Carolina:
+    value: NC
+North Dakota:
+    value: ND
+Ohio:
+    value: OH
+Oklahoma:
+    value: OK
+Oregon:
+    value: OR
+Pennsylvania:
+    value: PA
+Rhode Island:
+    value: RI
+South Carolina:
+    value: SC
+South Dakota:
+    value: SD
+Tennessee:
+    value: TN
+Texas:
+    value: TX
+Utah:
+    value: UT
+Vermont:
+    value: VT
+Virginia:
+    value: VA
+Washington:
+    value: WA
+West Virginia:
+    value: WV
+Wisconsin:
+    value: WI
+Wyoming:
+    value: WY

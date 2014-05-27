@@ -1,0 +1,27 @@
+body {
+    font-family: arial, sans-serif;
+}
+
+.navbar {
+    display: none;
+}
+
+.hide {
+    display: block;
+}
+
+.noprint {
+    display: none;
+}
+
+.print {
+    display: block;
+}
+
+.page-break {
+    page-break-before: always;
+}
+
+div, ul {
+    page-break-inside: avoid;
+}

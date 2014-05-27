@@ -1,0 +1,174 @@
+<script type="text/javascript">
+$(function() {
+    var $parent = $("#edit_user_modal");
+    
+    globals.shimInputs($parent);
+    
+    $parent.find("form").bind("submit", function() {
+        $parent.find(".destinationGroups").find("option").attr("selected", "selected");
+        var data = $(this).serialize();
+        $.ajax({
+            url: "@{UserManagement.update}",
+            type: "POST", data: data
+        })
+        .done(function(res,status,xhr) {
+            var $body = $parent.find(".modal-body");
+            $body.empty();
+            $body.append(res);
+            $body.scrollTop(0);
+        })
+        .fail(function(err,xhr) {
+            alert("Error updating the user");
+        });
+        
+        return false;
+    });
+    
+    $parent.find("select[name='u.agency']").change(function() {
+        $("input[name='u.agency']").val("");
+    });
+    
+    $parent.find(".selectMove").click(function() {
+        var $t = $(this);
+        var $src = $parent.find(_.template(".<%= src %> option:selected", {src: $t.data("src")}));
+        var $dst = $parent.find(_.template(".<%= dest %>", { dest: $t.data("dest")}));
+        $src.remove();
+        $src.each(function() {
+            var $me = $(this);
+            var pos = $me.text();
+            var $higherItems = $dst.children().filter(function() {
+                return $(this).text().toLowerCase() < pos;
+            });
+            if ( $higherItems.length == 0) {
+                $dst.prepend($me);
+            }
+            else {
+                $me.insertAfter($higherItems.last());
+            }
+        });
+        return false;
+    });
+});
+</script>
+
+#{ifErrors}
+<div class='alert alert-error error'>
+    <p><strong>There were some validation errors creating your user, please see below for details</strong></p>
+    <ul>
+    #{errors}
+        <li>&{error.getKey()}</li>
+    #{/errors}
+    </ul>
+</div>
+#{/ifErrors}
+
+#{if flash.success}
+<div class='alert alert-success'>
+    <p><strong>${flash.success}</strong></p>
+</div>
+#{/if}
+
+#{form @UserManagement.update(u?.id), class:'form-horizontal'}
+<fieldset>
+    <input type="hidden" value="${u?.id}" name="u.id"/>
+    <input type="hidden" value="${u?.userName}" name="u.userName"/>
+    <div class='control-group'>
+        <label for="u.userName" class='control-label'>Username:</label>
+        <div class='controls'>                
+            <input type="text" disabled value="${u?.userName}"/>
+        </div>
+    </div>
+    
+    <hr/>
+    <div class='control-group' style='float: left;'>
+        <label for="u.firstName" class='control-label'>First name:</label>
+        <div class='controls'>                
+            <input type="text" required placeholder="Your first name *" name="u.firstName" value="${u?.firstName}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label for="u.lastName" class='control-label'>Last name:</label>
+        <div class='controls'>                
+            <input type="text" required placeholder="Your last name *" name="u.lastName" value="${u?.lastName}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label for="u.email" class='control-label'>Email:</label>
+        <div class='controls'>                
+            <input type="text" required email placeholder="Email *" name="u.email" value="${u?.email}"/>
+        </div>
+    </div>
+    
+    <div class='control-group agency' style='float: left;clear: left;'>
+        <label for="u.agency" class='control-label'>Organization/Agency:</label>
+        <div class='controls'> 
+            #{select 'u.agency', items: helpers.ConfigurationHelpers.getAgencies(), value: u?.agency, style: 'float:left;', 'data-select2enabled':''}
+                #{option ''}Select agency...#{/option}
+            #{/select}
+            <span style='float: left;margin-left: 20px; margin-right: 20px;'>- OR -</span>
+            <input type="text" name="u.agency" placeholder="Organization/Agency *" value="${helpers.ConfigurationHelpers.getAgencies().contains(u?.agency) ? '': u?.agency}" style='float: left;'/>               
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label for="u.openPhone" class='control-label'>Open phone #:</label>
+        <div class='controls'>                
+            <input type="text" placeholder="Open phone # *" name="u.openPhone" value="${u?.openPhone}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label for="u.role.id" class="control-label">Role:</label>
+        <div class="controls">
+            #{select 'u.role.id', value: u?.role?.id, items: models.ApplicationRole.all().fetch(), labelProperty: 'name', valueProperty: 'id', 'data-select2enabled':'' /}
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label for="u.groups" class='control-label'>Groups:</label>
+        <div class='controls multiselect'>
+            %{
+                _groups = u?.groups;
+                _allGroups = models.Group.all().fetch().sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name});
+            }%
+            <input type="hidden" name="u.groups.id" value=""/>
+            <div class='inp show'>
+                <table>
+                    <tr>
+                        <td align="center">
+                            Available Groups
+                        </td>
+                        <td>
+                        </td>
+                        <td align="center">
+                            Selected Groups
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select multiple class='availableGroups'>
+                                #{list items:_allGroups, as:'g'}
+                                    #{ifnot g.id in _groups.collect({it.id})}
+                                        <option value="${g.id}">${g.name}</option>
+                                    #{/ifnot}
+                                #{/list}
+                            </select>
+                        </td>
+                        <td>
+                            <a href='#' class='btn selectMove' data-src="availableGroups" data-dest="destinationGroups"><i class='icon-arrow-right'></i></a><br/>
+                            <a href='#' class='btn selectMove' data-src="destinationGroups" data-dest="availableGroups"><i class='icon-arrow-left'></i></a>
+                        </td>
+                        <td>
+                            <select multiple name='u.groups.id' class="destinationGroups">
+                                #{list items:_groups?.sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name}), as:'g'}
+                                    #{if g.id in _allGroups.collect({it.id})}
+                                        <option value="${g.id}">${g.name}</option>
+                                    #{/if}
+                                #{/list}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<input type="submit" class='btn' value='Update'/>
+#{/form}

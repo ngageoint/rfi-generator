@@ -1,0 +1,191 @@
+#{if request.params.full}
+#{extends "shell.html"/}
+#{/if}
+<script type="text/javascript">
+    $(function() {
+        var $parent = #{if request.params.full}$("body");#{/if}#{else}$("#edit_rfi_modal");#{/else}
+        
+        globals.rfiFormSetup($parent);
+        
+        var netID = "${r?.networkID}";
+        if ( netID) {
+            $parent.find(".modal-header h3").empty().append("Update RFI: " + netID);
+        }
+        else {
+            $parent.find(".modal-header h3").empty().append("Update RFI");
+        }
+        var cnt = 0;
+        
+        $parent.find(".alert").linkify();
+        
+        if ($parent.find("#file_uploader").length > 0) {
+            var uploader = new qq.FileUploader({
+                element: $parent.find("#file_uploader").get(0),
+                action: '@{RFIController.upload}',
+                params: {
+                    rfi_id: $parent.find("input[name='r.id']").val()
+                }
+            });
+        }
+        
+        $parent.find(".addEmail").click(function() {
+            var $cur = $parent.find("*[name='"+$(this).data("to-update")+"']");
+            var curVal = $parent.find("*[name='"+$(this).data("values")+"']").val();
+            if ( $cur.val().trim().indexOf(curVal) < 0) {
+                if ( $cur.val().trim() == "") {
+                    $cur.val(curVal);
+                }
+                else {
+                    $cur.val($cur.val() + "; " + curVal);
+                }
+            }
+            return false;
+        });
+        
+        $parent.find(".classification .clear").click(function() {
+            $(this).closest("tr").find("input[type='radio'], input[type='checkbox']").prop("checked", false);
+            $(this).closest("tr").find("option").prop("selected", false);
+            $(this).closest("tr").find("select").trigger("change");
+            return false;
+        });
+        
+        $parent.find("form").bind("submit", function() {
+            $parent.find(".destinationSMTSKeywords").find("option").attr("selected", "selected");
+        });
+        
+        #{if !request.params.full}
+        $parent.find("form").bind("submit", function() {
+            var data = $(this).serialize();
+            $.ajax({
+                url: "@{RFIController.update}",
+                type: "POST",
+                data: data
+            })
+            .done(function(resp,status,xhr) {
+                var warning = xhr.getResponseHeader("FormErrors");
+                
+                if ( warning) {
+                    globals._updateModalContent($parent, resp);
+                }
+                else {
+                    $parent.modal("hide");
+                    globals.refreshRFIs().done(function(res,status,xhr) {
+                        globals.rfis = res;
+                        globals._refreshRFIs();
+                    });
+                    globals.addToast("RFI updated", "success");
+                }
+            });
+            
+            return false;
+        });
+        #{/if}
+        
+        $parent.find("#geoCode").click(function() {
+            var searchstr = " ";
+            searchstr = searchstr + " " + $parent.find("input[name='r.address1']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.address2']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.cityName']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.zipcode']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.state']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.country']").val();
+            geoCode(searchstr);
+        });
+        $parent.find("#revGeo").click(function() {
+            if($parent.find("input[name='r.region']").val().length == 0){
+                revGeoCode(new google.maps.LatLng($parent.find("input[name='r.coordinates.lat']").val(), $parent.find("input[name='r.coordinates.lon']").val()));                
+            }
+            else{
+                var ctr = globals.getCenter(JSON.parse($parent.find("input[name='r.region']").val()));
+                
+                revGeoCode(new google.maps.LatLng(ctr.lat, ctr.lng));
+            }
+        });
+        $parent.find("#geocodeLocation").click(function() {
+            geoCodeCurrentLocation();
+        });
+        
+        $parent.find("a[rel='moreActivities']").click(function() {
+            $parent.find("div.moreActivities").toggleClass("hide");
+        });
+    });
+</script>
+
+#{ifErrors}
+<div class='alert alert-error error'>
+    <p><strong>There were some validation errors submitting the RFI, please see below for details</strong></p>
+    <ul>
+    #{errors}
+        <li>&{error.getKey()}</li>
+    #{/errors}
+    </ul>
+</div>
+#{/ifErrors}
+
+#{if flash.success}
+<div class='alert alert-success'>
+    <strong>${flash.success}</strong>
+</div>
+#{/if}
+
+%{
+
+cssClass = ""
+if ( r?.region) {
+    cssClass = "region";
+}
+else if ( r?.polyline) {
+    cssClass = "polyline";
+}
+else if ( r?.nonSpatial) {
+    cssClass = "nonspatial";
+}
+else {
+    cssClass = "point";
+}
+
+}%
+
+#{form @RFIController.update(), id: 'RFIForm', enctype:'multipart/form-data', class: "edit form-horizontal ${cssClass}"}
+
+#{rfi.RFIform r:r, countries: countries, events: events, states: states, oldStatus:oldStatus, oldAssigned:oldAssigned, oldGroupId:oldGroupId, createGEOQJob:createGEOQJob/}
+
+<div class='input left clear' style='margin-bottom: 15px;'>
+    <input type="submit" value="Update RFI" class='btn btn-primary'/>
+</div>
+
+#{if r.comments.size() > 0}
+    <hr/>
+    <h3>End-user Comments</h3>
+    #{list items:r.comments, as:'comment'}
+        <div class='alert alert-info'>
+        #{comment.CommentView c:comment /}
+        </div>
+    #{/list}
+#{/if}
+#{/form}
+
+#{deadbolt.restrict roles:[['Management'],['Analyst']]}
+#{if r && r.id}
+    %{
+        // TODO: Refactor
+        cnt = models.Activity.count("rfi = ?", r)
+        pageSize = 5
+    }%
+    <h3 style='float: left;'>RFI Activity#{if cnt > pageSize}<span> - only latest ${pageSize} activities are displayed <a href='#bot' rel='moreActivities'>Show/hide more activities</a></span>#{/if}</h3>
+    <ul class='unstyled' style='clear:both;'>
+    #{list items:models.Activity.find("rfi = ? order by createdAt desc, id desc", r).fetch(pageSize), as: 'a'}
+        <li>${a.message}</li>
+    #{/list}
+    </ul>
+    #{if cnt > pageSize}
+    <div id="bot" class='hide moreActivities'>
+        <ul class='unstyled' style='clear:both;'>
+        #{list items:models.Activity.find("rfi = ? order by createdAt desc, id desc", r).from(pageSize).fetch(), as: 'a'}
+            <li>${a.message}</li>
+        #{/list}
+        </ul>
+    </div>
+    #{/if}
+#{/if}
+#{/deadbolt.restrict}

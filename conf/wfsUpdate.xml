@@ -1,0 +1,22 @@
+<wfs:Transaction xmlns:wfs="http://www.opengis.net/wfs"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    service="WFS"
+    version="1.1.0"
+    xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd http://localhost:8080 http://localhost:8080/geoserver/wfs/DescribeFeatureType?version=1.1.0&amp;typename=ima:mgrs_map">
+  <wfs:Update typeName="ima:mgrs_map">
+    <wfs:Property>
+        <wfs:Name>mgrs_map:the_geom</wfs:Name>
+        <wfs:Value>
+          {0}
+        </wfs:Value>
+    </wfs:Property>
+    <ogc:Filter>
+        <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>mgrs_grid</ogc:PropertyName>
+            <ogc:Literal>{1}</ogc:Literal>
+        </ogc:PropertyIsEqualTo>
+    </ogc:Filter>
+  </wfs:Update>
+</wfs:Transaction>

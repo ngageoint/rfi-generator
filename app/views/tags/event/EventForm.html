@@ -1,0 +1,123 @@
+<input type="hidden" name="e.id" value="${_e?.id}"/>
+<input type="hidden" name="e.region" value="${_region ? _region: _e?.region}"/>
+
+<fieldset>
+    <div class='control-group required clearfix'>
+        <label class='control-label' for="e.name"><a href='#' rel='popover' data-trigger="manual" data-original-title="Event name" data-content="Choose a meaningful name for the event">Name:</a><span>*</span></label>
+        <div class='controls'>
+            <input type="text" name="e.name" required placeholder="Name *" class='span6' value="${_e?.name}"/>
+        </div>
+    </div>
+    #{if _e && _e.id}
+    <div class='control-group clearfix eventActivities'>
+        <label class='control-label' for="e.eventActivities"><a href='#' rel='popover' data-trigger="manual" data-original-title="Event Activities" data-content="Choose the activites that this event contains, used for selection within RFIs as well as filtering on the admin experience's RFI List and dashboard">Activities:</a></label>
+        <div class='controls'>
+            %{
+                act = models.EventActivity.all().fetch()
+                values = _e.eventActivities.collect({it.id})
+            }%
+            <select name="e.eventActivities.id" multiple data-select2enabled>
+                #{list items:act, as:'a'}
+                <option value="${a.id}" #{if values.contains(a.id)}selected#{/if}>${a.name}</option>
+                #{/list}
+            </select>
+            <span style='float: left;margin-left: 20px; margin-right: 20px;'>- OR add new -</span>
+            <input type="text" name="newActivity.name" placeholder="New activity name" value="${_newActivity?.name}" style='float: left;'/>
+        </div>
+    </div>
+    #{/if}
+    <div class='control-group clearfix'>
+        <label class='control-label' for="e.smtsCategory"><a href='#' rel='popover' data-trigger="manual" data-original-title="SMTS Category" data-content="Used to tie SMTS category keywords as available to RFIs for this event">SMTS Category:</a></label>
+        <div class='controls'>
+            <input type="text" name="e.smtsCategory" placeholder="SMTS Category" class='span6' value="${_e?.smtsCategory}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float:left;clear:left;'>
+        <label for="e.groups.id" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Group" data-content="Group that will be handling the request">Assigned Group/Office:</a></label>
+        <div class='controls multiselect'>
+            %{
+                _groups = _e?.groups;
+                _allGroups = models.Group.all().fetch().sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name});
+            }%
+            <input type="hidden" name="e.groups.id" value=""/>
+            <div class='inp show'>
+                <table>
+                    <tr>
+                        <td align="center">
+                            Available Groups
+                        </td>
+                        <td>
+                        </td>
+                        <td align="center">
+                            Selected Groups
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select multiple class='availableGroups'>
+                                #{list items:_allGroups, as:'g'}
+                                    #{ifnot g.id in _groups.collect({it.id})}
+                                        <option value="${g.id}">${g.name}</option>
+                                    #{/ifnot}
+                                #{/list}
+                            </select>
+                        </td>
+                        <td>
+                            <a href='#' class='btn selectMove' data-src="availableGroups" data-dest="destinationGroups"><i class='icon-arrow-right'></i></a><br/>
+                            <a href='#' class='btn selectMove' data-src="destinationGroups" data-dest="availableGroups"><i class='icon-arrow-left'></i></a>
+                        </td>
+                        <td>
+                            <select multiple name='e.groups.id' class="destinationGroups">
+                                #{list items:_groups?.sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name}), as:'g'}
+                                    #{if g.id in _allGroups.collect({it.id})}
+                                        <option value="${g.id}">${g.name}</option>
+                                    #{/if}
+                                #{/list}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class='control-group' style='float:left;clear:left;'>
+        <label class='control-label' for="e.name"><a href='#' rel='popover' data-trigger="manual" data-original-title="GeoQ Id" data-content="Used to tie a GeoQ project to this event">GeoQ ID:</a></label>
+        <div class='controls'>
+            <input type="text" name="e.geoQId" placeholder="GeoQ Id" class='span6' value="${_e?.geoQId}"/>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <div class='control-group required' style='float:left;clear:left;'>
+        <label class='control-label' for="e.description"><a href='#' rel='popover' data-trigger="manual" data-original-title="Administrator email address(es)" data-content="Specify one or more (separated by commas) emails that will received updates when a new RFI is created/status changed">Administrator email(s):</a><span>*</span></label>
+        <div class='controls'>
+            <input type="text" name="e.adminEmailAddresses" required placeholder="Admin Email Address(es) *" value="${_e.adminEmailAddresses}"/>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <div class='control-group required clearfix'>
+        <label class='control-label' for="e.description"><a href='#' rel='popover' data-trigger="manual" data-original-title="Event description" data-content="Choose a meaningful description (include details) for the event">Description:</a><span>*</span></label>
+        <div class='controls'>
+            <textarea name="e.description" required placeholder="Description *" rows="10">${_e.description}</textarea>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <div class='control-group required clearfix'>
+        <label class='control-label' for="e.archived"><a href='#' rel='popover' data-trigger="manual" data-original-title="Archived" data-content="Check to archive the event, archived events are only visible to administrators">Archived:</a></label>
+        <div class='controls'>
+            <input type="checkbox" name="e.archived" ${_e?.archived ? "checked='yes'":""}/>
+            <input type="hidden" name="e.archived" value="0"/>
+        </div>
+    </div>
+    #{if !_e?.geoQId}
+    <div class='control-group required clearfix'>
+        <label class='control-label' for="createGeoQProject"><a href='#' rel='popover' data-trigger="manual" data-original-title="Create GeoQ Project" data-content="Check to also create a GeoQ project if it doesn't already exist">Create GeoQ Project:</a></label>
+        <div class='controls'>
+            <input type="checkbox" name="createGeoQProject" ${_createGeoQProject ? "checked='yes'":""}/>
+            <input type="hidden" name="createGeoQProject" value="0"/>
+        </div>
+    </div>
+    #{/if}
+</fieldset>

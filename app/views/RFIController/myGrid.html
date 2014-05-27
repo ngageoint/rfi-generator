@@ -1,0 +1,66 @@
+<input type="hidden" name="params" value="${_params}"/>
+
+<h2>RFIs assigned to/submitted by you</h2>
+<table class='condensed-table' data-idx="0">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            *{ TODO: Going to need to figure out how to concatenate the firstname + lastname for searching }*
+            <th class='sortable'><div><a href='#' rel='id'>ID</a></div></th>
+            <th class='sortable'><div><a href='#' rel='title'>Subject</a></div></th>
+            <th class='sortable'><div><a href='#' rel='requestor'>Requestor</a></div></th>
+            <th class='sortable'><div><a href='#' rel='organization'>Organization</a></div></th>
+            <th class='sortable'><div><a href='#' rel='status'>Status</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateRequested'>Requested</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateRequired'>Required</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateCompleted'>Completed</a></div></th>
+        </tr>
+    </thead>
+    <tbody>
+#{list items:directAssigned, as:'rfi'}
+    #{rfi.RFIMapListItem rfi:rfi, rfi_parity:rfi_parity /}
+#{/list}
+#{else}
+    <tr>
+        <td colspan="9" style='text-align: center;' class="no-items">No RFIs directly assigned to you</td>
+    </tr>
+#{/else}
+    </tbody>
+</table>
+<br/>
+
+%{
+myGroups = controllers.Master.getUser().groups
+}%
+
+<h2>RFIs in my group #{if myGroups}(${myGroups.collect({it.name}).join(',')})#{/if}</h2>
+<table class='condensed-table' data-idx="1">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th class='sortable'><div><a href='#' rel='id'>ID</a></div></th>
+            <th class='sortable'><div><a href='#' rel='subject'>Subject</a></div></th>
+            <th class='sortable'><div><a href='#' rel='requestor'>Requestor</a></div></th>
+            <th class='sortable'><div><a href='#' rel='organization'>Organization</a></div></th>
+            <th class='sortable'><div><a href='#' rel='status'>Status</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateRequested'>Requested</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateRequired'>Required</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateCompleted'>Completed</a></div></th>
+        </tr>
+    </thead>
+    <tbody>
+#{list items:inMyGroup, as:'rfi'}
+    #{rfi.RFIMapListItem rfi:rfi, rfi_parity:rfi_parity/}
+#{/list}
+#{else}
+    <tr>
+        <td colspan="9" style='text-align: center;' class="no-items">No RFIs assigned to your group</td>
+    </tr>
+#{/else}
+    #{if !myGroups}
+        <tr>
+            <td colspan="9" style='text-align: center;' class="no-items"><strong>You aren't assigned to a group</strong></td>
+        </tr>
+    #{/if}
+    </tbody>
+</table>

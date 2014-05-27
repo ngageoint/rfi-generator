@@ -1,0 +1,138 @@
+<script type="text/javascript">
+  $(function() {
+  
+    $(".activity").click(function() {
+        var lat = $(this).data("point-lat");
+        var lng = $(this).data("point-lng");
+        var region = $(this).data("region");
+        var polyline = $(this).data("polyline");
+        
+        if ( lat) {
+            globals.moveTo({lat: lat, lng: lng});
+            $("#bi_modal").modal("hide");
+        }
+        else if (region) {
+            globals.moveTo({region: region});
+            $("#bi_modal").modal("hide");
+        }
+        else if ( polyline) {
+            globals.moveTo({region: polyline});
+            $("#bi_modal").modal("hide");
+        }
+        else {
+            if ( confirm("This is a non-spatial RFI, would you like to open the edit form?")) {
+                $("#bi_modal").modal("hide");
+                globals.editRFI($(this).attr("rel"));
+            }
+        }
+        
+        return false;
+    });
+  
+      function drawChart()
+      {
+        $("#chartdiv").empty();
+        $.ajax({url: "@{biActivities}", type: "GET"})
+          .done(function(res,status,xhr) {
+            var created = [];
+            var started = [];
+            var completed = [];
+            var dates = [];
+            
+            _.each(res.movement, function(r) {
+                dates.push(r.Date);
+                created.push(r.CREATED);
+                started.push(r.STARTED);
+                completed.push(r.COMPLETED);
+            });
+
+          var ticks  = dates;
+
+          var plot1 = $.jqplot('chartdiv', [created, started, completed], {
+            *{ The "seriesDefaults" option is an options object that will
+              be applied to all series in the chart. }*
+            stackSeries: true,
+            seriesColors:["#999999", "#f89406", "#468847"],
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions: {
+                  *{  Put a 30 pixel margin between bars. }*
+                  barMargin: 30,
+                  *{ Highlight bars when mouse button pressed.
+                   Disables default highlighting on mouse over. }*
+                  highlightMouseDown: true
+                  }
+            },
+            *{ Custom labels for the series are specified with the "label"
+             option on the series option.  Here a series option object
+             is specified for each series. }*
+            series:[
+                {label:'RFIs Not Started'},
+                {label:'RFIs Started'},
+                {label:'RFIs Completed'}
+            ],
+            *{ Show the legend and put it outside the grid, but inside the
+             plot container, shrinking the grid to accomodate the legend.
+             A value of "outside" would not shrink the grid and allow
+             the legend to overflow the container. }*
+            legend: {
+                show: true,
+                placement: 'insideGrid'
+            },
+            axes: {         
+                *{ Use a category axis on the x axis and use our custom ticks. }*
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    label: 'date created',
+                    ticks: ticks
+                },
+                *{ Pad the y axis just a little so bars can get close to, but
+                 not touch, the grid boundaries.  1.2 is the default padding. }*
+                yaxis: {
+                    pad: 0,
+                    label:'total RFI',
+                    tickInterval: 1 
+                  }
+                }
+        });
+    })
+        .fail(function(err,xhr) {
+            alert("Error loading chart data");
+        });
+      }
+      
+      window.setTimeout(drawChart, 1000);
+  });
+
+</script>
+<span>
+<div>
+  <div id="chartdiv" style='height: 400px; width: 100%;'>
+    loading...
+  </div>
+</div>
+<div>
+#{if id}
+Activity for RFI (${id}) <a href='@{Application.widgetBI}'>view all</a>
+#{/if}
+#{else}
+Activity for all RFIs
+#{/else}
+
+<ul>
+#{list items:activities, as:'activity'}
+    #{if activity.rfi}
+    <li><a href='#' rel='${activity.rfi.id}' data-polyline="${activity.rfi.polyline}" data-point-lat="${activity.rfi.coordinates?.lat}" data-point-lng="${activity.rfi.coordinates?.lon}" data-region="${activity.rfi.region}" class='activity'>${activity.message}</a></li>
+    #{/if}
+#{/list}
+#{else}
+    #{if id}
+    <li>No activites for RFI (${id})</li>
+    #{/if}
+    #{else}
+    <li>No activities</li>
+    #{/else}
+#{/else}
+</ul>
+</div>
+</span>

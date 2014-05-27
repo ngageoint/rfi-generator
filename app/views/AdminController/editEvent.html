@@ -1,0 +1,221 @@
+#{extends "admin.html"/}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" media="screen" href="@{'/public/javascripts/libs/theme/default/style.css'}"/>
+#{/set}
+
+#{set 'moreScripts'}
+#{press.script 'libs/OpenLayers.min.js', compress:false /}
+<script type='text/javascript'>
+$(function() {
+    globals.shimInputs($("body"));
+    
+    var mapProjection = '${play.Play.configuration.get("mapProjection")}';
+    var layer1 = '${play.Play.configuration.get("mapLayer1")}';
+    var layer2 = '${play.Play.configuration.get("mapLayer2")}';
+    var map1Type = '${play.Play.configuration.get("map1Type")}';
+    var map2Type = '${play.Play.configuration.get("map2Type")}';
+    var layer1Name = '${play.Play.configuration.get("mapLayer1Name")}';
+    var layer2Name = '${play.Play.configuration.get("mapLayer2Name")}';
+    var layer1Token = '${play.Play.configuration.get("map1Token")}';
+    var layer2Token = '${play.Play.configuration.get("map2Token")}';
+    var baseEndpoint1 = '${play.Play.configuration.get("map1Endpoint")}';
+    var baseEndpoint2 = '${play.Play.configuration.get("map2Endpoint")}';
+    
+    OpenLayers.ImgPath = "../../img/";
+
+    var map = new OpenLayers.Map({
+        div: "map",
+        *{ To illustrate on-the-fly reprojections of vector data in EPSG:4326 }*
+        projection: new OpenLayers.Projection(mapProjection),
+        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        theme: null
+    });
+    window.map = map;
+    
+    var base;
+    var base2;
+    var opt1 = {};
+    var opt2 = {};
+    if ( layer1Token) {
+        opt1.token = layer1Token;
+    }
+    if ( layer2Token) {
+        opt2.token = layer2Token;
+    }
+    opt1.layers = layer1;
+    opt2.layers = layer2;
+    if ( map1Type == "WMS") {
+        base = new OpenLayers.Layer.WMS( layer1Name, baseEndpoint1, opt1, {wrapDateLine: true});
+    }
+    else if ( map1Type == "ArcGIS93Rest") {
+        base = new OpenLayers.Layer.ArcGIS93Rest( layer1Name, baseEndpoint1, opt1);
+    }
+    map.addLayer(base);
+    if ( map2Type == "WMS") {
+        base2 = new OpenLayers.Layer.WMS( layer2Name, baseEndpoint2, opt2, { wrapDateLine: true});
+    }
+    else if ( map2Type == "ArcGIS93Rest") {
+        base2 = new OpenLayers.Layer.ArcGIS93Rest( layer2Name, baseEndpoint2, opt2);
+    }
+    map.addLayer(base2);
+    map.zoomToMaxExtent();
+    
+    var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+    
+    var events = new OpenLayers.Layer.Vector("Events", {
+        style: layer_style,
+        projection: map.displayProjection,
+        displayInLayerSwitcher: false
+    });
+    
+    map.addLayer(events);
+    
+    map.addControl(new OpenLayers.Control.MousePosition());
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    
+    var modify = new OpenLayers.Control.ModifyFeature(events);
+    map.addControl(modify);
+    modify.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
+    
+    var draw = new OpenLayers.Control.DrawFeature(events, OpenLayers.Handler.Polygon);
+    map.addControl(draw);
+    
+    var isNew = false;
+    
+    function updateInputWithGeometry(geom) {
+        geom.transform(map.projection, map.displayProjection);
+        var verts = geom.getVertices();
+        var ret = [];
+        _.each(verts, function(v) {
+            ret.push({lng: v.x, lat: v.y});
+        });
+        
+        $("input[name='e.region']").val(JSON.stringify(ret));
+        $("input[name='region']").val(JSON.stringify(ret));
+    }
+    
+    function updated(a) {
+        if ( a.modified) {
+            var geom = a.feature.geometry.clone();
+            updateInputWithGeometry(geom);
+        }
+    }
+    
+    function created(a) {
+        var geom = a.feature.geometry.clone();
+        updateInputWithGeometry(geom);
+        *{ Switch to edit mode... }*
+        draw.deactivate();
+        modify.activate();
+    }
+    
+    events.events.on({
+        "afterfeaturemodified": updated,
+        "sketchcomplete": created
+    });
+    
+    var polyToFeature = function(pts) {
+        var pointList = [];
+        _.each(pts, function(pt) {
+            pointList.push(new OpenLayers.Geometry.Point(pt.lng, pt.lat));
+        });
+        var lr = new OpenLayers.Geometry.LinearRing(pointList);
+        pointList.push(pointList[0]);
+        
+        var f = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([lr]));
+        *{ You wouldn't think you'd need to do a manual projection... }*
+        f.geometry.transform(map.displayProjection, map.projection);
+        return f;
+    }
+    
+    var polylineToFeature = function(pts) {
+        var pointList = [];
+        _.each(pts, function(pt) {
+            pointList.push(new OpenLayers.Geometry.Point(pt.lng, pt.lat));
+        });
+        var ls = new OpenLayers.Geometry.LineString(pointList);
+        var f = new OpenLayers.Feature.Vector(ls);
+        f.geometry.transform(map.displayProjection, map.projection);
+        return f;
+    }
+    
+    function createIcon(which) {
+        var size = new OpenLayers.Size(20,34);
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+        var icon = new OpenLayers.Icon(globals.assets.markers[which], size, offset);
+        return icon;
+    }
+    
+    function loadEventInMap() {
+        var region = $("input[name='e.region']").val();
+        if ( region && region != "[]") {
+            var pts = JSON.parse(region);
+            var f = polyToFeature(pts);
+            events.addFeatures([f]);
+            map.setCenter(f.geometry.getCentroid());
+            map.zoomToExtent(f.geometry.getBounds());
+        }
+        else {
+            var ct = new OpenLayers.LonLat(-94.614, 38.8).transform(map.displayProjection, map.projection);
+            map.setCenter(ct, 4);
+        }
+    }
+    
+    $(".clearRegion").click(function() {
+        if ( confirm("Are you sure you want to reset the event's feature?")) {
+            events.destroyFeatures();
+            $("input[name='e.region']").val("");
+            $("input[name='region']").val("");
+            draw.activate();
+            modify.deactivate();
+        }
+        return false;
+    });
+    
+    $(".selectMove").click(function() {
+        var $t = $(this);
+        var $src = $(_.template(".<%= src %> option:selected", {src: $t.data("src")}));
+        var $dst = $(_.template(".<%= dest %>", { dest: $t.data("dest")}));
+        $src.remove();
+        $src.each(function() {
+            var $me = $(this);
+            var pos = $me.text();
+            var $higherItems = $dst.children().filter(function() {
+                return $(this).text().toLowerCase() < pos;
+            });
+            if ( $higherItems.length == 0) {
+                $dst.prepend($me);
+            }
+            else {
+                $me.insertAfter($higherItems.last());
+            }
+        });
+        return false;
+    });
+
+    $("#eventform").bind("submit", function() {
+        $(".destinationGroups").find("option").attr("selected", "selected");
+    });
+
+    loadEventInMap();    
+    #{if !isNew}
+        modify.activate();
+    #{/if}
+    #{else}
+        isNew = true;
+        draw.activate();
+    #{/else}
+});
+</script>
+#{/set}
+
+#{form @updateEvent(), id: 'eventform', enctype:'multipart/form-data', class: "edit form-horizontal adminForm"}
+<input type="hidden" name="ret" value="${ret}"/>
+#{event.AdminEventForm e:e, isNew: isNew, showMap: !isNew, createGeoQProject: createGeoQProject, oldGroupId:oldGroupId, newActivity:newActivity /}
+<br/>
+<div class='input left clear'>
+    <input type="submit" value="${isNew?'Create Event':'Update Event'}" class='btn btn-primary'/>
+    <a href='#{if ret}${ret}#{/if}#{else}@{events()}#{/else}' class='btn btn'>Cancel</a>
+</div>
+#{/form}

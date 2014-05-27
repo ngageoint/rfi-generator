@@ -1,0 +1,14 @@
+# Include uid of people who should be admins when their account is first created (YAML format)
+# ex. - demo
+- JPG
+- PDF
+- KML
+- SHAPEFILE
+- DOCUMENT (.doc)
+- DOCUMENT (.ppt)
+- GEOTIF
+- MRSID
+- RFI
+- ADMIN
+- DESK VISIT
+- Other...

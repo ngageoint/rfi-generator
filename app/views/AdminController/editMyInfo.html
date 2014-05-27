@@ -1,0 +1,11 @@
+#{extends 'admin.html'/}
+
+#{form @updateMyInfo(), id: 'userForm', enctype:'multipart/form-data', class: "edit form-horizontal adminForm"}
+<input type="hidden" name="ret" value="${ret}"/>
+#{user.AbridgedUserEditForm u:u /}
+<br/>
+<div class='input left clear'>
+    <input type="submit" value="Update My Information" class='btn btn-primary'/>
+    <a href='#{if ret}${ret}#{/if}#{else}@{index()}#{/else}' class='btn btn'>Cancel</a>
+</div>
+#{/form}

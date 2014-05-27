@@ -1,0 +1,522 @@
+RFI(1):
+    title: Here is a pretty long title for an RFI - Lorem ipsum dolor sit amet
+    instructions: http://www.google.com email@atest.com Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sodales, nulla ac facilisis semper, justo felis egestas magna, ut consequat ipsum orci ut libero. Aliquam vitae laoreet arcu. Pellentesque laoreet tortor tristique nisl eleifend luctus fringilla magna ultricies. Curabitur eget purus a enim mollis convallis quis id ligula. Aenean a nisi eu purus aliquet tristique. Etiam rutrum fermentum leo, ornare tempor lacus ultrices pretium. Pellentesque vitae odio lectus. Curabitur interdum, ligula viverra sagittis laoreet, ligula dui fringilla neque, in ultrices enim nulla quis arcu. Vivamus sit amet purus rhoncus enim dapibus fringilla vitae vitae metus. Aliquam ac sodales est. Quisque eget dolor massa. Duis tempor auctor lacus ultrices volutpat. Donec magna justo, auctor eget cursus et, congue vitae justo. Praesent mattis semper lacus et mattis. Etiam eros justo, dictum ut vehicula at, volutpat vitae odio. Mauris pulvinar, dolor eu consequat consequat, tortor elit ultrices diam, vestibulum tristique dolor augue ut purus.
+    dateRequested: 1/1/2012
+    dateRequired: 1/10/2012
+    requestorFirstName: Requestor
+    requestorLastName: 1
+    emailAddress: requestor@email.com, requestor2@email.com
+    organization: FEMA
+    cityName: City 1
+    country: <US>
+    assignedTo:
+    BENumber: 1
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: false
+    status: Accepted
+    archived: false
+    event: 2
+    group: 1
+    taskNumber: SeventyBlue
+    region: '[{"lat":38.93822942352003,"lng":-94.70568923950196},{"lat":38.931552992480995,"lng":-94.63204650878907},{"lat":38.912321359564494,"lng":-94.63410644531251},{"lat":38.899764565101776,"lng":-94.67702178955079},{"lat":38.912054216850116,"lng":-94.69890861511232},{"lat":38.92220493312964,"lng":-94.70435886383058}]'
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-03-26
+    createdBy: joseph.mctester
+    
+RFI(2):
+    title: Test RFI 2
+    instructions: |
+        http://www.google.com test@email.com test.test2@email.com
+        
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Pellentesque sodales, nulla ac facilisis semper, justo felis egestas magna,
+        ut consequat ipsum orci ut libero. Aliquam vitae laoreet arcu. Pellentesque
+        laoreet tortor tristique nisl eleifend luctus fringilla magna ultricies.
+        Curabitur eget purus a enim mollis convallis quis id ligula.
+        
+        Aenean a nisi eu purus aliquet tristique. Etiam rutrum fermentum leo,
+        ornare tempor lacus ultrices pretium. Pellentesque vitae odio lectus.
+        Curabitur interdum, ligula viverra sagittis laoreet, ligula dui fringilla neque,
+        in ultrices enim nulla quis arcu. Vivamus sit amet purus rhoncus enim dapibus
+        fringilla vitae vitae metus. Aliquam ac sodales est. Quisque eget dolor massa.
+        Duis tempor auctor lacus ultrices volutpat. Donec magna justo, auctor eget
+        cursus et, congue vitae justo. Praesent mattis semper lacus et mattis.
+        
+        Etiam eros justo, dictum ut vehicula at, volutpat vitae odio. Mauris pulvinar,
+        dolor eu consequat consequat, tortor elit ultrices diam, vestibulum tristique dolor augue ut purus.
+    dateRequested: 1/2/2012
+    dateRequired: 1/5/2012
+    requestorFirstName: Requestor
+    requestorLastName: 2
+    emailAddress: joseph.mctester@njvc.com
+    organization: FEMA
+    address1: 123 Test Street
+    address2: APT B
+    cityName: City 2
+    state: MO
+    zipcode: 63125
+    country: <US>
+    BENumber: 2
+    coordinates:
+        lat: 39.2667304257872
+        lon: -94.8988082885742
+    sendEmailToRequestor: true
+    status: On Hold
+    assignedTo: assigned1@mail.com, assigned3@mail.com, joseph.mctester@njvc.com
+    archived: false
+    event: 2
+    group: 2
+    classification: Unclassified
+    SIControl: true
+    SCIControl: COMINT, SCI
+    COMINTControls: GAMMA, 
+    specialAccess: true
+    FGI: true
+    foreignGovernment: DZA, ATG, UZB, 
+    dissemination: FISA, IMCON, PROPIN, REL TO, SENSITIVE INFORMATION, 
+    relTo: CFUP, FVEY, ISAF NATO, NATO, 
+    relToGovt: AND, ECU, 
+    productFormat: SHAPEFILE
+    productSize: 1
+    createdAt: 2012-03-25
+    createdBy: admin
+    
+RFI(3):
+    title: Test RFI 3
+    instructions: |
+        http://www.google.com test@email.com test.test2@email.com
+        
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Pellentesque sodales, nulla ac facilisis semper, justo felis egestas magna,
+        ut consequat ipsum orci ut libero. Aliquam vitae laoreet arcu. Pellentesque
+        laoreet tortor tristique nisl eleifend luctus fringilla magna ultricies.
+        Curabitur eget purus a enim mollis convallis quis id ligula.
+        
+        Aenean a nisi eu purus aliquet tristique. Etiam rutrum fermentum leo,
+        ornare tempor lacus ultrices pretium. Pellentesque vitae odio lectus.
+        Curabitur interdum, ligula viverra sagittis laoreet, ligula dui fringilla neque,
+        in ultrices enim nulla quis arcu. Vivamus sit amet purus rhoncus enim dapibus
+        fringilla vitae vitae metus. Aliquam ac sodales est. Quisque eget dolor massa.
+        Duis tempor auctor lacus ultrices volutpat. Donec magna justo, auctor eget
+        cursus et, congue vitae justo. Praesent mattis semper lacus et mattis.
+        
+        Etiam eros justo, dictum ut vehicula at, volutpat vitae odio. Mauris pulvinar,
+        dolor eu consequat consequat, tortor elit ultrices diam, vestibulum tristique dolor augue ut purus.
+    dateRequested: 1/2/2012
+    dateRequired: 1/10/2012
+    dateCompleted: 1/10/2012
+    requestorFirstName: Requestor
+    requestorLastName: 3
+    emailAddress: joseph.mctester@njvc.com
+    organization: FEMA
+    address1: 123 Test Street
+    address2: APT B
+    cityName: City 2
+    state: MO
+    zipcode: 63125
+    country: <US>
+    BENumber: 3
+    coordinates:
+        lat: 25.780145554633
+        lon: -80.4112176509857
+    sendEmailToRequestor: false
+    status: Completed
+    assignedTo: assigned3@mail.com
+    archived: false
+    event: 1
+    group: 1
+    productFormat: GEOTIF
+    productSize: 1
+    createdBy: joseph.mctester
+    
+RFI(4):
+    title: Test RFI 4
+    instructions: Test instructions 4
+    dateRequested: 1/4/2012
+    dateRequired: 1/14/2012
+    requestorFirstName: Requestor
+    requestorLastName: 4
+    emailAddress: requestor4@email.com
+    organization: FEMA
+    cityName: City 4
+    country: <US>, <AL>, <DZ>
+    BENumber: 4
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: false
+    status: Completed
+    assignedTo: assigned4@mail.com, assigned5@mail.com
+    archived: false
+    event: 1
+    region: '[{"lat":26.652406443156192,"lng":-80.18050476036069},{"lat":26.59347743906202,"lng":-80.05690856895444},{"lat":26.399288626485607,"lng":-80.09536071739194},{"lat":26.379605660931936,"lng":-80.17501159629819}]'
+    productFormat: Non-standard type
+    productSize: 1
+    createdBy: joseph.mctester
+    
+RFI(5):
+    title: Test RFI 5
+    instructions: Test instructions 5
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: 5
+    emailAddress: requestor5@email.com
+    organization: FEMA
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 25.8024023869187
+        lon: -80.2024774166107
+    sendEmailToRequestor: true
+    status: In Work
+    assignedTo: assigned5@mail.com
+    archived: false
+    event: 1
+    productFormat: JPG
+    productSize: 1
+    createdBy: joseph.mctester
+    
+RFI(6):
+    title: Test RFI 6
+    instructions: Test instructions 6
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: 6
+    emailAddress: requestor5@email.com
+    organization: FEMA
+    cityName: City 6
+    country: <US>
+    BENumber: 6
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: In Work
+    assignedTo: assigned6@mail.com
+    archived: false
+    polyline: '[{"lat":39.64738348186445,"lng":-94.11740570068355},{"lat":39.22099736976165,"lng":-93.96359710693355},{"lat":39.22312514980992,"lng":-94.6474960327148},{"lat":39.063362735286276,"lng":-95.15012054443355}]'
+    event: 1
+    productFormat: JPG
+    productSize: 1
+    createdBy: joseph.mctester   
+    
+RFI(7):
+    title: Test RFI 7
+    instructions: Test instructions 7
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 26.8024023869187
+        lon: -80.2024774166107
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    
+RFI(8):
+    title: Test RFI 8
+    instructions: Test instructions 8
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Joe
+    requestorLastName: Meilinger
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+
+RFI(9):
+    title: Test RFI 9
+    instructions: Test instructions 9
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: Meilinger
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    
+RFI(10):
+    title: Test RFI 10
+    instructions: Test instructions 10
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Steve
+    requestorLastName: McSteve
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    
+RFI(11):
+    title: Test RFI 11
+    instructions: Test instructions 11
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    
+RFI(12):
+    title: Test RFI 12
+    instructions: Test instructions 12
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productSize: 1
+    createdAt: 1/1/2012
+    createdBy: joseph.mctester
+    
+RFI(12):
+    title: Test RFI 12
+    instructions: Test instructions 12
+    dateRequested: 1/5/2012
+    dateRequired: 12/1/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 1/1/2012
+    createdBy: joseph.mctester
+    
+RFI(13):
+    title: Test RFI 13
+    instructions: Test instructions 13
+    dateRequested: 1/5/2012
+    dateRequired: 12/20/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: In Work
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    
+RFI(14):
+    title: Test RFI 14
+    instructions: Test instructions 14
+    dateRequested: 12/15/2012
+    dateRequired: 12/25/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Pending
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-12-15
+    createdBy: joseph.mctester
+    
+RFI(15):
+    title: Test RFI 15
+    instructions: Test instructions 15
+    dateRequested: 1/5/2012
+    dateRequired: 1/17/2012
+    dateCompleted: 1/20/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Completed
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    
+RFI(16):
+    title: Test RFI 16
+    instructions: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sodales, nulla ac facilisis semper, justo felis egestas magna, ut consequat ipsum orci ut libero. Aliquam vitae laoreet arcu. Pellentesque laoreet tortor tristique nisl eleifend luctus fringilla magna ultricies. Curabitur eget purus a enim mollis convallis quis id ligula. Aenean a nisi eu purus aliquet tristique. Etiam rutrum fermentum leo, ornare tempor lacus ultrices pretium. Pellentesque vitae odio lectus. Curabitur interdum, ligula viverra sagittis laoreet, ligula dui fringilla neque, in ultrices enim nulla quis arcu. Vivamus sit amet purus rhoncus enim dapibus fringilla vitae vitae metus. Aliquam ac sodales est. Quisque eget dolor massa. Duis tempor auctor lacus ultrices volutpat. Donec magna justo, auctor eget cursus et, congue vitae justo. Praesent mattis semper lacus et mattis. Etiam eros justo, dictum ut vehicula at, volutpat vitae odio. Mauris pulvinar, dolor eu consequat consequat, tortor elit ultrices diam, vestibulum tristique dolor augue ut purus.
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    dateCompleted: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: Completed
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: true
+    event: 2
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    
+RFI(17):
+    title: Test RFI 17
+    instructions: Pentagon NST - EVENT X
+    dateRequested: 1/5/2012
+    dateRequired: 1/15/2012
+    dateCompleted: 1/15/2012
+    requestorFirstName: Requestor
+    requestorLastName: 7
+    emailAddress: requestor7@email.com
+    organization: FEMA
+    nonSpatial: true
+    cityName: City 5
+    country: <US>
+    BENumber: 5
+    coordinates:
+        lat: 0
+        lon: 0
+    sendEmailToRequestor: true
+    status: With Customer
+    assignedTo: assigned7@mail.com, assigned8@mail.com
+    archived: false
+    event: 4
+    productFormat: JPG
+    productSize: 1
+    createdAt: 2012-01-01
+    createdBy: joseph.mctester
+    eventActivity: 1
+    

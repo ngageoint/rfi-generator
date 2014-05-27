@@ -1,0 +1,5 @@
+%{
+t = _c.createdAt.format("yyyy-MM-dd HH:mm:ssZ")
+}%
+<h4>${_c.text}</h4>
+<p>Created by: ${_c.createdBy} <abbr class='timeago' title='${t}'>${t}</abbr>#{if _full} (${t})#{/if}</p>

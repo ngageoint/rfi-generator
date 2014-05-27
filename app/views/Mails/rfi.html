@@ -1,0 +1,168 @@
+<html>
+    <head></head>
+    <body>
+        <pre>${helpers.RFIHelpers.gatherClassificationEmailStrings(r).join("\n")}</pre><br/><br/>
+        <strong style='font-family: arial;'>${message}</strong><hr/><br/>
+        <table style='font-family: arial; border: 1px solid #eee; width: 100%;' cellpadding="5" cellspacing="0">
+            <tr>
+                <td><strong>Event:</strong></td>
+                <td>${r.event.name}</td>
+            </tr>
+            #{if r.eventActivity}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Event activity:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.eventActivity.name}</td>
+            </tr>
+            #{/if}
+            #{if r.networkID}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Network ID:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.networkID}</td>
+            </tr>
+            #{/if}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Title:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.title}</td>
+            </tr>
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Instructions:</strong></td>
+                <td style='border-top:1px solid #ccc'>${helpers.ApplicationHelpers.linkify(r.instructions.split("\n").join("<br/>")).raw()}</td>
+            </tr>
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Status:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.status}</td>
+            </tr>
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Date Requested:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.dateRequested.format("yyyy-MM-dd")}</td>
+            </tr>
+            #{if r.dateRequired}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Date Required:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.dateRequired.format("yyyy-MM-dd")}</td>
+            </tr>
+            #{/if}
+            #{if r.dateCompleted}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Date Completed:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.dateCompleted.format("yyyy-MM-dd")}</td>
+            </tr>
+            #{/if}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Product Format:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.productFormat}</td>
+            </tr>
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Requestor:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.requestorFirstName + " " + r.requestorLastName}</td>
+            </tr>
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Email Address(es):</strong></td>
+                <td style='border-top:1px solid #ccc'>${helpers.ApplicationHelpers.linkify(r.emailAddress).raw()}</td>
+            </tr>
+            #{if r.assignedTo}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Assigned To:</strong></td>
+                <td style='border-top:1px solid #ccc'>${helpers.ApplicationHelpers.linkify(r.assignedTo).raw()}</td>
+            </tr>
+            #{/if}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Organization:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.organization}</td>
+            </tr>
+            #{if r.phoneOpen}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Phone (OPEN):</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.phoneOpen}</td>
+            </tr>
+            #{/if}
+            #{if r.phoneSecure}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Phone (SECURE):</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.phoneSecure}</td>
+            </tr>
+            #{/if}
+            #{if r.address1}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Address Line 1:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.address1}</td>
+            </tr>
+            #{/if}
+            #{if r.address2}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Address Line 2:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.address2}</td>
+            </tr>
+            #{/if}
+            #{if r.cityName}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>City Name:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.cityName}</td>
+            </tr>
+            #{/if}
+            #{if r.state}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>State:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.state}</td>
+            </tr>
+            #{/if}
+            #{if r.zipcode}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Zipcode:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.zipcode}</td>
+            </tr>
+            #{/if}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Country/Countries:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.country.replaceAll(/</,'').replaceAll(/>/,'')}</td>
+            </tr>
+            #{if r.taskNumber}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Task Number:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.taskNumber}</td>
+            </tr>
+            #{/if}
+            #{if r.receivedVia}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Received Via:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.receivedVia}</td>
+            </tr>
+            #{/if}
+            #{if r.group}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Group:</strong></td>
+                <td style='border-top:1px solid #ccc'>${r.group}</td>
+            </tr>
+            #{/if}
+            %{
+                products = r.relatedItems.findAll { it.itemType == "PRODUCT"}.sort({b,a->a.createdAt<=>b.createdAt})
+            }%
+            #{if products}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Associated Products:</strong></td>
+                <td style='border-top:1px solid #ccc'>
+                #{list items:products, as:'p'}
+                    ${helpers.ApplicationHelpers.linkify(p.text).raw()}<br/>
+                #{/list}
+                </td>
+            </tr>
+            #{/if}
+            %{
+                links = r.relatedItems.findAll { it.itemType == "WEBLINK"}.sort({b,a->a.createdAt<=>b.createdAt})
+            }%
+            #{if links}
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Associated Links:</strong></td>
+                <td style='border-top:1px solid #ccc'>
+                #{list items:links, as:'p'}
+                    ${helpers.ApplicationHelpers.linkify(p.text).raw()}<br/>
+                #{/list}
+                </td>
+            </tr>
+            #{/if}
+        </table>
+        <a style='font-family: arial;' href='${baseUrl}@{Application.index(null,r.id)}#popup'>View the RFI</a><br/>
+        <a style='font-family: arial;' href='${baseUrl}@{AdminController.edit(r.id)}'>View the RFI in the admin view</a>
+        <br/><br/><pre>${helpers.RFIHelpers.gatherClassificationEmailStrings(r).reverse().join("\n")}</pre>
+    </body>
+</html>

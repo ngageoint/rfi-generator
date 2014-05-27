@@ -1,0 +1,21 @@
+<html>
+    <head></head>
+    <body>
+        <pre>${helpers.RFIHelpers.gatherClassificationEmailStrings(c.rfi).join("\n")}</pre><br/><br/>
+        <strong style='font-family: arial;'>A comment was created for RFI: ${c.rfi.title}</strong><br/><br/>
+        <table style='font-family: arial; border: 1px solid #eee; width: 100%;' cellpadding="5" cellspacing="0">
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Comment text:</strong></td>
+                <td style='border-top:1px solid #ccc'>${helpers.ApplicationHelpers.sanitize(helpers.ApplicationHelpers.linkify(c.text)).raw()}</td>
+            </tr>
+            <tr>
+                <td style='border-top:1px solid #ccc' valign="top"><strong>Created by:</strong></td>
+                <td style='border-top:1px solid #ccc'>
+                ${c.createdBy} @ ${helpers.ApplicationHelpers.formatDate(c.createdAt)}
+                </td>
+            </tr>
+        </table>
+        <a style='font-family: arial;' href='${baseUrl}@{Application.index(null,c.rfi.id)}#popup'>View the RFI (on map)</a>
+        <br/><br/><pre>${helpers.RFIHelpers.gatherClassificationEmailStrings(c.rfi).reverse().join("\n")}</pre>
+    </body>
+</html>

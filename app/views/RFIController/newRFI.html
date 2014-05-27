@@ -1,0 +1,111 @@
+#{if request.params.full}
+#{extends 'shell.html'/}
+#{/if}
+<script type="text/javascript">
+    $(function() {
+        var $parent = #{if request.params.full}$("body");#{/if}#{else}$("#new_rfi_modal");#{/else}
+        globals.rfiFormSetup($parent);
+        
+        $parent.find("form").bind("submit", function() {
+            $parent.find(".destinationSMTSKeywords").find("option").attr("selected", "selected");
+        });
+        
+        *{ On new RFI creation, just redirect back to the site's homepage for now }*
+        #{if !request.params.full}
+        $parent.find("form").bind("submit", function() {
+            var data = $(this).serialize();
+            $.ajax({
+                url: "@{RFIController.create}",
+                type: "POST", data: data
+            })
+            .done(function(resp, status, xhr) {
+                var warning = xhr.getResponseHeader("FormErrors");
+                var body = $parent.find(".modal-body");
+                
+                if ( warning) {
+                    body.empty();
+                    body.append(resp);
+                    body.scrollTop(0);
+                }
+                else {
+                    $parent.modal("hide");
+                    globals.exitRegionMode();
+                    globals.refreshRFIs().done(function(res,status,xhr) {
+                        globals.rfis = res;
+                        globals._refreshRFIs();
+                    });
+                    globals.addToast("RFI created", "success");
+                }
+            })
+            .fail(function(a,b,c) {
+                alert("Error creating new RFI");
+            });
+            return false;
+        });
+        #{/if}
+        
+        $parent.find(".classification .clear").click(function() {
+            $(this).closest("tr").find("input[type='radio'], input[type='checkbox']").prop("checked", false);
+            $(this).closest("tr").find("option").prop("selected", false);
+            return false;
+        });
+        
+        $parent.find(".addEmail").click(function() {
+            var $cur = $parent.find("*[name='"+$(this).data("to-update")+"']");
+            var curVal = $parent.find("*[name='"+$(this).data("values")+"']").val();
+            if ( $cur.val().trim().indexOf(curVal) < 0) {
+                if ( $cur.val().trim() == "") {
+                    $cur.val(curVal);
+                }
+                else {
+                    $cur.val($cur.val() + "; " + curVal);
+                }
+            }
+            return false;
+        });
+        
+        $parent.find("#geoCode").click(function() {
+            var searchstr = " ";
+            searchstr = searchstr + " " + $parent.find("input[name='r.address1']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.address2']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.cityName']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.zipcode']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.state']").val();
+            searchstr = searchstr + " " + $parent.find("input[name='r.country']").val();
+            geoCode(searchstr);
+        });
+        $parent.find("#revGeo").click(function() {
+            if($parent.find("input[name='r.region']").val().length == 0){
+                revGeoCode(new google.maps.LatLng($parent.find("input[name='r.coordinates.lat']").val(), $parent.find("input[name='r.coordinates.lon']").val()));                
+            }
+            else{
+                var ctr = globals.getCenter(JSON.parse($parent.find("input[name='r.region']").val()));
+                
+                revGeoCode(new google.maps.LatLng(ctr.lat, ctr.lng));
+            }
+        });
+        $parent.find("#geocodeLocation").click(function() {
+            geoCodeCurrentLocation();
+        });
+    });
+</script>
+
+#{ifErrors}
+<div class='alert alert-error error'>
+    <p><strong>There were some validation errors submitting the RFI, please see below for details</strong></p>
+    <ul>
+    #{errors}
+        <li>&{error.getKey()}</li>
+    #{/errors}
+    </ul>
+</div>
+#{/ifErrors}
+
+#{form @RFIController.create(), id: 'RFIForm', enctype:'multipart/form-data', class: "new form-horizontal"}
+#{rfi.RFIform countries: countries, events: events, r: r, isNew: true, states: states /}
+
+<div class='input left clear'>
+    <input type="submit" value="Create RFI" class='btn btn-primary'/>
+</div>
+
+#{/form}

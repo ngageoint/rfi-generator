@@ -1,0 +1,446 @@
+*{TODO: Refactor all of the floating into either control-group styles or new class }*
+<input type="hidden" name="full" value="${request.params.full}"/>
+<input type="hidden" name="r.id" value="${_r != null ? _r.id:''}"/>
+<input type="hidden" name="oldStatus" value="${oldStatus ? oldStatus: _r?.status}"/>
+<input type="hidden" name="oldGroupId" value="${oldGroupId ? oldGroupId: _r?.group?.id}"/>
+<input type="hidden" name="r.region" value="${_region ? _region: _r?.region}"/>
+<input type="hidden" name="r.polyline" value="${_polyline ? _polyline: _r?.polyline}"/>
+<input type="hidden" name="r.nonSpatial" value="${_r?.nonSpatial}"/>
+<fieldset>
+    <div class='control-group required' style='float: left;'>
+        <label for="r.title" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="RFI Title" data-content="Create a short, but meaningful title for this RFI">Title:</a><span>*</span></label>
+        <div class='controls'>
+            <input type="text" name="r.title" placeholder="Title *" required class='span8' value="${_r?.title}"/>
+        </div>
+    </div>
+    <div class='control-group required' style='float: left;'>
+        <label for="r.dateRequested" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Date Requested" data-content="The date the RFI was requested">Date Requested:</a><span>*</span></label>
+        <div class='controls'>
+            <input type="date" name="r.dateRequested" required placeholder="Date Requested *" value="${_r ? _r?.dateRequested?.format('yyyy-MM-dd'): new java.util.Date().format('yyyy-MM-dd')}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label for="r.dateRequired" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Date Required" data-content="Ideal target date for resolution of RFI in regards to information required to satsify the original request">Date Required:</a></label>
+        <div class='controls'>
+            <input type="date" name="r.dateRequired" placeholder="Date Required" value="${_r?.dateRequired?.format('yyyy-MM-dd')}"/><br/>
+        </div>
+    </div>
+    <div class='control-group required #{ifError "r.productFormat"}error#{/ifError}' style='float: left;'>
+        <label for="r.productFormat" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Product Format" data-content="The expected file type used in RFI fulfillment">Product Format:</a><span>*</span></label>
+        <div class='controls'>
+            #{select 'r.productFormat', items: helpers.ConfigurationHelpers.getProducts(), value: _r?.productFormat, class: 'span3', class: 'span4', style: 'float:left;', 'data-select2enabled':''}
+                #{option ''}Select one...#{/option}
+            #{/select}
+            <span style='float: left;margin-left: 20px; margin-right: 20px;'>- OR -</span>
+            <input type="text" name="r.productFormat" placeholder="Product Format *" value="${helpers.ConfigurationHelpers.getProducts().contains(_r?.productFormat) ? '':_r?.productFormat}" style='float: left;'/>
+        </div>
+    </div>
+    <div class='control-group required event' style='float: left;'>
+        <label for="r.event.id" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Associated event" data-content="The event that this RFI was created in response to">Event:</a></label>
+        <div class='controls'>
+            <select name='r.event.id' class='span4' data-select2enabled>
+                %{
+                    _selected = _r?.event?.id ? _r.event.id : session.get('event')
+                    if ( _selected == null) {
+                        _selected = ''
+                    }
+                }%
+                #{list items:_events, as:'e'}
+                    <option data-smts="${e.smtsCategory}" data-geoq-project="${e.geoQId}" value="${e.id}" #{if e.id.toString() == _selected.toString()}selected#{/if}>${e.name}</option>
+                #{/list}
+            </select>
+            <input type="hidden" name="eventActivity" value="${_r?.eventActivity?.id}"/>
+            <div style='float:left;' class='hide activity'>
+                <span style='float: left;margin-left: 20px; margin-right: 20px;'>Activity:</span>
+                <select name='r.eventActivity.id' data-select2enabled></select>
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div class='control-group required' style='float: left;'>
+        <label for="r.requestorFirstName" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Requestor's First Name" data-content="The first name of the original submitter of the RFI">Requestor First Name:</a><span>*</span></label>
+        <div class='controls'>
+            <input type="text" name="r.requestorFirstName" required="required" placeholder="Requestor's First Name *" class='span4' value="${_r?.requestorFirstName ? _r?.requestorFirstName : controllers.Master.getUser().firstName}"/>
+        </div>
+    </div>
+    <div class='control-group required' style='float: left;clear:left;'>
+        <label for="r.requestorLastName" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Requestor's Last Name" data-content="The last name of the original submitter of the RFI">Requestor Last Name:</a><span>*</span></label>
+        <div class='controls'>
+            <input type="text" name="r.requestorLastName" required="required" placeholder="Requestor's Last Name *" class='span4' value="${_r?.requestorLastName ? _r?.requestorLastName : controllers.Master.getUser().lastName}"/>
+        </div>
+    </div>
+    <div class='control-group required agency #{ifError "r.organization"}error#{/ifError}' style='float: left;'>
+        <label for="r.organization" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Organization/agency" data-content="The agency/organization this RFI requestor is associated with">Organization:</a><span>*</span></label>
+        <div class='controls'>
+            #{select 'r.organization', items: helpers.ConfigurationHelpers.getAgencies(), value: _r?.organization ? _r?.organization:controllers.Master.getUser().agency, class: 'span4', style: 'float:left;', 'data-select2enabled':''}
+                #{option ''}Select organization...#{/option}
+            #{/select}
+            <span style='float: left;margin-left: 20px; margin-right: 20px;'>- OR -</span>
+            <input type="text" name="r.organization" placeholder="Organization *" value="${helpers.ConfigurationHelpers.getAgencies().contains(_r?.organization ? _r?.organization:controllers.Master.getUser().agency) ? '': _r?.organization ? _r.organization:controllers.Master.getUser().agency}" style='float: left;'/>
+        </div>
+    </div>
+    <div class='control-group required' style='float: left;'>
+        <label class='control-label' for="r.emailAddress"><a href='#' rel='popover' data-trigger="manual" data-original-title="Email address" data-content="The email address of the RFI's requestor, used in RFI-related correspondence">Email Address(es):</a><span>*</span></label>
+        <div class='controls'>
+            <input type="text" name="r.emailAddress" class='span8' required="required" placeholder="Email Address(es) *" value="${_r?.emailAddress ? _r?.emailAddress: controllers.Master.getUser().email}"/>
+            <br/>
+            <select name="emailAddress" data-select2enabled>
+                #{list items:helpers.RFIHelpers.getAllRequestorEmailAddresses(), as: 'e'}
+                    <option value="${e}">${e}</option>
+                #{/list}
+            </select>
+            <a href='#' class='addEmail' data-to-update="r.emailAddress" data-values="emailAddress"><i class='icon-plus'></i></a>
+        </div>
+    </div>
+    <div class='control-group' style='float: left; clear: left;'>
+        <label class='control-label' for="r.phoneOpen"><a href='#' rel='popover' data-trigger="manual" data-original-title="Phone (open)" data-content="An open phone number used to contact the RFI requestor">Phone (OPEN):</a></label>
+        <div class='controls'>
+            <input type="text" name="r.phoneOpen" placeholder="Phone (OPEN)" value="${_r?.phoneOpen ? _r?.phoneOpen: controllers.Master.getUser().openPhone}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;'>
+        <label class='control-label' for="r.phoneSecure"><a href='#' rel='popover' data-trigger="manual" data-original-title="Phone (secure)" data-content="A secure phone number used to contact the RFI requestor">Phone (SECURE):</a></label>
+        <div class='controls'>
+            <input type="text" name="r.phoneSecure" placeholder="Phone (SECURE)" value="${_r?.phoneSecure}"/>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>Request Information</legend>
+    <div class='spatialInfo ${_r?.nonSpatial ? "hide": ""}'>
+    <div class='control-group noRegion' style='float: left;clear:left;'>
+        <label class='control-label' for="r.coordinates"><a href='#' rel='popover' data-trigger="manual" data-original-title="Coordinates" data-content="Latitude/Longitude of the specific location for the RFI">Coordinates:</a></label>
+        <div class='controls'>
+            <input type="text" data-hint="coordinate" name="r.coordinates.lat" placeholder="Latitude" class='span2' value="${_lat ? _lat: _r?.coordinates?.lat}"/>
+            <input type="text" data-hint="coordinate" name="r.coordinates.lon" placeholder="Longitude" class='span2' value="${_lng ? _lng: _r?.coordinates?.lon}"/>
+        </div>
+    </div>
+    <div class='control-group noRegion' style='float: left;clear:left;'>
+        <label class='control-label' for="r.address1"><a href='#' rel='popover' data-trigger="manual" data-original-title="Address (line 1)" data-content="The street name and house number for the physical location of the RFI">Address 1:</a></label>
+        <div class='controls'>
+            <input type="text" name="r.address1" placeholder="Address line 1" value="${_r?.address1}"/>
+        </div>           
+    </div>
+    <div class='control-group noRegion' style='float: left;'>
+        <label class='control-label' for="r.address2"><a href='#' rel='popover' data-trigger="manual" data-original-title="Address (line 2)" data-content="Additional information about the address, apartment numbet, etc">Address 2:</a></label>
+        <div class='controls'>
+            <input type="text" name="r.address2" placeholder="Address line 2" value="${_r?.address2}"/>
+        </div>            
+    </div>
+    <div class='control-group noRegion' style='float: left; clear: left;'>
+        <label class='control-label' for="r.cityName"><a href='#' rel='popover' data-trigger="manual" data-original-title="City" data-content="The name of the city the RFI geographically resides">City Name:</a></label>
+        <div class='controls'>
+            <input type="text" name="r.cityName" placeholder="City Name" value="${_r?.cityName}"/>
+        </div>            
+    </div>
+    <div class='control-group noRegion' style='float: left;'>
+        <label class='control-label' for="r.zipcode"><a href='#' rel='popover' data-trigger="manual" data-original-title="Zipcode" data-content="The zipcode of the RFI's geographic location">Zipcode:</a></label>
+        <div class="controls">
+            <input type="text" name="r.zipcode" placeholder="Zipcode" value="${_r?.zipcode}"/>
+        </div>
+    </div>
+    <div class='control-group noRegion' style='float: left;'>
+        <label class='control-label' for="r.state"><a href='#' rel='popover' data-trigger="manual" data-original-title="State" data-content="In the United States, the state the RFI is located">State:</a></label>
+        <div class='controls'>
+            #{select 'r.state', items: _states, value: _r?.state, labelProperty: 'name', valueProperty: 'value', class: 'span2', 'data-select2enabled':''}
+                #{option ''}Select state...#{/option}
+            #{/select}
+        </div>
+    </div>
+    </div>
+    <div class='control-group nonspatial' style='float: left;'>
+        <div class='controls'>
+            <strong><a href='#' rel='popover' data-trigger="manual" data-original-title="RFI is non-spatial" data-content="RFI is not specific to an area">Non-spatial</a></strong>
+        </div>
+    </div>
+    <div class='control-group region' style='float: left;'>
+        <div class='controls'>
+            <strong><a href='#' rel='popover' data-trigger="manual" data-original-title="RFI encompasses a polygon" data-content="RFI's area is defined by a polygon, to define a RFI by a specific point or polyline, return to the map view and click the map to create another type of RFI">Polygon selected</a></strong>
+        </div>
+    </div>
+    <div class='control-group polyline' style='float: left;'>
+        <div class='controls'>
+            <strong><a href='#' rel='popover' data-trigger="manual" data-original-title="RFI defined by a polyline" data-content="RFI's area is defined by a polyline (most likely a road), to define a RFI by a specific point or polygon, return to the map view and click the map to create another type of RFI">Polyline selected</a></strong>
+        </div>
+    </div>
+    <div class='control-group required' style='float: left;clear:left;'>
+        <label class='control-label' for="r.country"><a href='#' rel='popover' data-trigger="manual" data-original-title="Country/Region" data-content="The country/region the RFI is geographically located within">Country/Region:</a><span>*</span></label>
+        <div class='controls'>
+            %{
+                myCountries = []
+                if ( _r?.country) {
+                    myCountries = _r?.country.split(", ")
+                }
+            }%
+            <select class='span4' name='r.country' required multiple data-select2enabled>
+                #{list items:_countries, as:'c'}
+                    <option value='${c.code}' #{if myCountries.contains(c.code)}selected#{/if}>${c.name}</option>
+                #{/list}
+            </select>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label class='control-label' for='r.BENumber'><a href='#' rel='popover' data-trigger="manual" data-original-title="BENumber" data-content="BE Number">BE Number:</a></label>
+        <div class='controls'>
+            <input type="text" data-hint="beNumber" name="r.BENumber" placeholder="BE Number" class='span2' value="${_r?.BENumber}"/>
+        </div>
+    </div>
+    #{if helpers.ConfigurationHelpers.ShowClassifications() }
+        <div class='control-group required' style='float: left;clear:left;width:98%'>
+            <label class='control-label' for=''><a href='#'>Classification Settings:</a></label>
+            <div class='controls'>
+                <table cellspacing="2" class='classification'>
+                    <tr>
+                        <td><strong>Classification</strong></td>
+                        <td>
+                            %{
+                                defaultClassification = helpers.ConfigurationHelpers.DefaultClassificationLevel()
+                                curClassification = defaultClassification
+                                if ( _r?.classification) {
+                                    curClassification = _r?.classification.replaceAll(",\\s*", "")
+                                }
+                            }%
+                            <input id='q.level1' type='radio' name='r.classification' value='Level1' ${curClassification == "Level1" ? "checked":""}/><label for='q.unclassified'>Level1</label>
+                            <input id='q.level2' type='radio' name='r.classification' value='Level2' ${curClassification == "Level2" ? "checked":""}/><label for='q.level2'>Level2</label>
+                            <input id='q.level3' type='radio' name='r.classification' value='Level3' ${curClassification == "Level3" ? "checked":""}/><label for='q.level3'>Level3</label>
+                            <input type="hidden" name="r.classification" value=""/>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    #{/if}
+    <div class='control-group required' style='float: left;clear:left;width: 98%;'>
+        <label class='control-label' for="r.instructions"><a href='#' rel='popover' data-trigger="manual" data-original-title="Instructions" data-content="Create comprehensive instructions to indicate exactly what information is needed to fulfill the RFI">Instructions:</a><span>*</span></label>
+        <div class='controls'>
+            <textarea name="r.instructions" required="required" placeholder="Instructions *" rows="10">${_r?.instructions}</textarea>
+        </div>
+    </div>
+    #{if !_isNew}
+    <div class='control-group' style='float: left;'>
+        <label class='control-label' for="r.relatedLink"><a href='#' rel='popover' data-trigger="manual" data-original-title="Link" data-content="Link to additional information or website">Related Web Link:</a></label>
+        <div class='controls webLinks'>
+            #{deadbolt.restrict roles:[['Analyst'],['Management']]}
+            <input type="text" name="r.webLink" placeholder="Related Web Link" class='span7' value="" />
+            <a href='#' rel='@{RFIController.addLink()}'><i class='icon-plus'></i></a>
+            #{/deadbolt.restrict}
+            <div style='margin-top:10px;'>
+                %{
+                    links = _r?.relatedItems.findAll { it.itemType == "WEBLINK"}.sort({b,a->a.createdAt<=>b.createdAt})
+                }%
+                <div class='alert alert-info #{if !links}hide#{/if}'>
+                    #{list items:links, as:'i'}
+                        ${i.text} - added by ${i.createdBy} @ ${i.createdAt.format("yyyy-MM-dd HH:mm:ssZ")}<br/>
+                    #{/list}
+                </div>
+            </div>
+        </div>
+    </div>
+    #{/if}
+    <div class='control-group' style='float: left;clear:left;'>
+        <label for="r.sendEmailToRequestor" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Send email to original requestor" data-content="Checking this box will send an email to the original requestor's email address above with the updated RFI information">Send Email to Requestor:</a></label>
+        <div class='controls'>
+            <input type="checkbox" name="r.sendEmailToRequestor" ${_r == null ? "checked":_r.sendEmailToRequestor ? "checked":''}/>
+            <input type="hidden" name="r.sendEmailToRequestor" value="0"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label for="r.group.id" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Group" data-content="Group that will be handling the request">Assigned Group/Office:</a></label>
+        <div class='controls'>
+            #{select 'r.group.id', value: _r?.group?.id, items: models.Group.all().fetch().sort({a,b->b.defaultGroup<=>a.defaultGroup ?: a.name<=>b.name}), labelProperty: 'name', valueProperty: 'id', class: 'span4', 'data-select2enabled':''}
+                #{if !_isNew}
+                    #{option value:''}(No group)#{/option}
+                #{/if}
+            #{/select}
+        </div>
+    </div>
+    #{if !_isNew}
+    <div class='control-group' style='float: left;'>
+        <label class='control-label' for="productURLs"><a href='#' rel='popover' data-trigger="manual" data-original-title="Link" data-content="Link to produced product">Product URL:</a></label>
+        <div class='controls productURLs'>
+            #{deadbolt.restrict roles:[['Analyst'],['Management']]}
+            <input type="text" name="productURLs" placeholder="Product URL" class='span7' value="" />
+            <a href='#' rel="@{RFIController.addProduct()}"><i class='icon-plus'></i></a>
+            #{/deadbolt.restrict}
+            %{
+                products = _r?.relatedItems.findAll { it.itemType == "PRODUCT"}.sort({b,a->a.createdAt<=>b.createdAt})
+            }%
+            <div style='margin-top:10px;'>
+                <div class='alert alert-info #{if !products}hide#{/if}'>
+                    #{list items:products, as:'i'}
+                        ${i.text} - added by ${i.createdBy} @ ${i.createdAt.format("yyyy-MM-dd HH:mm:ssZ")}<br/>
+                    #{/list}
+                </div>
+            </div>
+        </div>
+    </div>
+    #{/if}
+    #{deadbolt.restrict roles:[['Analyst']]}
+    <div class='control-group' style='float:left;clear:left;'>
+        <label class='control-label' for='r.assignedTo'>
+            <a href='#' rel='popover' data-trigger="manual" data-original-title="RFI Assigned To (email)" data-content="Email address of the person(s) actively working on the RFI (comma-separated)&lt;br&gt;NOTE: In order for the RFI to advance to the 'In Work' status, at least 1 email address must be present in the 'Assigned to email address(es)' field">Assigned to email address(es) <i class='icon-question-sign'></i>:</a>
+        </label>
+        <div class='controls'>
+            <input type="text" class='span8' name="r.assignedTo" disabled value="${_r?.assignedTo}"/>
+        </div>
+    </div>
+    #{/deadbolt.restrict}
+    #{deadbolt.restrict roles:[['Management']]}
+    <div class='control-group assignedContainer' style='float: left;clear: left;'>
+        <label class='control-label' for='r.assignedTo'>
+            <a href='#' rel='popover' data-trigger="manual" data-original-title="RFI Assigned To (email)" data-content="Email address of the person(s) actively working on the RFI (comma-separated)&lt;br&gt;NOTE: In order for the RFI to advance to the 'In Work' status, at least 1 email address must be present in the 'Assigned to email address(es)' field">Assigned to email address(es) <i class='icon-question-sign'></i>:</a>
+        </label>
+        <div class='controls'>
+            <input type="text" name="r.assignedTo" class='span8' placeholder="Assigned to email address(es)" value="${_r?.assignedTo}"/>
+            <br/>
+            <select name="assignedTo" data-select2enabled>
+                #{list items:helpers.RFIHelpers.getAllEmailAddresses(), as: 'e'}
+                    <option value="${e}">${e}</option>
+                #{/list}
+            </select>
+            <a href='#' class='addEmail' data-to-update="r.assignedTo" data-values="assignedTo"><i class='icon-plus'></i></a>
+        </div>
+    </div>
+    #{/deadbolt.restrict}
+    #{deadbolt.restrict roles:[['Analyst'],['Management']]}
+    <div class='control-group' style='float: left;clear:left;'>
+        <label class='control-label' for="r.status"><a href='#' rel='popover' data-trigger="manual" data-original-title="RFI Status" data-content="The RFI's status">Status:</a></label>
+        <div class='controls'>
+            #{select 'r.status', value: _r != null ? _r.status:'', items: helpers.RFIHelpers.getAvailableStatuses(_r, controllers.Master.getUser()), class: 'span4', 'data-select2enabled':'' /}
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label class='control-label' for="r.receivedVia"><a href='#' rel='popover' data-trigger="manual" data-original-title="Received Via" data-content="How the RFI was originally received">Received Via:</a></label>
+        <div class='controls'>
+            #{select 'r.receivedVia', value: _r?.receivedVia, items: helpers.ConfigurationHelpers.getReceivedVia(), class: 'span4', 'data-select2enabled':''}
+                #{option ''}Select...#{/option}
+            #{/select}
+            <span style='float: left;margin-left: 20px; margin-right: 20px;'>- OR -</span>
+            <input type="text" name="r.receivedVia" placeholder="Received Via" value="${helpers.ConfigurationHelpers.getReceivedVia().contains(_r?.receivedVia) ? '':_r?.receivedVia}" style='float: left;'/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label class='control-label' for="r.taskNumber"><a href='#' rel='popover' data-trigger="manual" data-original-title="Task Number" data-content="The task number assocated with the RFI">Task Number:</a></label>
+        <div class='controls'>
+            <input type="text" name="r.taskNumber" placeholder="Task Number" value="${_r?.taskNumber}"/>
+        </div>           
+    </div>
+    <div class='control-group' style='float: left; clear: left;'>
+        <label class='control-label' for="r.assignedPhoneOpen"><a href='#' rel='popover' data-trigger="manual" data-original-title="Assigned Phone (open)" data-content="An open phone number used to contact the currently-assigned RFI analyst">Assigned Phone (OPEN):</a></label>
+        <div class='controls'>
+            <input type="text" name="r.assignedPhoneOpen" placeholder="Assigned Phone (OPEN)" value="${_r?.assignedPhoneOpen}"/>
+        </div>
+    </div>
+    
+    <div class='control-group' style='float: left;'>
+        <label class='control-label' for="r.assignedPhoneSecure"><a href='#' rel='popover' data-trigger="manual" data-original-title="Assign Phone (secure)" data-content="A secure phone number used to contact the currently-assigned RFI analyst">Assigned Phone (SECURE):</a></label>
+        <div class='controls'>
+            <input type="text" name="r.assignedPhoneSecure" placeholder="Assigned Phone (SECURE)" value="${_r?.assignedPhoneSecure}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left;clear:left;'>
+        <label class='control-label' for='r.workHours'><a href='#' rel='popover' data-trigger="manual" data-original-title="Work Hours" data-content="Work Hours">Work Hours:</a></label>
+        <div class='controls'>
+            <input type="text" data-hint="workHours" name="r.workHours" placeholder="Work Hours" class='span2' value="${_r?.workHours}"/>
+        </div>
+    </div>
+    <div class='control-group' style='float: left; clear: left;'>
+        <label class='control-label' for="r.archived"><a href='#' rel='popover' data-trigger="manual" data-original-title="Archived" data-content="Archive this RFI">Archived:</a></label>
+        <div class='controls'>
+            <input type="checkbox" name="r.archived" ${_r != null && _r.archived ? "checked":''}/>
+            <input type="hidden" name="r.archived" value="0"/>
+        </div>
+    </div>
+    #{/deadbolt.restrict}
+    #{deadbolt.restrict roles:[['Management']]}
+    <div class='control-group' style='float: left; clear:left;'>
+        <label for="r.dateCompleted" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Date Completed" data-content="The date the RFI was completed">Date Completed:</a></label>
+        <div class='controls'>
+            <input type="date" name="r.dateCompleted" placeholder="Date Completed" value="${_r?.dateCompleted?.format('yyyy-MM-dd')}"/>
+        </div>
+    </div>
+    #{/deadbolt.restrict}
+    <div class='control-group' style='float: left; clear: left;'>
+        <label class='control-label' for="r.smtsKeywords"><a href='#' rel='popover' data-trigger="manual" data-original-title="SMTS Keywords" data-content="Used to associate RFI with existing keywords in SMTS">SMTS Keywords:</a></label>
+        <div class='controls multiselect'>
+            <input type="hidden" name="smtsKeywords" value="${_r?.smtsKeywords}"/>
+            <input type="hidden" name="r.smtsKeywords" value=""/>
+            <div class='smtsStatus'></div>
+            <div class='inp'>
+                <table>
+                    <tr>
+                        <td align="center">
+                            Available SMTS keywords
+                        </td>
+                        <td>
+                        </td>
+                        <td align="center">
+                            Selected SMTS keywords
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select multiple class='availableSMTSKeywords'></select>
+                        </td>
+                        <td>
+                            <a href='#' class='btn selectMove' data-src="availableSMTSKeywords" data-dest="destinationSMTSKeywords"><i class='icon-arrow-right'></i></a><br/>
+                            <a href='#' class='btn selectMove' data-src="destinationSMTSKeywords" data-dest="availableSMTSKeywords"><i class='icon-arrow-left'></i></a>
+                        </td>
+                        <td>
+                            <select multiple name='r.smtsKeywords' class="destinationSMTSKeywords"></select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class='control-group geoqJobId' style='float: left;'>
+        <label class='control-label' for="r.geoQJobId"><a href='#' rel='popover' data-trigger="manual" data-original-title="GEOQ Job" data-content="The RFI's associated GeoQ Job ID">GeoQ Job ID:</a></label>
+        <div class='controls'>
+            <input type="text" name="r.geoQJobId" class='span8' placeholder="Associated GeoQ Job ID" value="${_r?.geoQJobId}" />
+            <p class='hide'>Associated event does not have an associated GeoQ Project, cannot create a GeoQ Job w/o associated GeoQ Project</p>
+        </div>
+    </div>
+    #{if !_r?.geoQJobId}
+    <div class='control-group createGeoQ' style='float: left;'>
+        <label class='control-label' for="createGEOQJob"><a href='#' rel='popover' data-trigger="manual" data-original-title="Create GEOQ Job" data-content="In addition to upadating/creating this RFI, create an associated GEOQ Job">Create GEOQ Job:</a></label>
+        <div class='controls'>
+            <input type="checkbox" name="createGEOQJob" ${_createGEOQJob ? "checked='yes'":""}/>
+            <input type="hidden" name="createGEOQJob" value="0"/>
+        </div>
+    </div>
+    #{/if}
+    <div class='control-group' style='float: left; clear:left;'>
+        <label for="r.createdAt" class='control-label'><a href='#' rel='popover' data-trigger="manual" data-original-title="Date Created" data-content="The date the RFI was created">Date Created:</a></label>
+        <div class='controls'>
+            <input disabled type="text" name="r.createdAt" value="${_r?.createdAt?.format('yyyy-MM-dd HH:mm:ssZ')}"/>
+        </div>
+    </div>
+    #{deadbolt.restrict roles:[['Field']]}
+        <input type="hidden" name="r.status" value="${_r?.status ? _r?.status : helpers.ApplicationHelpers.PENDING}"/>
+    #{/deadbolt.restrict}
+    <hr style='clear: both;'/>
+    #{if helpers.ConfigurationHelpers.attachmentsEnabled() }
+    <div class='control-group notNew' style='float: left;'>
+        <label class='control-label' for="attachment"><a href='#' rel='popover' data-trigger="manual" data-original-title="Upload an attachment" data-content="Choose a file to associate with this RFI, when the RFI is updated, the file will be loaded and accessible from this dialog">Upload attachment:</a></label><br/><br/>
+        <div id="file_uploader"></div>
+        *{<div class='controls'>
+            <input type="file" name="attachment" class='input-file'/>
+            <iframe id="upload_target" name="upload_target" src="javascript:false;" style="width: 0; height: 0; border: 0;"></iframe>
+        </div>}*
+        #{if _r?.attachments}
+        <ul class="unstyled">
+        #{list items:_r.attachments, as: 'attachment'}
+            <li>
+            #{renderAttachment item:attachment/}
+            </li>
+        #{/list}
+        #{/if}
+        </ul>
+    </div>
+    #{/if}
+</fieldset>

@@ -1,0 +1,793 @@
+$baseColor: #000;
+
+$bs-red: #9d261d;
+$bs-green: #468847;
+$bs-blue: #3A87AD;
+$bs-gray: #999999;
+$bs-muted-red: #F2DEDE;
+$bs-muted-green: #DFF0D8;
+$bs-muted-gray: #F7F7F9;
+$bs-muted-blue: #D9EDF7;
+
+@mixin status-shim {
+    a {
+        color: black;
+        text-decoration: underline;
+    }
+}
+
+.overdue {
+    background-color: $bs-muted-red !important;
+    @include status-shim;
+}
+
+.label.overdue {
+    background-color: $bs-red !important;
+}
+
+.label.accepted {
+    background-color: $bs-blue !important;
+}
+
+.label.pending {
+    background-color: $bs-gray !important;
+}
+
+.label.notstarted {
+    background-color: $bs-red !important;
+}
+
+.label.completed {
+    background-color: $bs-green !important;
+}
+
+@mixin dropshadow($distance,$color,$top:0,$left:0) {
+    -moz-box-shadow: $top $left $distance $color;
+    -webkit-box-shadow: $top $left $distance $color;
+    -o-box-shadow: $top $left $distance $color;
+    box-shadow: $top $left $distance $color;
+}
+
+html {
+    overflow: auto;
+}
+
+html, body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+table.sortable th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.agency .select2-container, .eventActivities .select2-container {
+    float: left;
+}
+
+.select2-container {
+    margin-left: 0;
+}
+
+.filters .select2-container {
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.adminFilters .select2-container {
+    margin-bottom: 5px;
+}
+
+.sortable.sorted {
+    position: relative;
+    background: #eeeeee;
+    
+    > div {
+        position: relative;
+    }
+    
+    .sortarrow {
+        position: absolute;
+        left: 50%;
+        margin-left: -5px;
+    }
+    
+    &.asc {
+        .sortarrow {
+            width: 0; 
+            height: 0; 
+            top: -5px;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+
+            border-bottom: 5px solid #999;
+        }
+    }
+    
+    &.desc {
+        .sortarrow {
+            width: 0; 
+            height: 0;
+            bottom: -5px; 
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+
+            border-top: 5px solid #999;
+        }
+    }
+}
+
+.sort_wrapper {
+    position: relative;
+    display: inline;    
+    
+    .icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.navbar-inner {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+section > .row {
+    margin-bottom: 10px;
+}
+
+.odd {
+    background: #F9F9F9;
+}
+
+.even {
+    background: #DDDDDD;
+}
+
+.required {
+    label span {
+        color: red;
+    }
+}
+
+table tbody tr th {
+    border-top: none;
+}
+
+a.sortable {
+    img {
+        display: none;
+    }
+    
+    span {
+        display: block;
+        float: left;
+    }
+}
+
+.sorted.desc {
+    .desc {
+        display: inline;
+    }
+    
+    .asc {
+        display: none;
+    }
+}
+
+.sorted.asc {
+    .asc {
+        display: inline;
+    }
+    
+    .desc {
+        display: none;
+    }
+}
+
+ul.secondary-nav li div > a.btn {
+    display: none;
+}
+
+ul.secondary-nav li div > a.btn.shown {
+    display: block;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+#map {
+    width: 100%;
+    position: relative;
+}
+
+.clearfix.error select {
+    border: 1px solid red;
+}
+
+.modal {
+    width: 960px;
+    margin-left: -480px;
+    
+    .form-horizontal .control-group {
+        margin-bottom: 5px;
+    }
+    
+    .modal-body {
+        max-height: 400px;
+        overflow-y: scroll;
+        overflow-x: auto;
+        min-height: 200px;
+    }
+}
+
+.modal-body table {
+    width: 100%;
+}
+
+form .clearfix {
+    margin-bottom: 0;
+}
+
+#RFIForm {
+    margin-bottom: 0;
+    position: relative;
+}
+
+.overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #ccc;
+    opacity: 0.5;
+    display: none;
+}
+
+#owa-tracker-post-container {
+    display: none;
+}
+
+.layersDiv label {
+    display: inline;
+    color: white;
+}
+
+.olControlMousePosition {
+    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding-left: 2px;
+    padding-right: 2px;
+    border: 1px solid #cccccc;
+}
+
+.pickAPoint {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 100px;
+    margin-left: -200px;
+    margin-top: -50px;
+    background: white;
+    @include dropshadow(15px,#999);
+    border-radius: 5px;
+    border: 3px solid #999;
+    display: none;
+}
+
+#toast {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    width:300px;
+    z-index: 1000;
+    margin-left: -150px;
+    
+    section {
+        border: 2px solid #666;
+        @include dropshadow(10px, #999);
+    }
+}
+
+.new .notNew {
+    display: none;
+}
+
+.pickAPoint h2 {
+    text-align: center;
+}
+
+#chartdiv {
+    table {
+        width: auto;
+    }
+}
+
+form.region .noRegion, form.polyline .noRegion {
+    display: none;
+}
+
+form.region .noRegionHidden, form.polyline .noRegionHidden {
+    visibility: hidden;
+}
+
+form .region {
+    display: none;
+}
+
+form .polyline {
+    display: none;
+}
+
+form .nonspatial {
+    display: none;
+}
+
+form.region .region, form.polyline .polyline, form.nonspatial .nonspatial {
+    display: block;
+}
+
+.nonspatial .spatialInfo {
+    display: none;
+}
+
+form.edit .noEdit{
+    display: none;
+}
+
+.overflow { 
+    overflow: hidden;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.hideOverride {
+    display: none !important;
+}
+
+textarea {
+    width: 98%;
+}
+
+.modalMap {
+    width: 100%;
+    height: 100%;
+}
+
+.watermark {
+    color: #999;
+}
+
+a.delete {
+    background: #ee0000;
+}
+
+a.selected {
+    background: #eeee00;
+}
+
+.jqplot-xaxis-tick {
+    font-size: 12px;
+}
+
+.jqplot-table-legend {
+    font-size: 12px;
+}
+
+.mobileShow {
+    display: none;
+}
+
+.rfiGrid .popover-inner {
+    width: 600px;
+}
+
+.rfiBottom {
+    td {
+        padding-bottom: 15px;
+    }
+}
+
+.navbar .nav > li > a.lessPadding {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.attention {
+    width: 16px;
+    height: 16px;
+    background: transparent url(../images/exclamation.png) center center no-repeat;
+}
+
+.latLngInfo {
+    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #999999;
+    text-align: center;
+    width: 300px;
+}
+
+.input-prepend .search-query {
+    border: 1px solid #999999;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.drawingContainer {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: 1100;
+
+    &.rfiEdit {
+        position: absolute;
+        right: 0;
+        z-index: 1000;
+    }
+
+    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 3px;
+    margin-right: 5px;
+    border: 1px solid #999999;
+    .drawPoly {
+        background: transparent url(../images/editing_tool_bar.png) no-repeat -25px 0;
+        
+        &.active {
+            background-position: -25px -23px;
+        }
+    }
+    
+    .drawPolyline {
+        background: transparent url(../images/editing_tool_bar.png) no-repeat -50px 0;
+        
+        &.active {
+            background-position: -50px -23px;
+        }
+    }
+    
+    .drawPoint {
+        background: transparent url(../images/editing_tool_bar.png) no-repeat -76px 0;
+        
+        &.active {
+            background-position: -76px -23px;
+        }
+    }
+    
+    a {
+        width: 26px;
+        height: 24px;
+        float: left;
+        clear: both;
+        display: block;
+    }
+    
+    &.big {
+        padding: 5px;
+        .drawPoly {
+            background: transparent url(../images/editing_tool_bar_150.png) no-repeat -38px 0;
+            
+            &.active {
+                background-position: -38px -35px;
+            }
+        }
+        
+        .drawPolyline {
+            background: transparent url(../images/editing_tool_bar_150.png) no-repeat -76px 0;
+            
+            &.active {
+                background-position: -76px -35px;
+            }
+        }
+        
+        .drawPoint {
+            background: transparent url(../images/editing_tool_bar_150.png) no-repeat -115px 0;
+            
+            &.active {
+                background-position: -115px -35px;
+            }
+        }
+        
+        a {
+            width: 38px;
+            height: 36px;
+            float: left;
+            clear: both;
+            display: block;
+        }
+    }
+}
+
+.gotoControl {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1100;
+    margin-top: 5px;
+    
+    .action {
+        direction: ltr;
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        color: rgb(0, 0, 0);
+        font-family: Arial, sans-serif;
+        -webkit-user-select: none;
+        font-size: 13px;
+        background-color: rgb(255, 255, 255);
+        padding: 1px 6px;
+        border: 1px solid rgb(113, 123, 135);
+        -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
+        font-weight: bold;
+        min-width: 28px;
+    }
+    
+    .content {
+        background-color: white;
+        z-index: -1;
+        padding-top: 2px;
+        border-width: 0px 1px 1px;
+        border-right-style: solid;
+        border-bottom-style: solid;
+        border-left-style: solid;
+        border-right-color: rgb(113, 123, 135);
+        border-bottom-color: rgb(113, 123, 135);
+        border-left-color: rgb(113, 123, 135);
+        -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
+        position: absolute;
+        right: 0px;
+        padding: 4px;
+        top: 21px;
+        border: 1px solid #666666;
+        text-align: left;
+        display: none;
+    }
+}
+
+.classification {
+    width: 100%;
+    background: #ccc;
+    
+    td {
+        padding: 8px;
+        border-bottom: 2px solid white;
+        border-right: 2px solid white;
+    }
+    
+    label {
+        display: inline;
+    }
+}
+
+.nga img {
+    padding: 3px 6px 3px 3px;
+    margin-left: -17px;
+    width: 35px;
+    height: 35px;
+}
+
+.controls.multiselect .inp {
+    &.show {
+        display: block;
+    }
+    display: none;
+    select {
+        height: 300px;
+    }
+}
+
+#grid_modal, #my_rfis_modal {
+    .row {
+        margin-left: 0;
+    }
+    
+    .topRow {
+        border-top: 1px solid #dddddd;
+    }
+    
+    &.advOpen .modal-body {
+        max-height: 235px;
+    }
+    
+    .filters {
+        border-left: 1px solid #cccccc;
+        border-bottom: 1px solid #cccccc;
+        border-right: 1px solid #cccccc;
+        padding-left: 10px;
+        
+        select {
+            margin-right: 5px;
+        }
+    }
+}
+
+div.advSearch {
+    padding-top: 5px;
+}
+
+.overthrow-enabled .overthrow {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.navbar .nav > li > a.eventActive {
+    color: white;
+}
+
+@media screen and (min-height: 800px) {
+    .modal {
+        margin-top: -400px;
+    }
+    .modal .modal-body {
+        max-height: 620px;
+    }
+    
+    #grid_modal.advOpen .modal-body {
+        max-height: 445px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .modal {
+        width:750px;
+        margin-left: -375px;
+    }
+    
+    .modal input[type='date'] {
+        width: 148px;
+    }
+    
+    .modal .form-horizontal .control-label {
+        width: 125px;
+    }
+    
+    .modal .form-horizontal .controls {
+        margin-left: 140px;
+    }
+    
+    .modal input:not([class^='span']), .modal textarea, .modal select, .modal .uneditable-input {
+        width: 200px;
+    }
+    
+    .modal textarea {
+        width: 98%;
+    }
+}
+
+@media screen and (max-width:767px) {
+    .navbar-fixed-top {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .modal {
+        width: 480px;
+        margin-left: -240px;
+    }
+    
+    textarea {
+        width: 98%;
+    }
+}
+
+@media screen and (max-width:979px) {
+    .navbar-fixed-top {
+        margin-bottom: 0;
+    }
+    
+    .mobileShow {
+        display: inline;
+    }
+}
+
+h3 span {
+    font-size: 70%;
+}
+
+/* Handhelds */
+@media screen and (max-width:533px) {
+    body.modal-open {
+        overflow: auto;
+        #map {
+            display: none;
+        }
+        .navbar {
+            display: none;
+        }
+    }
+    
+    .mobileHide {
+        display: none !important;
+    }
+    
+    .navbar .brand {
+        font-size: 18px;
+        padding-bottom: 10px;
+    }
+    
+    .modal {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 0;
+        position: relative;
+        
+        .modal-header {
+            position: fixed;
+            height: 40px;
+            width: 100%;
+            top: 0;
+            left: 0;
+            padding: 0;
+            margin: 0;
+            @include dropshadow(10px,#ccc);
+            
+            background: white;
+            z-index: 1;
+            
+            .close {
+                margin: 0;
+            }
+            
+            h3 {
+                margin: 5px 0 0 5px;
+            }
+        }
+        
+        .modal-body {
+            max-height: 100%;
+            min-height: 533px;
+            overflow: auto;
+            padding: 50px 5px 5px 5px;
+            background: #eee;
+            
+            .control-group {
+                float: left;
+                clear: left;
+                width: 100%;
+                margin-left: 0;
+                
+                .controls {
+                    margin-left: 0;
+                }
+            }
+
+            input[type='submit'] {
+                margin: 5px auto;
+                width: 200px;
+                display: block;
+            }
+            
+            input[name='r.organization'] {
+                float: left;
+                clear: left;
+            }   
+        }
+    }
+    
+    .modal.fade.in {
+        top: 0;
+        overflow: hidden;
+    }
+} 

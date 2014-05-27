@@ -1,0 +1,17 @@
+.modal-body form {
+    padding-bottom: 18px;
+}
+
+.adminForm .row {
+    margin-bottom: 10px;
+}
+
+.modal .modal-body {
+    max-height: none;
+    height: 400px;
+}
+
+.jqplot-table-legend {
+    background: transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7fffffff,endColorStr=#7fffffff);
+}

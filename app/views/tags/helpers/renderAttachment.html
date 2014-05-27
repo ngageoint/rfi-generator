@@ -1,0 +1,3 @@
+*{ Renders an icon and link for an attachment }*
+
+<a href='@{RFIController.renderAttachment(_item.id)}' title='${_item.attachmentFilename}'><img src="@{'/public/images/attach.png'}" alt='Attachment'/>${_item.attachmentFilename} - (${_item.createdBy}: ${_item.createdAt})</a>

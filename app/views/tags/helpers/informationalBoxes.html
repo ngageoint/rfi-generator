@@ -1,0 +1,10 @@
+<ul class='informational #{if _class}${_class}#{/if}'>
+#{list items:_boxes, as:'b'}
+    <li class='#{if b.class}${b.class}#{/if}'>
+        <a href='#' #{if b.text == "N/A"}title='No state changes between these dates'#{/if}>${b.text}</a>
+        #{if b.subText}
+            <span>${b.subText}</span>
+        #{/if}
+    </li>
+#{/list}
+</ul>

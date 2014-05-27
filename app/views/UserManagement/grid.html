@@ -1,0 +1,38 @@
+<input type="hidden" name="params" value="${_params}"/>
+
+<table class='condensed-table'>
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th class='sortable'><div><a href='#' rel='id'>ID</a></div></th>
+        <th class='sortable'><div><a href='#' rel='firstName'>First Name</a></div></th>
+        <th class='sortable'><div><a href='#' rel='lastName'>Last Name</a></div></th>
+        <th class='sortable'><div><a href='#' rel='userName'>Username</a></div></th>
+        <th class='sortable'><div><a href='#' rel='email'>Email</a></div></th>
+        <th class='sortable'><div><a href='#' rel='agency'>Agency</a></div></th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+#{list items:users, as:'u'}
+    <tr class='${u_parity}'>
+        <td><a class='btn edit' href='@{UserManagement.edit(u.id)}'>Edit</a></td>
+        <td>${u.id}</td>
+        <td>${u.firstName}</td>
+        <td>${u.lastName}</td>
+        <td>${u.userName}</td>
+        <td>${u.email}</td>
+        <td>${u.agency}</td>
+        <td>${u.role.name}</td>
+    </tr>
+#{/list}
+#{else}
+    <tr>
+        <td colspan="8" style='text-align: center;' class="no-items">No items to display</td>
+    </tr>
+#{/else}
+    <tr>
+        <td colspan="8">Displaying: ${totalCount}</td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,27 @@
+Comment(1):
+    text: My comment
+    rfi: 1
+    createdBy: joseph.mctester
+
+Comment(2):
+    text: My comment 2
+    rfi: 2
+    createdBy: joseph.mctester
+
+Comment(3):
+    text: |
+        My comment 3
+        http://www.google.com
+        test@email.com
+        
+        More information....
+    rfi: 3
+    createdBy: joseph.mctester
+
+Comment(4):
+    text: |
+        Longer comment...
+        With more than 1
+        line
+    rfi: 1
+    createdBy: joseph.mctester

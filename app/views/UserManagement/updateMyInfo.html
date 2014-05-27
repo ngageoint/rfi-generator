@@ -1,0 +1,52 @@
+<script type="text/javascript">
+$(function() {
+    var $parent = $("#update_my_info_modal");
+    
+    globals.shimInputs($parent);
+    
+    $parent.find("form").bind("submit", function() {
+        var data = $(this).serialize();
+        $.ajax({
+            url: "@{UserManagement.submitUpdateMyInfo}",
+            type: "POST", data: data
+        })
+        .done(function(res,status,xhr) {
+            var $body = $parent.find(".modal-body");
+            $body.empty();
+            $body.append(res);
+            $body.scrollTop(0);
+        })
+        .fail(function(err,xhr) {
+            alert("Error updating the user");
+        });
+        
+        return false;
+    });
+    
+    $parent.find("select[name='u.agency']").change(function() {
+        $("input[name='u.agency']").val("");
+    });
+});
+</script>
+
+#{ifErrors}
+<div class='alert alert-error error'>
+    <p><strong>There were some validation errors updating your user information, please see below for details</strong></p>
+    <ul>
+    #{errors}
+        <li>&{error.getKey()}</li>
+    #{/errors}
+    </ul>
+</div>
+#{/ifErrors}
+
+#{if flash.success}
+<div class='alert alert-success'>
+    <p><strong>${flash.success}</strong></p>
+</div>
+#{/if}
+
+#{form @UserManagement.submitUpdateMyInfo(), class:'form-horizontal'}
+#{user.AbridgedUserEditForm u:u/}
+<input type="submit" class='btn' value='Update'/>
+#{/form}

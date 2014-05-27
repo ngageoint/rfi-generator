@@ -1,0 +1,35 @@
+Event(1):
+    name: Hurricane Hilde - Miami, FL
+    archived: false
+    description: Response to damage caused by hurricane Hilde in Miami, FL
+    region: '[{"lat":26.30716613386001,"lng":-80.29832153320314},{"lat":26.085363790983966,"lng":-80.11979370117189},{"lat":25.76176618106255,"lng":-80.12528686523439},{"lat":25.442244689288575,"lng":-80.33952026367189},{"lat":25.54389054033749,"lng":-80.56199340820314},{"lat":25.95454965407655,"lng":-80.43015747070314},{"lat":26.061926702738432,"lng":-80.43015747070314}]'
+    createdBy: joseph.mctester
+    adminEmailAddresses: admin@mail.com, admin2@mail.com
+    groups: 2
+
+Event(2):
+    geoQId: 10
+    name: Tornadoes in Kansas City, MO
+    archived: false
+    region: '[{"lat":39.04390023961601,"lng":-94.78928833007814},{"lat":39.04816645106559,"lng":-94.42673950195314},{"lat":38.91151992840485,"lng":-94.33060913085939},{"lat":38.66103182980462,"lng":-94.45969848632814},{"lat":38.56338226085656,"lng":-94.99528198242189},{"lat":38.701769224109164,"lng":-95.14634399414064},{"lat":39.0054927430876,"lng":-95.05296020507814}]'
+    description: (http://wikipedia.com) Reponse to extensive damage caused by tornadoes in Kansas City, MO and surrounding areas
+    createdBy: joseph.mctester
+    adminEmailAddresses: admin@mail.com
+    groups: 1
+    
+Event(3):
+    name: RFIs without event
+    archived: false
+    description: Holding area for RFIs that aren't directly associated with an event
+    createdBy: joseph.mctester
+    region: '[]'
+    adminEmailAddresses: admin@mail.com
+    
+Event(4):
+    name: Pentagon NST Event
+    archived: false
+    description: Holding area for RFIs for the Pentagon NST
+    createdBy: joseph.mctester
+    region: '[]'
+    adminEmailAddresses: admin@mail.com
+    eventActivities: [1,2]

@@ -1,0 +1,10 @@
+#{extends 'admin.html'/}
+
+#{if imports}
+<h2>Successfully imported ${imports.size()} RFIs</h2>
+#{/if}
+#{list items:imports, as:'r'}
+    <p>${r.title} (${r.uuid})</p>
+#{/list}
+
+<a href='@{index()}' class='btn'>Back to list</a>

@@ -1,0 +1,1466 @@
+Country(AF):
+  name: AFGHANISTAN
+  code: <AF>
+  sortOrder: 2
+
+Country(AX):
+  name: ÅLAND ISLANDS
+  code: <AX>
+  sortOrder: 2
+
+Country(AL):
+  name: ALBANIA
+  code: <AL>
+  sortOrder: 2
+
+Country(DZ):
+  name: ALGERIA
+  code: <DZ>
+  sortOrder: 2
+
+Country(AS):
+  name: AMERICAN SAMOA
+  code: <AS>
+  sortOrder: 2
+
+Country(AD):
+  name: ANDORRA
+  code: <AD>
+  sortOrder: 2
+
+Country(AO):
+  name: ANGOLA
+  code: <AO>
+  sortOrder: 2
+
+Country(AI):
+  name: ANGUILLA
+  code: <AI>
+  sortOrder: 2
+
+Country(AQ):
+  name: ANTARCTICA
+  code: <AQ>
+  sortOrder: 2
+
+Country(AG):
+  name: ANTIGUA AND BARBUDA
+  code: <AG>
+  sortOrder: 2
+
+Country(AR):
+  name: ARGENTINA
+  code: <AR>
+  sortOrder: 2
+
+Country(AM):
+  name: ARMENIA
+  code: <AM>
+  sortOrder: 2
+
+Country(AW):
+  name: ARUBA
+  code: <AW>
+  sortOrder: 2
+
+Country(AU):
+  name: AUSTRALIA
+  code: <AU>
+  sortOrder: 2
+
+Country(AT):
+  name: AUSTRIA
+  code: <AT>
+  sortOrder: 2
+
+Country(AZ):
+  name: AZERBAIJAN
+  code: <AZ>
+  sortOrder: 2
+
+Country(BS):
+  name: BAHAMAS
+  code: <BS>
+  sortOrder: 2
+
+Country(BH):
+  name: BAHRAIN
+  code: <BH>
+  sortOrder: 2
+
+Country(BD):
+  name: BANGLADESH
+  code: <BD>
+  sortOrder: 2
+
+Country(BB):
+  name: BARBADOS
+  code: <BB>
+  sortOrder: 2
+
+Country(BY):
+  name: BELARUS
+  code: <BY>
+  sortOrder: 2
+
+Country(BE):
+  name: BELGIUM
+  code: <BE>
+  sortOrder: 2
+
+Country(BZ):
+  name: BELIZE
+  code: <BZ>
+  sortOrder: 2
+
+Country(BJ):
+  name: BENIN
+  code: <BJ>
+  sortOrder: 2
+
+Country(BM):
+  name: BERMUDA
+  code: <BM>
+  sortOrder: 2
+
+Country(BT):
+  name: BHUTAN
+  code: <BT>
+  sortOrder: 2
+
+Country(BO):
+  name: BOLIVIA, PLURINATIONAL STATE OF
+  code: <BO>
+  sortOrder: 2
+
+Country(BQ):
+  name: BONAIRE, SINT EUSTATIUS AND SABA
+  code: <BQ>
+  sortOrder: 2
+
+Country(BA):
+  name: BOSNIA AND HERZEGOVINA
+  code: <BA>
+  sortOrder: 2
+
+Country(BW):
+  name: BOTSWANA
+  code: <BW>
+  sortOrder: 2
+
+Country(BV):
+  name: BOUVET ISLAND
+  code: <BV>
+  sortOrder: 2
+
+Country(BR):
+  name: BRAZIL
+  code: <BR>
+  sortOrder: 2
+
+Country(IO):
+  name: BRITISH INDIAN OCEAN TERRITORY
+  code: <IO>
+  sortOrder: 2
+
+Country(BN):
+  name: BRUNEI DARUSSALAM
+  code: <BN>
+  sortOrder: 2
+
+Country(BG):
+  name: BULGARIA
+  code: <BG>
+  sortOrder: 2
+
+Country(BF):
+  name: BURKINA FASO
+  code: <BF>
+  sortOrder: 2
+
+Country(BI):
+  name: BURUNDI
+  code: <BI>
+  sortOrder: 2
+
+Country(KH):
+  name: CAMBODIA
+  code: <KH>
+  sortOrder: 2
+
+Country(CM):
+  name: CAMEROON
+  code: <CM>
+  sortOrder: 2
+
+Country(CA):
+  name: CANADA
+  code: <CA>
+  sortOrder: 2
+
+Country(CV):
+  name: CAPE VERDE
+  code: <CV>
+  sortOrder: 2
+
+Country(KY):
+  name: CAYMAN ISLANDS
+  code: <KY>
+  sortOrder: 2
+
+Country(CF):
+  name: CENTRAL AFRICAN REPUBLIC
+  code: <CF>
+  sortOrder: 2
+
+Country(TD):
+  name: CHAD
+  code: <TD>
+  sortOrder: 2
+
+Country(CL):
+  name: CHILE
+  code: <CL>
+  sortOrder: 2
+
+Country(CN):
+  name: CHINA
+  code: <CN>
+  sortOrder: 2
+
+Country(CX):
+  name: CHRISTMAS ISLAND
+  code: <CX>
+  sortOrder: 2
+
+Country(CC):
+  name: COCOS (KEELING) ISLANDS
+  code: <CC>
+  sortOrder: 2
+
+Country(CO):
+  name: COLOMBIA
+  code: <CO>
+  sortOrder: 2
+
+Country(KM):
+  name: COMOROS
+  code: <KM>
+  sortOrder: 2
+
+Country(CG):
+  name: CONGO
+  code: <CG>
+  sortOrder: 2
+
+Country(CD):
+  name: CONGO, THE DEMOCRATIC REPUBLIC OF THE
+  code: <CD>
+  sortOrder: 2
+
+Country(CK):
+  name: COOK ISLANDS
+  code: <CK>
+  sortOrder: 2
+
+Country(CR):
+  name: COSTA RICA
+  code: <CR>
+  sortOrder: 2
+
+Country(CI):
+  name: CÔTE D'IVOIRE
+  code: <CI>
+  sortOrder: 2
+
+Country(HR):
+  name: CROATIA
+  code: <HR>
+  sortOrder: 2
+
+Country(CU):
+  name: CUBA
+  code: <CU>
+  sortOrder: 2
+
+Country(CW):
+  name: CURAÇAO
+  code: <CW>
+  sortOrder: 2
+
+Country(CY):
+  name: CYPRUS
+  code: <CY>
+  sortOrder: 2
+
+Country(CZ):
+  name: CZECH REPUBLIC
+  code: <CZ>
+  sortOrder: 2
+
+Country(DK):
+  name: DENMARK
+  code: <DK>
+  sortOrder: 2
+
+Country(DJ):
+  name: DJIBOUTI
+  code: <DJ>
+  sortOrder: 2
+
+Country(DM):
+  name: DOMINICA
+  code: <DM>
+  sortOrder: 2
+
+Country(DO):
+  name: DOMINICAN REPUBLIC
+  code: <DO>
+  sortOrder: 2
+
+Country(EC):
+  name: ECUADOR
+  code: <EC>
+  sortOrder: 2
+
+Country(EG):
+  name: EGYPT
+  code: <EG>
+  sortOrder: 2
+
+Country(SV):
+  name: EL SALVADOR
+  code: <SV>
+  sortOrder: 2
+
+Country(GQ):
+  name: EQUATORIAL GUINEA
+  code: <GQ>
+  sortOrder: 2
+
+Country(ER):
+  name: ERITREA
+  code: <ER>
+  sortOrder: 2
+
+Country(EE):
+  name: ESTONIA
+  code: <EE>
+  sortOrder: 2
+
+Country(ET):
+  name: ETHIOPIA
+  code: <ET>
+  sortOrder: 2
+
+Country(FK):
+  name: FALKLAND ISLANDS (MALVINAS)
+  code: <FK>
+  sortOrder: 2
+
+Country(FO):
+  name: FAROE ISLANDS
+  code: <FO>
+  sortOrder: 2
+
+Country(FJ):
+  name: FIJI
+  code: <FJ>
+  sortOrder: 2
+
+Country(FI):
+  name: FINLAND
+  code: <FI>
+  sortOrder: 2
+
+Country(FR):
+  name: FRANCE
+  code: <FR>
+  sortOrder: 2
+
+Country(GF):
+  name: FRENCH GUIANA
+  code: <GF>
+  sortOrder: 2
+
+Country(PF):
+  name: FRENCH POLYNESIA
+  code: <PF>
+  sortOrder: 2
+
+Country(TF):
+  name: FRENCH SOUTHERN TERRITORIES
+  code: <TF>
+  sortOrder: 2
+
+Country(GA):
+  name: GABON
+  code: <GA>
+  sortOrder: 2
+
+Country(GM):
+  name: GAMBIA
+  code: <GM>
+  sortOrder: 2
+
+Country(GE):
+  name: GEORGIA
+  code: <GE>
+  sortOrder: 2
+
+Country(DE):
+  name: GERMANY
+  code: <DE>
+  sortOrder: 2
+
+Country(GH):
+  name: GHANA
+  code: <GH>
+  sortOrder: 2
+
+Country(GI):
+  name: GIBRALTAR
+  code: <GI>
+  sortOrder: 2
+
+Country(GR):
+  name: GREECE
+  code: <GR>
+  sortOrder: 2
+
+Country(GL):
+  name: GREENLAND
+  code: <GL>
+  sortOrder: 2
+
+Country(GD):
+  name: GRENADA
+  code: <GD>
+  sortOrder: 2
+
+Country(GP):
+  name: GUADELOUPE
+  code: <GP>
+  sortOrder: 2
+
+Country(GU):
+  name: GUAM
+  code: <GU>
+  sortOrder: 2
+
+Country(GT):
+  name: GUATEMALA
+  code: <GT>
+  sortOrder: 2
+
+Country(GG):
+  name: GUERNSEY
+  code: <GG>
+  sortOrder: 2
+
+Country(GN):
+  name: GUINEA
+  code: <GN>
+  sortOrder: 2
+
+Country(GW):
+  name: GUINEA-BISSAU
+  code: <GW>
+  sortOrder: 2
+
+Country(GY):
+  name: GUYANA
+  code: <GY>
+  sortOrder: 2
+
+Country(HT):
+  name: HAITI
+  code: <HT>
+  sortOrder: 2
+
+Country(HM):
+  name: HEARD ISLAND AND MCDONALD ISLANDS
+  code: <HM>
+  sortOrder: 2
+
+Country(VA):
+  name: HOLY SEE (VATICAN CITY STATE)
+  code: <VA>
+  sortOrder: 2
+
+Country(HN):
+  name: HONDURAS
+  code: <HN>
+  sortOrder: 2
+
+Country(HK):
+  name: HONG KONG
+  code: <HK>
+  sortOrder: 2
+
+Country(HU):
+  name: HUNGARY
+  code: <HU>
+  sortOrder: 2
+
+Country(IS):
+  name: ICELAND
+  code: <IS>
+  sortOrder: 2
+
+Country(IN):
+  name: INDIA
+  code: <IN>
+  sortOrder: 2
+
+Country(ID):
+  name: INDONESIA
+  code: <ID>
+  sortOrder: 2
+
+Country(IR):
+  name: IRAN, ISLAMIC REPUBLIC OF
+  code: <IR>
+  sortOrder: 2
+
+Country(IQ):
+  name: IRAQ
+  code: <IQ>
+  sortOrder: 2
+
+Country(IE):
+  name: IRELAND
+  code: <IE>
+  sortOrder: 2
+
+Country(IM):
+  name: ISLE OF MAN
+  code: <IM>
+  sortOrder: 2
+
+Country(IL):
+  name: ISRAEL
+  code: <IL>
+  sortOrder: 2
+
+Country(IT):
+  name: ITALY
+  code: <IT>
+  sortOrder: 2
+
+Country(JM):
+  name: JAMAICA
+  code: <JM>
+  sortOrder: 2
+
+Country(JP):
+  name: JAPAN
+  code: <JP>
+  sortOrder: 2
+
+Country(JE):
+  name: JERSEY
+  code: <JE>
+  sortOrder: 2
+
+Country(JO):
+  name: JORDAN
+  code: <JO>
+  sortOrder: 2
+
+Country(KZ):
+  name: KAZAKHSTAN
+  code: <KZ>
+  sortOrder: 2
+
+Country(KE):
+  name: KENYA
+  code: <KE>
+  sortOrder: 2
+
+Country(KI):
+  name: KIRIBATI
+  code: <KI>
+  sortOrder: 2
+
+Country(KP):
+  name: KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF
+  code: <KP>
+  sortOrder: 2
+
+Country(KR):
+  name: KOREA, REPUBLIC OF
+  code: <KR>
+  sortOrder: 2
+
+Country(KW):
+  name: KUWAIT
+  code: <KW>
+  sortOrder: 2
+
+Country(KG):
+  name: KYRGYZSTAN
+  code: <KG>
+  sortOrder: 2
+
+Country(LA):
+  name: LAO PEOPLE'S DEMOCRATIC REPUBLIC
+  code: <LA>
+  sortOrder: 2
+
+Country(LV):
+  name: LATVIA
+  code: <LV>
+  sortOrder: 2
+
+Country(LB):
+  name: LEBANON
+  code: <LB>
+  sortOrder: 2
+
+Country(LS):
+  name: LESOTHO
+  code: <LS>
+  sortOrder: 2
+
+Country(LR):
+  name: LIBERIA
+  code: <LR>
+  sortOrder: 2
+
+Country(LY):
+  name: LIBYA
+  code: <LY>
+  sortOrder: 2
+
+Country(LI):
+  name: LIECHTENSTEIN
+  code: <LI>
+  sortOrder: 2
+
+Country(LT):
+  name: LITHUANIA
+  code: <LT>
+  sortOrder: 2
+
+Country(LU):
+  name: LUXEMBOURG
+  code: <LU>
+  sortOrder: 2
+
+Country(MO):
+  name: MACAO
+  code: <MO>
+  sortOrder: 2
+
+Country(MK):
+  name: MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF
+  code: <MK>
+  sortOrder: 2
+
+Country(MG):
+  name: MADAGASCAR
+  code: <MG>
+  sortOrder: 2
+
+Country(MW):
+  name: MALAWI
+  code: <MW>
+  sortOrder: 2
+
+Country(MY):
+  name: MALAYSIA
+  code: <MY>
+  sortOrder: 2
+
+Country(MV):
+  name: MALDIVES
+  code: <MV>
+  sortOrder: 2
+
+Country(ML):
+  name: MALI
+  code: <ML>
+  sortOrder: 2
+
+Country(MT):
+  name: MALTA
+  code: <MT>
+  sortOrder: 2
+
+Country(MH):
+  name: MARSHALL ISLANDS
+  code: <MH>
+  sortOrder: 2
+
+Country(MQ):
+  name: MARTINIQUE
+  code: <MQ>
+  sortOrder: 2
+
+Country(MR):
+  name: MAURITANIA
+  code: <MR>
+  sortOrder: 2
+
+Country(MU):
+  name: MAURITIUS
+  code: <MU>
+  sortOrder: 2
+
+Country(YT):
+  name: MAYOTTE
+  code: <YT>
+  sortOrder: 2
+
+Country(MX):
+  name: MEXICO
+  code: <MX>
+  sortOrder: 2
+
+Country(FM):
+  name: MICRONESIA, FEDERATED STATES OF
+  code: <FM>
+  sortOrder: 2
+
+Country(MD):
+  name: MOLDOVA, REPUBLIC OF
+  code: <MD>
+  sortOrder: 2
+
+Country(MC):
+  name: MONACO
+  code: <MC>
+  sortOrder: 2
+
+Country(MN):
+  name: MONGOLIA
+  code: <MN>
+  sortOrder: 2
+
+Country(ME):
+  name: MONTENEGRO
+  code: <ME>
+  sortOrder: 2
+
+Country(MS):
+  name: MONTSERRAT
+  code: <MS>
+  sortOrder: 2
+
+Country(MA):
+  name: MOROCCO
+  code: <MA>
+  sortOrder: 2
+
+Country(MZ):
+  name: MOZAMBIQUE
+  code: <MZ>
+  sortOrder: 2
+
+Country(MM):
+  name: MYANMAR
+  code: <MM>
+  sortOrder: 2
+
+Country(NA):
+  name: NAMIBIA
+  code: <NA>
+  sortOrder: 2
+
+Country(NR):
+  name: NAURU
+  code: <NR>
+  sortOrder: 2
+
+Country(NP):
+  name: NEPAL
+  code: <NP>
+  sortOrder: 2
+
+Country(NL):
+  name: NETHERLANDS
+  code: <NL>
+  sortOrder: 2
+
+Country(NC):
+  name: NEW CALEDONIA
+  code: <NC>
+  sortOrder: 2
+
+Country(NZ):
+  name: NEW ZEALAND
+  code: <NZ>
+  sortOrder: 2
+
+Country(NI):
+  name: NICARAGUA
+  code: <NI>
+  sortOrder: 2
+
+Country(NE):
+  name: NIGER
+  code: <NE>
+  sortOrder: 2
+
+Country(NG):
+  name: NIGERIA
+  code: <NG>
+  sortOrder: 2
+
+Country(NU):
+  name: NIUE
+  code: <NU>
+  sortOrder: 2
+
+Country(NF):
+  name: NORFOLK ISLAND
+  code: <NF>
+  sortOrder: 2
+
+Country(MP):
+  name: NORTHERN MARIANA ISLANDS
+  code: <MP>
+  sortOrder: 2
+
+Country(NO):
+  name: NORWAY
+  code: <NO>
+  sortOrder: 2
+
+Country(OM):
+  name: OMAN
+  code: <OM>
+  sortOrder: 2
+
+Country(PK):
+  name: PAKISTAN
+  code: <PK>
+  sortOrder: 2
+
+Country(PW):
+  name: PALAU
+  code: <PW>
+  sortOrder: 2
+
+Country(PS):
+  name: PALESTINIAN TERRITORY, OCCUPIED
+  code: <PS>
+  sortOrder: 2
+
+Country(PA):
+  name: PANAMA
+  code: <PA>
+  sortOrder: 2
+
+Country(PG):
+  name: PAPUA NEW GUINEA
+  code: <PG>
+  sortOrder: 2
+
+Country(PY):
+  name: PARAGUAY
+  code: <PY>
+  sortOrder: 2
+
+Country(PE):
+  name: PERU
+  code: <PE>
+  sortOrder: 2
+
+Country(PH):
+  name: PHILIPPINES
+  code: <PH>
+  sortOrder: 2
+
+Country(PN):
+  name: PITCAIRN
+  code: <PN>
+  sortOrder: 2
+
+Country(PL):
+  name: POLAND
+  code: <PL>
+  sortOrder: 2
+
+Country(PT):
+  name: PORTUGAL
+  code: <PT>
+  sortOrder: 2
+
+Country(PR):
+  name: PUERTO RICO
+  code: <PR>
+  sortOrder: 2
+
+Country(QA):
+  name: QATAR
+  code: <QA>
+  sortOrder: 2
+
+Country(RE):
+  name: RÉUNION
+  code: <RE>
+  sortOrder: 2
+
+Country(RO):
+  name: ROMANIA
+  code: <RO>
+  sortOrder: 2
+
+Country(RU):
+  name: RUSSIAN FEDERATION
+  code: <RU>
+  sortOrder: 2
+
+Country(RW):
+  name: RWANDA
+  code: <RW>
+  sortOrder: 2
+
+Country(BL):
+  name: SAINT BARTHÉLEMY
+  code: <BL>
+  sortOrder: 2
+
+Country(SH):
+  name: SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA
+  code: <SH>
+  sortOrder: 2
+
+Country(KN):
+  name: SAINT KITTS AND NEVIS
+  code: <KN>
+  sortOrder: 2
+
+Country(LC):
+  name: SAINT LUCIA
+  code: <LC>
+  sortOrder: 2
+
+Country(MF):
+  name: SAINT MARTIN (FRENCH PART)
+  code: <MF>
+  sortOrder: 2
+
+Country(PM):
+  name: SAINT PIERRE AND MIQUELON
+  code: <PM>
+  sortOrder: 2
+
+Country(VC):
+  name: SAINT VINCENT AND THE GRENADINES
+  code: <VC>
+  sortOrder: 2
+
+Country(WS):
+  name: SAMOA
+  code: <WS>
+  sortOrder: 2
+
+Country(SM):
+  name: SAN MARINO
+  code: <SM>
+  sortOrder: 2
+
+Country(ST):
+  name: SAO TOME AND PRINCIPE
+  code: <ST>
+  sortOrder: 2
+
+Country(SA):
+  name: SAUDI ARABIA
+  code: <SA>
+  sortOrder: 2
+
+Country(SN):
+  name: SENEGAL
+  code: <SN>
+  sortOrder: 2
+
+Country(RS):
+  name: SERBIA
+  code: <RS>
+  sortOrder: 2
+
+Country(SC):
+  name: SEYCHELLES
+  code: <SC>
+  sortOrder: 2
+
+Country(SL):
+  name: SIERRA LEONE
+  code: <SL>
+  sortOrder: 2
+
+Country(SG):
+  name: SINGAPORE
+  code: <SG>
+  sortOrder: 2
+
+Country(SX):
+  name: SINT MAARTEN (DUTCH PART)
+  code: <SX>
+  sortOrder: 2
+
+Country(SK):
+  name: SLOVAKIA
+  code: <SK>
+  sortOrder: 2
+
+Country(SI):
+  name: SLOVENIA
+  code: <SI>
+  sortOrder: 2
+
+Country(SB):
+  name: SOLOMON ISLANDS
+  code: <SB>
+  sortOrder: 2
+
+Country(SO):
+  name: SOMALIA
+  code: <SO>
+  sortOrder: 2
+
+Country(ZA):
+  name: SOUTH AFRICA
+  code: <ZA>
+  sortOrder: 2
+
+Country(GS):
+  name: SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS
+  code: <GS>
+  sortOrder: 2
+
+Country(SS):
+  name: SOUTH SUDAN
+  code: <SS>
+  sortOrder: 2
+
+Country(ES):
+  name: SPAIN
+  code: <ES>
+  sortOrder: 2
+
+Country(LK):
+  name: SRI LANKA
+  code: <LK>
+  sortOrder: 2
+
+Country(SD):
+  name: SUDAN
+  code: <SD>
+  sortOrder: 2
+
+Country(SR):
+  name: SURINAME
+  code: <SR>
+  sortOrder: 2
+
+Country(SJ):
+  name: SVALBARD AND JAN MAYEN
+  code: <SJ>
+  sortOrder: 2
+
+Country(SZ):
+  name: SWAZILAND
+  code: <SZ>
+  sortOrder: 2
+
+Country(SE):
+  name: SWEDEN
+  code: <SE>
+  sortOrder: 2
+
+Country(CH):
+  name: SWITZERLAND
+  code: <CH>
+  sortOrder: 2
+
+Country(SY):
+  name: SYRIAN ARAB REPUBLIC
+  code: <SY>
+  sortOrder: 2
+
+Country(TW):
+  name: TAIWAN, PROVINCE OF CHINA
+  code: <TW>
+  sortOrder: 2
+
+Country(TJ):
+  name: TAJIKISTAN
+  code: <TJ>
+  sortOrder: 2
+
+Country(TZ):
+  name: TANZANIA, UNITED REPUBLIC OF
+  code: <TZ>
+  sortOrder: 2
+
+Country(TH):
+  name: THAILAND
+  code: <TH>
+  sortOrder: 2
+
+Country(TL):
+  name: TIMOR-LESTE
+  code: <TL>
+  sortOrder: 2
+
+Country(TG):
+  name: TOGO
+  code: <TG>
+  sortOrder: 2
+
+Country(TK):
+  name: TOKELAU
+  code: <TK>
+  sortOrder: 2
+
+Country(TO):
+  name: TONGA
+  code: <TO>
+  sortOrder: 2
+
+Country(TT):
+  name: TRINIDAD AND TOBAGO
+  code: <TT>
+  sortOrder: 2
+
+Country(TN):
+  name: TUNISIA
+  code: <TN>
+  sortOrder: 2
+
+Country(TR):
+  name: TURKEY
+  code: <TR>
+  sortOrder: 2
+
+Country(TM):
+  name: TURKMENISTAN
+  code: <TM>
+  sortOrder: 2
+
+Country(TC):
+  name: TURKS AND CAICOS ISLANDS
+  code: <TC>
+  sortOrder: 2
+
+Country(TV):
+  name: TUVALU
+  code: <TV>
+  sortOrder: 2
+
+Country(UG):
+  name: UGANDA
+  code: <UG>
+  sortOrder: 2
+
+Country(UA):
+  name: UKRAINE
+  code: <UA>
+  sortOrder: 2
+
+Country(AE):
+  name: UNITED ARAB EMIRATES
+  code: <AE>
+  sortOrder: 2
+
+Country(GB):
+  name: UNITED KINGDOM
+  code: <GB>
+  sortOrder: 2
+
+Country(US):
+  name: UNITED STATES
+  code: <US>
+  sortOrder: 1
+
+Country(UM):
+  name: UNITED STATES MINOR OUTLYING ISLANDS
+  code: <UM>
+  sortOrder: 2
+
+Country(UY):
+  name: URUGUAY
+  code: <UY>
+  sortOrder: 2
+
+Country(UZ):
+  name: UZBEKISTAN
+  code: <UZ>
+  sortOrder: 2
+
+Country(VU):
+  name: VANUATU
+  code: <VU>
+  sortOrder: 2
+
+Country(VE):
+  name: VENEZUELA, BOLIVARIAN REPUBLIC OF
+  code: <VE>
+  sortOrder: 2
+
+Country(VN):
+  name: VIET NAM
+  code: <VN>
+  sortOrder: 2
+
+Country(VG):
+  name: VIRGIN ISLANDS, BRITISH
+  code: <VG>
+  sortOrder: 2
+
+Country(VI):
+  name: VIRGIN ISLANDS, U.S.
+  code: <VI>
+  sortOrder: 2
+
+Country(WF):
+  name: WALLIS AND FUTUNA
+  code: <WF>
+  sortOrder: 2
+
+Country(EH):
+  name: WESTERN SAHARA
+  code: <EH>
+  sortOrder: 2
+
+Country(YE):
+  name: YEMEN
+  code: <YE>
+  sortOrder: 2
+
+Country(ZM):
+  name: ZAMBIA
+  code: <ZM>
+  sortOrder: 2
+
+Country(ZW):
+  name: ZIMBABWE
+  code: <ZW>
+  sortOrder: 2
+
+Country(World):
+  name: World
+  code: <World>
+  sortOrder: 3
+
+Country(Africa):
+  name: Africa
+  code: <Africa>
+  sortOrder: 3
+
+Country(AFRICOM):
+  name: AFRICOM
+  code: <AFRICOM>
+  sortOrder: 3
+
+Country(Americas):
+  name: Americas
+  code: <Americas>
+  sortOrder: 3
+
+Country(Antarctic):
+  name: Antarctic
+  code: <Antarctic>
+  sortOrder: 3
+
+Country(Antarctica):
+  name: Antarctica
+  code: <Antarctica>
+  sortOrder: 3
+
+Country(Arabian Peninsula):
+  name: Arabian Peninsula
+  code: <Arabian Peninsula>
+  sortOrder: 3
+
+Country(Arabian Sea):
+  name: Arabian Sea
+  code: <Arabian Sea>
+  sortOrder: 3
+
+Country(Arctic):
+  name: Arctic
+  code: <Arctic>
+  sortOrder: 3
+
+Country(Arctic Ocean):
+  name: Arctic Ocean
+  code: <Arctic Ocean>
+  sortOrder: 3
+
+Country(Asia/Pacific):
+  name: Asia/Pacific
+  code: <Asia/Pacific>
+  sortOrder: 3
+
+Country(Atlantic Ocean):
+  name: Atlantic Ocean
+  code: <Atlantic Ocean>
+  sortOrder: 3
+
+Country(Baltic Sea):
+  name: Baltic Sea
+  code: <Baltic Sea>
+  sortOrder: 3
+
+Country(Black Sea):
+  name: Black Sea
+  code: <Black Sea>
+  sortOrder: 3
+
+Country(Caribbean):
+  name: Caribbean
+  code: <Caribbean>
+  sortOrder: 3
+
+Country(CENTCOM):
+  name: CENTCOM
+  code: <CENTCOM>
+  sortOrder: 3
+
+Country(East China Sea):
+  name: East China Sea
+  code: <East China Sea>
+  sortOrder: 3
+
+Country(Eastern Africa):
+  name: Eastern Africa
+  code: <Eastern Africa>
+  sortOrder: 3
+
+Country(EUCOM):
+  name: EUCOM
+  code: <EUCOM>
+  sortOrder: 3
+
+Country(Europe/Eurasia):
+  name: Europe/Eurasia
+  code: <Europe/Eurasia>
+  sortOrder: 3
+
+Country(Gulf of Guinea):
+  name: Gulf of Guinea
+  code: <Gulf of Guinea>
+  sortOrder: 3
+
+Country(Gulf of Suez):
+  name: Gulf of Suez
+  code: <Gulf of Suez>
+  sortOrder: 3
+
+Country(Horn of Africa):
+  name: Horn of Africa
+  code: <Horn of Africa>
+  sortOrder: 3
+
+Country(Indian Ocean):
+  name: Indian Ocean
+  code: <Indian Ocean>
+  sortOrder: 3
+
+Country(Korea Bay):
+  name: Korea Bay
+  code: <Korea Bay>
+  sortOrder: 3
+
+Country(Latin America):
+  name: Latin America
+  code: <Latin America>
+  sortOrder: 3
+
+Country(Luzon Strait):
+  name: Luzon Strait
+  code: <Luzon Strait>
+  sortOrder: 3
+
+Country(Mediterranean Sea):
+  name: Mediterranean Sea
+  code: <Mediterranean Sea>
+  sortOrder: 3
+
+Country(Middle East):
+  name: Middle East
+  code: <Middle East>
+  sortOrder: 3
+
+Country(North America):
+  name: North America
+  code: <North America>
+  sortOrder: 3
+
+Country(NORTHCOM):
+  name: NORTHCOM
+  code: <NORTHCOM>
+  sortOrder: 3
+
+Country(Oceania):
+  name: Oceania
+  code: <Oceania>
+  sortOrder: 3
+
+Country(Pacific Ocean):
+  name: Pacific Ocean
+  code: <Pacific Ocean>
+  sortOrder: 3
+
+Country(PACOM):
+  name: PACOM
+  code: <PACOM>
+  sortOrder: 3
+
+Country(Red Sea):
+  name: Red Sea
+  code: <Red Sea>
+  sortOrder: 3
+
+Country(Sea of Japan):
+  name: Sea of Japan
+  code: <Sea of Japan>
+  sortOrder: 3
+
+Country(SOCOM):
+  name: SOCOM
+  code: <SOCOM>
+  sortOrder: 3
+
+Country(South America):
+  name: South America
+  code: <South America>
+  sortOrder: 3
+
+Country(South China Sea):
+  name: South China Sea
+  code: <South China Sea>
+  sortOrder: 3
+
+Country(SOUTHCOM):
+  name: SOUTHCOM
+  code: <SOUTHCOM>
+  sortOrder: 3
+
+Country(STRATCOM):
+  name: STRATCOM
+  code: <STRATCOM>
+  sortOrder: 3
+
+Country(Suez Canal):
+  name: Suez Canal
+  code: <Suez Canal>
+  sortOrder: 3
+
+Country(Taiwan Strait):
+  name: Taiwan Strait
+  code: <Taiwan Strait>
+  sortOrder: 3
+
+Country(Yellow Sea):
+  name: Yellow Sea
+  code: <Yellow Sea>
+  sortOrder: 3
+
+

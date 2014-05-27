@@ -1,0 +1,95 @@
+ReportingSnapshot(1):
+    text: "Bootstrapped"
+    totalRFIs: 12
+    pendingRFIs: 5
+    acceptedRFIs: 3
+    inWorkRFIs: 1
+    completedRFIs: 1
+    overdueRFIs: 1
+    canceledRFIs: 2
+    persistentRFIs: 0
+    onHoldRFIs: 1
+    withCustomerRFIs: 0
+    event: 1
+    createdBy: joseph.mctester
+    createdAt: 2012-04-01
+
+ReportingSnapshot(2):
+    text: "Bootstrapped"
+    totalRFIs: 12
+    pendingRFIs: 4
+    acceptedRFIs: 3
+    inWorkRFIs: 2
+    completedRFIs: 2
+    overdueRFIs: 1
+    canceledRFIs: 2
+    persistentRFIs: 0
+    onHoldRFIs: 0
+    withCustomerRFIs: 0
+    event: 1
+    createdBy: joseph.mctester
+    createdAt: 2012-04-02
+    
+ReportingSnapshot(3):
+    text: "Bootstrapped"
+    totalRFIs: 16
+    pendingRFIs: 4
+    acceptedRFIs: 5
+    inWorkRFIs: 5
+    completedRFIs: 1
+    overdueRFIs: 4
+    canceledRFIs: 0
+    persistentRFIs: 1
+    onHoldRFIs: 0
+    withCustomerRFIs: 0
+    event: 2
+    createdBy: joseph.mctester
+    createdAt: 2012-04-01
+    
+ReportingSnapshot(4):
+    text: "Bootstrapped"
+    totalRFIs: 16
+    pendingRFIs: 4
+    acceptedRFIs: 5
+    inWorkRFIs: 5
+    completedRFIs: 1
+    overdueRFIs: 4
+    canceledRFIs: 0
+    persistentRFIs: 1
+    onHoldRFIs: 0
+    withCustomerRFIs: 0
+    event: 2
+    createdBy: joseph.mctester
+    createdAt: 2012-04-02
+
+ReportingSnapshot(5):
+    text: "Bootstrapped"
+    totalRFIs: 14
+    pendingRFIs: 6
+    acceptedRFIs: 4
+    inWorkRFIs: 3
+    completedRFIs: 2
+    overdueRFIs: 2
+    canceledRFIs: 2
+    persistentRFIs: 0
+    onHoldRFIs: 0
+    withCustomerRFIs: 0
+    event: 1
+    createdBy: joseph.mctester
+    createdAt: 2012-04-01
+    
+ReportingSnapshot(6):
+    text: "Bootstrapped"
+    totalRFIs: 18
+    pendingRFIs: 2
+    acceptedRFIs: 3
+    inWorkRFIs: 6
+    completedRFIs: 6
+    overdueRFIs: 3
+    canceledRFIs: 0
+    persistentRFIs: 1
+    onHoldRFIs: 0
+    withCustomerRFIs: 0
+    event: 2
+    createdBy: joseph.mctester
+    createdAt: 2012-04-01

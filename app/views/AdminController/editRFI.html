@@ -1,0 +1,519 @@
+*{TODO: Refactor all of the floating into either control-group styles or new class }*
+#{extends "admin.html"/}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" media="screen" href="@{'/public/javascripts/libs/theme/default/style.css'}"/>
+#{/set}
+
+#{set 'moreScripts'}
+#{press.script 'libs/OpenLayers.min.js', compress:false /}
+<script type='text/javascript'>
+$(function() {
+    globals.rfiFormSetup($("body"));
+    
+    $(".timeago").timeago();
+    
+    $(".internalComments").linkify();
+    $(".userComments").linkify();
+    
+    $(".submitAdminComment").click(function() {
+        var $ths = $(this);
+        var $txt = $ths.prevAll("textarea").eq(0);
+        if ($txt.val() != "") {
+            var id = $("input[name='r.id']").val();
+            $.ajax({type: "POST", url: globals.route.RFIController.adminComment(), data: { c: { text: $txt.val(), rfi: { id: id} }}})
+            .done(function(res,status,xhr) {
+                if ( !xhr.getResponseHeader("FormErrors")) {
+                    $(".internalComments").prepend(_.template(templates.adminComment, { c: res}));
+                    $txt.val("");
+                }
+                else {
+                    alert("Error creating admin status comment");
+                }
+            });
+        }
+        else {
+            alert("Text required");
+        }
+        return false;
+    });
+    
+    $(".internalComments").on("click", ".deleteAdminComment", function() {
+        var $p = $(this).closest(".alert");
+        var id = $p.attr("rel");
+        if ( confirm("Are you sure you permanently want to delete this status (admin-only) item?")) {
+            $.ajax({type: "DELETE", url: globals.route.RFIController.deleteAdminComment({id:id})})
+            .done(function(res, status, xhr) {
+                $p.fadeOut(500, function() {
+                    $p.remove();
+                });
+            });
+        }
+        return false;
+    });
+    
+    $("#RFIForm").bind("submit", function() {
+        $(".destinationSMTSKeywords").find("option").attr("selected", "selected");
+    });
+    
+    $(".submitFieldComment").click(function() {
+        var $ths = $(this);
+        var $txt = $ths.prevAll("textarea").eq(0);
+        if ($txt.val() != "") {
+            var id = $("input[name='r.id']").val();
+            $.ajax({type: "POST", url: globals.route.RFIController.createComment(), data: { c: { text: $txt.val(), rfi: { id: id} }}})
+            .done(function(res,status,xhr) {
+                if ( !xhr.getResponseHeader("Warning")) {
+                    console.log(res);
+                    $(".userComments").prepend(_.template(templates.commentTemplate, { c: res}));
+                    $txt.val("");
+                }
+                else {
+                    alert("Error creating end-user-visible comment");
+                }
+            });
+        }
+        else {
+            alert("Text required");
+        }
+        return false;
+    });
+    
+    $("#delete").click(function() {
+        if ( confirm("Are you sure you want to permanently delete this RFI?")) {
+            $.ajax({url: globals.route.RFIController.deleteRFI({id:$(this).data("rfi")}), type: "DELETE"})
+            .done(function() {
+                window.location = "@{AdminController.index()}";
+            });
+        }
+        return false;
+    });
+    
+    $(".classification .clear").click(function() {
+        $(this).closest("tr").find("input[type='radio'], input[type='checkbox']").prop("checked", false);
+        $(this).closest("tr").find("option").prop("selected", false);
+        $(this).closest("tr").find("select").trigger("change");
+        return false;
+    });
+    
+    $("#file_uploader").each(function() {
+        var uploader = new qq.FileUploader({
+            element: $("#file_uploader").get(0),
+            action: '@{RFIController.upload}',
+            params: {
+                rfi_id: $("input[name='r.id']").val()
+            }
+        });
+    }); 
+    
+    $("input[name='r.nonSpatial']").change(function(a) {
+        if ( a.currentTarget.checked) {
+            $(".spatialInfo").addClass("hide");
+        }
+        else {
+            $(".spatialInfo").removeClass("hide");
+        }
+    }); 
+    
+    $(".addEmail").click(function() {
+        var $ths = $(this);
+        var $cur = $("*[name='"+$ths.data("to-update")+"']");
+        var curVal = $("*[name='"+$ths.data("values")+"']").val();
+        if ( $cur.val().trim().indexOf(curVal) < 0) {
+            if ( $cur.val().trim() == "") {
+                $cur.val(curVal);
+            }
+            else {
+                $cur.val($cur.val() + "; " + curVal);
+            }
+        }
+        return false;
+    });
+    
+    $("a[rel='moreActivities']").click(function() {
+        $("div.moreActivities").toggleClass("hide");
+    });
+    
+    var mapProjection = '${play.Play.configuration.get("mapProjection")}';
+    var layer1 = '${play.Play.configuration.get("mapLayer1")}';
+    var layer2 = '${play.Play.configuration.get("mapLayer2")}';
+    var map1Type = '${play.Play.configuration.get("map1Type")}';
+    var map2Type = '${play.Play.configuration.get("map2Type")}';
+    var layer1Name = '${play.Play.configuration.get("mapLayer1Name")}';
+    var layer2Name = '${play.Play.configuration.get("mapLayer2Name")}';
+    var layer1Token = '${play.Play.configuration.get("map1Token")}';
+    var layer2Token = '${play.Play.configuration.get("map2Token")}';
+    var baseEndpoint1 = '${play.Play.configuration.get("map1Endpoint")}';
+    var baseEndpoint2 = '${play.Play.configuration.get("map2Endpoint")}';
+    
+    OpenLayers.ImgPath = "../../img/";
+
+    var map = new OpenLayers.Map({
+        div: "map",
+        *{ To illustrate on-the-fly reprojections of vector data in EPSG:4326 }*
+        projection: new OpenLayers.Projection(mapProjection),
+        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        theme: null
+    });
+    window.map = map;
+    
+    var base;
+    var base2;
+    var opt1 = {};
+    var opt2 = {};
+    if ( layer1Token) {
+        opt1.token = layer1Token;
+    }
+    if ( layer2Token) {
+        opt2.token = layer2Token;
+    }
+    opt1.layers = layer1;
+    opt2.layers = layer2;
+    if ( map1Type == "WMS") {
+        base = new OpenLayers.Layer.WMS( layer1Name, baseEndpoint1, opt1, {wrapDateLine: true});
+    }
+    else if ( map1Type == "ArcGIS93Rest") {
+        base = new OpenLayers.Layer.ArcGIS93Rest( layer1Name, baseEndpoint1, opt1);
+    }
+    map.addLayer(base);
+    if ( map2Type == "WMS") {
+        base2 = new OpenLayers.Layer.WMS( layer2Name, baseEndpoint2, opt2, { wrapDateLine: true});
+    }
+    else if ( map2Type == "ArcGIS93Rest") {
+        base2 = new OpenLayers.Layer.ArcGIS93Rest( layer2Name, baseEndpoint2, opt2);
+    }
+    map.addLayer(base2);
+    map.zoomToMaxExtent();
+    
+    var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+    var event_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+    event_style.fillColor = "#999999";
+    event_style.strokeColor = "#333333";
+    
+    var events = new OpenLayers.Layer.Vector("Events", {
+        style: event_style,
+        projection: map.displayProjection,
+        displayInLayerSwitcher: false
+    });
+    
+    var rfis = new OpenLayers.Layer.Vector("RFIs",{
+        style: layer_style,
+        projection: map.displayProjection,
+        displayInLayerSwitcher: false
+    });
+    
+    map.addLayers([events,rfis]);
+    
+    map.addControl(new OpenLayers.Control.MousePosition());
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    
+    var modify = new OpenLayers.Control.ModifyFeature(rfis);
+    map.addControl(modify);
+    
+    var drawPolygon = new OpenLayers.Control.DrawFeature(rfis, OpenLayers.Handler.Polygon);
+    map.addControl(drawPolygon);
+    
+    var drawPoint = new OpenLayers.Control.DrawFeature(rfis, OpenLayers.Handler.Point);
+    map.addControl(drawPoint);
+    
+    var drawPolyline = new OpenLayers.Control.DrawFeature(rfis, OpenLayers.Handler.Path);
+    map.addControl(drawPolyline);
+    
+    var drag = new OpenLayers.Control.DragFeature(rfis, {
+        onComplete: function(a) {
+            var geom = a.geometry.clone();
+            updateInputWithGeometry(geom);
+        }
+    });
+    map.addControl(drag);
+    
+    function update(a) {
+        var geom = a.feature.geometry.clone();
+        updateInputWithGeometry(geom);
+    }
+    
+    function createNew(a) {
+        var geom = a.feature.geometry.clone();
+        $("a.drawPoly").removeClass("active");
+        $("a.drawPoint").removeClass("active");
+        $("a.drawPolyline").removeClass("active");
+        updateInputWithGeometry(geom);
+        drawPolygon.deactivate();
+        drawPolyline.deactivate();
+        drawPoint.deactivate();
+        console.log(geom);
+        if ( geom.CLASS_NAME == "OpenLayers.Geometry.Point") {
+            drag.activate();
+            modify.deactivate();
+        }
+        else if (geom.CLASS_NAME == "OpenLayers.Geometry.LineString") {
+            modify.activate();
+            drag.deactivate();
+        }
+        else if ( geom.CLASS_NAME == "OpenLayers.Geometry.Polygon") {
+            modify.activate();
+            drag.deactivate();
+        }
+    }
+    
+    rfis.events.on({
+        "afterfeaturemodified": update,
+        "sketchcomplete": createNew
+    });
+    
+    function loadEvent(zoom) {
+        var cur = $("*[name='r.event.id']").val();
+        if ( cur) {
+            events.destroyFeatures();
+            var l = _.first(_.where(_events, {id: parseInt(cur)}));
+            if ( l) {
+                var f = polyToFeature(JSON.parse(l.region));
+                events.addFeatures([f]);
+                #{if isNew}
+                map.zoomToExtent(f.geometry.getBounds());
+                #{/if}
+            }
+        }
+    }
+    
+    $("*[name='r.event.id']").bind("change", function() {
+        loadEvent();
+    });
+    
+    var _events = [];
+    $.ajax({url:globals.route.EventController.getAll, type:"GET"})
+    .done(function(res,status,xhr) {
+        _events = res;
+        window.events = _events;
+        loadEvent();
+    });
+    
+    function polyToFeature(pts) {
+        var pointList = [];
+        _.each(pts, function(pt) {
+            pointList.push(new OpenLayers.Geometry.Point(pt.lng, pt.lat));
+        });
+        var lr = new OpenLayers.Geometry.LinearRing(pointList);
+        pointList.push(pointList[0]);
+        
+        var f = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([lr]));
+        *{ You wouldn't think you'd need to do a manual projection... }*
+        f.geometry.transform(map.displayProjection, map.projection);
+        return f;
+    }
+    
+    function polylineToFeature(pts) {
+        var pointList = [];
+        _.each(pts, function(pt) {
+            pointList.push(new OpenLayers.Geometry.Point(pt.lng, pt.lat));
+        });
+        var ls = new OpenLayers.Geometry.LineString(pointList);
+        console.log(layer_style);
+        var f = new OpenLayers.Feature.Vector(ls, {}, layer_style);
+        f.geometry.transform(map.displayProjection, map.projection);
+        return f;
+    }
+    
+    function clearSpatialInputs() {
+        $("input[name='r.coordinates.lon']").val("");
+        $("input[name='r.coordinates.lat']").val("");
+        $("input[name='r.region']").val("");
+        $("input[name='region']").val("");
+        $("input[name='r.polyline']").val("");
+        $("input[name='polyline']").val("");
+    }
+    
+    function updateInputWithGeometry(geom) {
+        function unpackVerts(geom) {
+            var verts = geom.getVertices();
+            var ret = [];
+            _.each(verts, function(v) {
+                ret.push({lng: v.x, lat: v.y});
+            });
+            return ret;
+        }
+    
+        geom.transform(map.projection, map.displayProjection);
+        if ( geom.CLASS_NAME == "OpenLayers.Geometry.Point") {
+            $("input[name='r.coordinates.lon']").val(geom.x);
+            $("input[name='r.coordinates.lat']").val(geom.y);
+        }
+        else if ( geom.CLASS_NAME == "OpenLayers.Geometry.Polygon") {
+            var ret = unpackVerts(geom);
+            $("input[name='r.region']").val(JSON.stringify(ret));
+            $("input[name='region']").val(JSON.stringify(ret));
+        }
+        else if ( geom.CLASS_NAME == "OpenLayers.Geometry.LineString") {
+            var ret = unpackVerts(geom);
+            $("input[name='r.polyline']").val(JSON.stringify(ret));
+            $("input[name='polyline']").val(JSON.stringify(ret));
+        }
+    }
+    
+    function loadRFIInMap() {
+        var lat = $("input[name='r.coordinates.lat']").val();
+        var lng = $("input[name='r.coordinates.lon']").val();
+        var region = $("input[name='r.region']").val();
+        var polyline = $("input[name='r.polyline']").val();
+        
+        if ( region) {
+            var pts = JSON.parse(region);
+            var f = polyToFeature(pts);
+            rfis.addFeatures([f]);
+            var center = f.geometry.getCentroid();
+            var bounds = f.geometry.getBounds();
+            map.zoomToExtent(f.geometry.getBounds());
+        }
+        else if ( polyline) {
+            var pts = JSON.parse(polyline);
+            var f = polylineToFeature(pts);
+            f.style.strokeWidth = 5;
+            rfis.addFeatures([f]);
+            var center = f.geometry.getCentroid();
+            var bounds = f.geometry.getBounds();
+            map.zoomToExtent(f.geometry.getBounds());
+        }
+        else if ( lat != 0.0 || lng != 0.0) {
+            var pt = new OpenLayers.Geometry.Point(lng, lat);
+            var projPt = new OpenLayers.LonLat(pt.x, pt.y).transform(map.displayProjection, map.projection);
+            var toAdd = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(projPt.lon, projPt.lat));
+            rfis.addFeatures([toAdd]);
+            map.setCenter(projPt, 12);
+        }
+        else {
+            var ct = new OpenLayers.LonLat(-94.614, 38.8).transform(map.displayProjection, map.projection);
+            map.setCenter(ct, 4);
+        }
+    }
+    
+    var $control = $(templates.rfiDrawingTemplate);
+    $("#map").append($control);
+    
+    $control.find("a.drawPoly").click(function() {
+        $(this).addClass("active");
+        $control.find("a:not(.drawPoly)").removeClass("active");
+        drawPolygon.activate();
+        drawPoint.deactivate();
+        drawPolyline.deactivate();
+        rfis.removeAllFeatures();
+        clearSpatialInputs();
+        return false;
+    });
+    
+    $control.find("a.drawPoint").click(function() {
+        $(this).addClass("active");
+        $control.find("a:not(.drawPoint)").removeClass("active");
+        drawPoint.activate();
+        drawPolyline.deactivate();
+        drawPolygon.deactivate();
+        rfis.removeAllFeatures();
+        clearSpatialInputs();
+        return false;
+    });
+    
+    $control.find("a.drawPolyline").click(function() {
+        $(this).addClass("active");
+        $control.find("a:not(.drawPolyline)").removeClass("active");
+        drawPoint.deactivate();
+        drawPolyline.activate();
+        drawPolygon.deactivate();
+        rfis.removeAllFeatures();
+        clearSpatialInputs();
+        return false;
+    });
+    
+    loadRFIInMap();
+    #{if r?.nonSpatial}
+        $(".spatialInfo").addClass("hide");
+    #{/if}
+    #{if !isNew && !r?.nonSpatial}
+        #{if r.region || r.polyline}
+            modify.activate();
+        #{/if}
+        #{elseif r.coordinates.lat != 0.0 || r.coordinates.lon != 0.0}
+            drag.activate();
+        #{/elseif}
+    #{/if}
+});
+</script>
+#{/set}
+
+#{if isNew}
+<h1>NEW RFI</h1>
+#{/if}
+#{else}
+    <div style='margin-bottom: 8px;'>
+    <a class='btn' href='@{RFIController.exportSingle(r.id)}'><strong>Export RFI</strong></a>
+    #{if !r.nonSpatial && !r.archived}
+        <a class='btn' href='@{Application.index(null, r.id)}#popup'><strong>View in map</strong></a>
+    #{/if}
+    </div>
+    <h1>${r.networkID}</h1>
+#{/else}
+
+#{form @update(), id: 'RFIForm', enctype:'multipart/form-data', class: "edit form-horizontal adminForm"}
+<input type="hidden" name="ret" value="${ret}"/>
+#{rfi.AdminRFIform r:r, isNew: isNew, countries: countries, events: events, states: states, oldStatus:oldStatus, oldAssigned:oldAssigned, oldGroupId:oldGroupId, createGEOQJob:createGEOQJob /}
+
+<div class='input left clear control-group'>
+    <input type="submit" value="${isNew?'Create RFI':'Update RFI'}" class='btn btn-primary'/>
+    #{if !isNew}
+        <a href='#' data-rfi='${r.id}' id='delete' class='btn btn-danger'>Delete</a>
+    #{/if}
+    <a href='#{if ret}${ret}#{/if}#{else}@{index()}#{/else}' class='btn btn'>Cancel</a>
+</div>
+
+#{if !isNew}
+<hr/>
+<h3>Status (admin-only)</h3>
+<textarea placeholder="Status (Admin only)" rows="3"></textarea>
+<a href='#' class='btn btn-submit submitAdminComment' style='margin-bottom: 10px;'>Add</a>
+
+<div class='internalComments'>
+    #{if r?.internalComments}
+        #{list items:r?.internalComments.sort({a,b->b.createdAt<=>a.createdAt}), as:'c'}
+            <div class='alert alert-block alert-info' rel='${c.id}'>
+                <button class='close deleteAdminComment'>&times;</button>
+                #{comment.CommentView c:c, full:true /}
+            </div>
+        #{/list}
+    #{/if}
+</div>
+<hr/>
+<h3 style='float: left;'>User Comments</h3>
+<a class='noprint' style='float: left; margin: 5px 0 0 5px;' href='#' rel='popover' data-placement="right" data-trigger='manual' data-original-title="Submit a public comment" data-content="Submitting a public (user) comment will send an email to the requestor(s) as well as the persons assigned"><i class='icon-question-sign'></i></a>
+<textarea placeholder="Add public comment, submitting a public comment will send an email to the requestor(s) as well as the persons assigned" rows="3"></textarea>
+<a href='#' class='btn btn-submit submitFieldComment' style='margin-bottom: 10px;'>Add</a>
+<div class='userComments'>
+#{if r?.comments?.size() > 0}
+    #{list items:r.comments.sort({a,b->b.createdAt<=>a.createdAt}), as:'comment'}
+        <div class='alert alert-info'>
+            #{comment.CommentView c:comment, full:true /}
+        </div>
+    #{/list}
+#{/if}
+</div>
+#{/if}
+#{/form}
+
+#{if r && r.id}
+    %{
+        cnt = models.Activity.count("rfi = ?", r)
+        pageSize = 5
+    }%
+    <h3 style='float: left;'>RFI Activity#{if cnt > pageSize}<span> - only latest ${pageSize} activities are displayed <a href='#bot' rel='moreActivities'>Show/hide more activities</a></span>#{/if}</h3>
+    <ul class='unstyled' style='clear:both;'>
+    #{list items:models.Activity.find("rfi = ? order by createdAt desc, id desc", r).fetch(pageSize), as: 'a'}
+        <li>${a.message}</li>
+    #{/list}
+    </ul>
+    #{if cnt > pageSize}
+    <div id="bot" class='hide moreActivities'>
+        <ul class='unstyled' style='clear:both;'>
+        #{list items:models.Activity.find("rfi = ? order by createdAt desc, id desc", r).from(pageSize).fetch(), as: 'a'}
+            <li>${a.message}</li>
+        #{/list}
+        </ul>
+    </div>
+    #{/if}
+#{/if}

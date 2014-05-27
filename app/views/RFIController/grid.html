@@ -1,0 +1,30 @@
+<input type="hidden" name="params" value="${_params}"/>
+
+<table class='condensed-table' data-idx="0">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th class='sortable'><div><a href='#' rel='id'>ID</a></div></th>
+            <th class='sortable'><div><a href='#' rel='title'>Subject</a></div></th>
+            <th class='sortable'><div><a href='#' rel='requestor'>Requestor</a></div></th>
+            <th class='sortable'><div><a href='#' rel='organization'>Organization</a></div></th>
+            <th class='sortable'><div><a href='#' rel='status'>Status</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateRequested'>Requested</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateRequired'>Required</a></div></th>
+            <th class='sortable'><div><a href='#' rel='dateCompleted'>Completed</a></div></th>
+        </tr>
+    </thead>
+    <tbody>
+#{list items:rfis, as:'rfi'}
+    #{rfi.RFIMapListItem rfi:rfi, rfi_parity:rfi_parity/}
+#{/list}
+#{else}
+    <tr>
+        <td colspan="9" style='text-align: center;' class="no-items">No items to display</td>
+    </tr>
+#{/else}
+    <tr>
+        <td colspan="9">Displaying: ${totalCount}</td>
+    </tr>
+    </tbody>
+</table>

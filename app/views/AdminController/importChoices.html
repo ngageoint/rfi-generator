@@ -1,0 +1,58 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+<script type='text/javascript'>
+$(function() {
+    $(".allNone").click(function() {
+        var $ths = $(this);
+        var v = function(val) {
+            $ths.parent().find(".items input[type='checkbox']").prop("checked", val);
+        };
+        
+        if ( $ths.prop("checked")) {
+            v(true);   
+        }
+        else {
+            v(false);
+        }
+    });
+});
+</script>
+#{/set}
+
+#{form @AdminController.doImport(), id: 'imports', enctype:'multipart/form-data', class: "import form-horizontal adminForm"}
+    #{if rfi_conflicts.size() > 0}
+        <div class='conflicts'>
+            <h2>RFI Conflicts</h2>
+            <p><em>An RFI with this unique identifier already exists in the destination database.
+                An import will overwrite the RFI, but not the associated comments/attachments.<br/>
+                If the associated event is not found by unique id or name, an event will be created.
+            </em></p>
+            <input id='allNone1' type='checkbox' class='allNone'/><label for='allNone1'>Check all/none</label>
+            <div class='items'>
+            #{list items:rfi_conflicts, as:'r'}
+                <input id='rfi${r.id}' type='checkbox' value='${r.id}' name='rfis'/>
+                <label for='rfi${r.id}'>${r.title}</label><br/>
+            #{/list}
+            </div>
+        </div>
+    #{/if}
+    #{if ok_rfis.size() > 0}
+        <div class='non-conflicts'>
+            <h2>Non-conflicting RFIs</h2>
+            <p><em>These RFIs are considered new in the destination system.<br/>
+                If the associated event is not found by unique id or name, an event will be created.
+            </em></p>
+            <input id='allNone2' type='checkbox' class='allNone'/><label for='allNone2'>Check all/none</label>
+            <div class='items'>
+            #{list items:ok_rfis, as:'r'}
+                <input id='rfi${r.id}' type='checkbox' value='${r.id}' name='rfis'/>
+                <label for='rfi${r.id}'>${r.title}</label><br/>
+            #{/list}
+            </div>
+        </div>
+    #{/if}
+    <input type='hidden' name='rfis' value=''/>
+    <input type='hidden' name='f.id' value='${fileid}'/>
+    <input type='submit' value='Import' class='btn btn-primary'/>
+#{/form}

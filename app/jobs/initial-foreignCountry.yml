@@ -1,0 +1,1250 @@
+ForeignGovt(AFG):
+  name: Afghanistan
+  code: AFG
+  sortOrder: 1
+
+ForeignGovt(ALB):
+  name: Albania
+  code: ALB
+  sortOrder: 1
+
+ForeignGovt(DZA):
+  name: Algeria
+  code: DZA
+  sortOrder: 1
+
+ForeignGovt(ASM):
+  name: American Samoa
+  code: ASM
+  sortOrder: 1
+
+ForeignGovt(AND):
+  name: Andorra
+  code: AND
+  sortOrder: 1
+
+ForeignGovt(AGO):
+  name: Angola
+  code: AGO
+  sortOrder: 1
+
+ForeignGovt(AIA):
+  name: Anguilla
+  code: AIA
+  sortOrder: 1
+
+ForeignGovt(ATA):
+  name: Antarctica
+  code: ATA
+  sortOrder: 1
+
+ForeignGovt(ATG):
+  name: Antigua and Barbuda
+  code: ATG
+  sortOrder: 1
+
+ForeignGovt(ARG):
+  name: Argentina
+  code: ARG
+  sortOrder: 1
+
+ForeignGovt(ARM):
+  name: Armenia
+  code: ARM
+  sortOrder: 1
+
+ForeignGovt(ABW):
+  name: Aruba
+  code: ABW
+  sortOrder: 1
+
+ForeignGovt(AUS):
+  name: Australia
+  code: AUS
+  sortOrder: 1
+
+ForeignGovt(AUT):
+  name: Austria
+  code: AUT
+  sortOrder: 1
+
+ForeignGovt(AZE):
+  name: Azerbaijan
+  code: AZE
+  sortOrder: 1
+
+ForeignGovt(BHS):
+  name: Bahamas
+  code: BHS
+  sortOrder: 1
+
+ForeignGovt(BHR):
+  name: Bahrain
+  code: BHR
+  sortOrder: 1
+
+ForeignGovt(BGD):
+  name: Bangladesh
+  code: BGD
+  sortOrder: 1
+
+ForeignGovt(BRB):
+  name: Barbados
+  code: BRB
+  sortOrder: 1
+
+ForeignGovt(BLR):
+  name: Belarus
+  code: BLR
+  sortOrder: 1
+
+ForeignGovt(BEL):
+  name: Belgium
+  code: BEL
+  sortOrder: 1
+
+ForeignGovt(BLZ):
+  name: Belize
+  code: BLZ
+  sortOrder: 1
+
+ForeignGovt(BEN):
+  name: Benin
+  code: BEN
+  sortOrder: 1
+
+ForeignGovt(BMU):
+  name: Bermuda
+  code: BMU
+  sortOrder: 1
+
+ForeignGovt(BTN):
+  name: Bhutan
+  code: BTN
+  sortOrder: 1
+
+ForeignGovt(BOL):
+  name: Bolivia
+  code: BOL
+  sortOrder: 1
+
+ForeignGovt(BIH):
+  name: Bosnia and Herzegovina
+  code: BIH
+  sortOrder: 1
+
+ForeignGovt(BWA):
+  name: Botswana
+  code: BWA
+  sortOrder: 1
+
+ForeignGovt(BVT):
+  name: Bouvet Island
+  code: BVT
+  sortOrder: 1
+
+ForeignGovt(BRA):
+  name: Brazil
+  code: BRA
+  sortOrder: 1
+
+ForeignGovt(IOT):
+  name: British Indian Ocean Territory
+  code: IOT
+  sortOrder: 1
+
+ForeignGovt(VGB):
+  name: British Virgin Islands
+  code: VGB
+  sortOrder: 1
+
+ForeignGovt(BRN):
+  name: Brunei
+  code: BRN
+  sortOrder: 1
+
+ForeignGovt(BGR):
+  name: Bulgaria
+  code: BGR
+  sortOrder: 1
+
+ForeignGovt(BFA):
+  name: Burkina Faso
+  code: BFA
+  sortOrder: 1
+
+ForeignGovt(MMR):
+  name: Burma / Myanmar
+  code: MMR
+  sortOrder: 1
+
+ForeignGovt(BDI):
+  name: Burundi
+  code: BDI
+  sortOrder: 1
+
+ForeignGovt(KHM):
+  name: Cambodia
+  code: KHM
+  sortOrder: 1
+
+ForeignGovt(CMR):
+  name: Cameroon
+  code: CMR
+  sortOrder: 1
+
+ForeignGovt(CAN):
+  name: Canada
+  code: CAN
+  sortOrder: 1
+
+ForeignGovt(CPV):
+  name: Cape Verde
+  code: CPV
+  sortOrder: 1
+
+ForeignGovt(CYM):
+  name: Cayman Islands
+  code: CYM
+  sortOrder: 1
+
+ForeignGovt(CAF):
+  name: Central African Republic
+  code: CAF
+  sortOrder: 1
+
+ForeignGovt(TCD):
+  name: Chad
+  code: TCD
+  sortOrder: 1
+
+ForeignGovt(CHL):
+  name: Chile
+  code: CHL
+  sortOrder: 1
+
+ForeignGovt(CHN):
+  name: China
+  code: CHN
+  sortOrder: 1
+
+ForeignGovt(CXR):
+  name: Christmas Island
+  code: CXR
+  sortOrder: 1
+
+ForeignGovt(CCK):
+  name: Cocos (Keeling) Islands
+  code: CCK
+  sortOrder: 1
+
+ForeignGovt(COL):
+  name: Colombia
+  code: COL
+  sortOrder: 1
+
+ForeignGovt(COM):
+  name: Comoros
+  code: COM
+  sortOrder: 1
+
+ForeignGovt(COK):
+  name: Cook Islands
+  code: COK
+  sortOrder: 1
+
+ForeignGovt(CRI):
+  name: Costa Rica
+  code: CRI
+  sortOrder: 1
+
+ForeignGovt(CIV):
+  name: Cote d Ivoire
+  code: CIV
+  sortOrder: 1
+
+ForeignGovt(HRV):
+  name: Croatia
+  code: HRV
+  sortOrder: 1
+
+ForeignGovt(CUB):
+  name: Cuba
+  code: CUB
+  sortOrder: 1
+
+ForeignGovt(CYP):
+  name: Cyprus
+  code: CYP
+  sortOrder: 1
+
+ForeignGovt(CZE):
+  name: Czech Republic
+  code: CZE
+  sortOrder: 1
+
+ForeignGovt(COD):
+  name: Democratic Republic of the Congo
+  code: COD
+  sortOrder: 1
+
+ForeignGovt(DNK):
+  name: Denmark
+  code: DNK
+  sortOrder: 1
+
+ForeignGovt(DJI):
+  name: Djibouti
+  code: DJI
+  sortOrder: 1
+
+ForeignGovt(DMA):
+  name: Dominica
+  code: DMA
+  sortOrder: 1
+
+ForeignGovt(DOM):
+  name: Dominican Republic
+  code: DOM
+  sortOrder: 1
+
+ForeignGovt(F3):
+  name: Eastern Africa
+  code: F3
+  sortOrder: 1
+
+ForeignGovt(ECU):
+  name: Ecuador
+  code: ECU
+  sortOrder: 1
+
+ForeignGovt(EGY):
+  name: Egypt
+  code: EGY
+  sortOrder: 1
+
+ForeignGovt(SLV):
+  name: El Salvador
+  code: SLV
+  sortOrder: 1
+
+ForeignGovt(GNQ):
+  name: Equatorial Guinea
+  code: GNQ
+  sortOrder: 1
+
+ForeignGovt(ERI):
+  name: Eritrea
+  code: ERI
+  sortOrder: 1
+
+ForeignGovt(EST):
+  name: Estonia
+  code: EST
+  sortOrder: 1
+
+ForeignGovt(ETH):
+  name: Ethiopia
+  code: ETH
+  sortOrder: 1
+
+ForeignGovt(FLK):
+  name: Falkland Islands (Islas Malvinas)
+  code: FLK
+  sortOrder: 1
+
+ForeignGovt(FRO):
+  name: Faroe Islands
+  code: FRO
+  sortOrder: 1
+
+ForeignGovt(FJI):
+  name: Fiji
+  code: FJI
+  sortOrder: 1
+
+ForeignGovt(FIN):
+  name: Finland
+  code: FIN
+  sortOrder: 1
+
+ForeignGovt(FRA):
+  name: France
+  code: FRA
+  sortOrder: 1
+
+ForeignGovt(GUF):
+  name: French Guiana
+  code: GUF
+  sortOrder: 1
+
+ForeignGovt(PYF):
+  name: French Polynesia
+  code: PYF
+  sortOrder: 1
+
+ForeignGovt(ATF):
+  name: French Southern and Antarctic Lands
+  code: ATF
+  sortOrder: 1
+
+ForeignGovt(GAB):
+  name: Gabon
+  code: GAB
+  sortOrder: 1
+
+ForeignGovt(GMB):
+  name: Gambia
+  code: GMB
+  sortOrder: 1
+
+ForeignGovt(PSE):
+  name: Gaza Strip
+  code: PSE
+  sortOrder: 1
+
+ForeignGovt(GEO):
+  name: Georgia
+  code: GEO
+  sortOrder: 1
+
+ForeignGovt(DEU):
+  name: Germany
+  code: DEU
+  sortOrder: 1
+
+ForeignGovt(GHA):
+  name: Ghana
+  code: GHA
+  sortOrder: 1
+
+ForeignGovt(GIB):
+  name: Gibraltar
+  code: GIB
+  sortOrder: 1
+
+ForeignGovt(GRC):
+  name: Greece
+  code: GRC
+  sortOrder: 1
+
+ForeignGovt(GRL):
+  name: Greenland
+  code: GRL
+  sortOrder: 1
+
+ForeignGovt(GRD):
+  name: Grenada
+  code: GRD
+  sortOrder: 1
+
+ForeignGovt(GLP):
+  name: Guadeloupe
+  code: GLP
+  sortOrder: 1
+
+ForeignGovt(GUM):
+  name: Guam
+  code: GUM
+  sortOrder: 1
+
+ForeignGovt(GTM):
+  name: Guatemala
+  code: GTM
+  sortOrder: 1
+
+ForeignGovt(GGY):
+  name: Guernsey
+  code: GGY
+  sortOrder: 1
+
+ForeignGovt(GIN):
+  name: Guinea
+  code: GIN
+  sortOrder: 1
+
+ForeignGovt(GNB):
+  name: Guinea-Bissau
+  code: GNB
+  sortOrder: 1
+
+ForeignGovt(GUY):
+  name: Guyana
+  code: GUY
+  sortOrder: 1
+
+ForeignGovt(HTI):
+  name: Haiti
+  code: HTI
+  sortOrder: 1
+
+ForeignGovt(HMD):
+  name: Heard Island and McDonald Islands
+  code: HMD
+  sortOrder: 1
+
+ForeignGovt(VAT):
+  name: Holy See (Vatican City)
+  code: VAT
+  sortOrder: 1
+
+ForeignGovt(HND):
+  name: Honduras
+  code: HND
+  sortOrder: 1
+
+ForeignGovt(HKG):
+  name: Hong Kong
+  code: HKG
+  sortOrder: 1
+
+ForeignGovt(HUN):
+  name: Hungary
+  code: HUN
+  sortOrder: 1
+
+ForeignGovt(ISL):
+  name: Iceland
+  code: ISL
+  sortOrder: 1
+
+ForeignGovt(IND):
+  name: India
+  code: IND
+  sortOrder: 1
+
+ForeignGovt(IDN):
+  name: Indonesia
+  code: IDN
+  sortOrder: 1
+
+ForeignGovt(IRN):
+  name: Iran
+  code: IRN
+  sortOrder: 1
+
+ForeignGovt(IRQ):
+  name: Iraq
+  code: IRQ
+  sortOrder: 1
+
+ForeignGovt(IRL):
+  name: Ireland
+  code: IRL
+  sortOrder: 1
+
+ForeignGovt(IMN):
+  name: Isle of Man
+  code: IMN
+  sortOrder: 1
+
+ForeignGovt(ISR):
+  name: Israel
+  code: ISR
+  sortOrder: 1
+
+ForeignGovt(ITA):
+  name: Italy
+  code: ITA
+  sortOrder: 1
+
+ForeignGovt(JAM):
+  name: Jamaica
+  code: JAM
+  sortOrder: 1
+
+ForeignGovt(JPN):
+  name: Japan
+  code: JPN
+  sortOrder: 1
+
+ForeignGovt(JEY):
+  name: Jersey
+  code: JEY
+  sortOrder: 1
+
+ForeignGovt(JOR):
+  name: Jordan
+  code: JOR
+  sortOrder: 1
+
+ForeignGovt(KAZ):
+  name: Kazakhstan
+  code: KAZ
+  sortOrder: 1
+
+ForeignGovt(KEN):
+  name: Kenya
+  code: KEN
+  sortOrder: 1
+
+ForeignGovt(KIR):
+  name: Kiribati
+  code: KIR
+  sortOrder: 1
+
+ForeignGovt(KSV):
+  name: Kosovo
+  code: KSV
+  sortOrder: 1
+
+ForeignGovt(KWT):
+  name: Kuwait
+  code: KWT
+  sortOrder: 1
+
+ForeignGovt(KGZ):
+  name: Kyrgyzstan
+  code: KGZ
+  sortOrder: 1
+
+ForeignGovt(LAO):
+  name: Laos
+  code: LAO
+  sortOrder: 1
+
+ForeignGovt(LVA):
+  name: Latvia
+  code: LVA
+  sortOrder: 1
+
+ForeignGovt(LBN):
+  name: Lebanon
+  code: LBN
+  sortOrder: 1
+
+ForeignGovt(LSO):
+  name: Lesotho
+  code: LSO
+  sortOrder: 1
+
+ForeignGovt(LBR):
+  name: Liberia
+  code: LBR
+  sortOrder: 1
+
+ForeignGovt(LBY):
+  name: Libya
+  code: LBY
+  sortOrder: 1
+
+ForeignGovt(LIE):
+  name: Liechtenstein
+  code: LIE
+  sortOrder: 1
+
+ForeignGovt(LTU):
+  name: Lithuania
+  code: LTU
+  sortOrder: 1
+
+ForeignGovt(LUX):
+  name: Luxembourg
+  code: LUX
+  sortOrder: 1
+
+ForeignGovt(MAC):
+  name: Macau
+  code: MAC
+  sortOrder: 1
+
+ForeignGovt(MKD):
+  name: Macedonia
+  code: MKD
+  sortOrder: 1
+
+ForeignGovt(MDG):
+  name: Madagascar
+  code: MDG
+  sortOrder: 1
+
+ForeignGovt(MWI):
+  name: Malawi
+  code: MWI
+  sortOrder: 1
+
+ForeignGovt(MYS):
+  name: Malaysia
+  code: MYS
+  sortOrder: 1
+
+ForeignGovt(MDV):
+  name: Maldives
+  code: MDV
+  sortOrder: 1
+
+ForeignGovt(MLI):
+  name: Mali
+  code: MLI
+  sortOrder: 1
+
+ForeignGovt(MLT):
+  name: Malta
+  code: MLT
+  sortOrder: 1
+
+ForeignGovt(MHL):
+  name: Marshall Islands
+  code: MHL
+  sortOrder: 1
+
+ForeignGovt(MTQ):
+  name: Martinique
+  code: MTQ
+  sortOrder: 1
+
+ForeignGovt(MRT):
+  name: Mauritania
+  code: MRT
+  sortOrder: 1
+
+ForeignGovt(MUS):
+  name: Mauritius
+  code: MUS
+  sortOrder: 1
+
+ForeignGovt(MYT):
+  name: Mayotte
+  code: MYT
+  sortOrder: 1
+
+ForeignGovt(MEX):
+  name: Mexico
+  code: MEX
+  sortOrder: 1
+
+ForeignGovt(FSM):
+  name: Micronesia
+  code: FSM
+  sortOrder: 1
+
+ForeignGovt(MDA):
+  name: Moldova
+  code: MDA
+  sortOrder: 1
+
+ForeignGovt(MCO):
+  name: Monaco
+  code: MCO
+  sortOrder: 1
+
+ForeignGovt(MNG):
+  name: Mongolia
+  code: MNG
+  sortOrder: 1
+
+ForeignGovt(MNE):
+  name: Montenegro
+  code: MNE
+  sortOrder: 1
+
+ForeignGovt(MSR):
+  name: Montserrat
+  code: MSR
+  sortOrder: 1
+
+ForeignGovt(MAR):
+  name: Morocco
+  code: MAR
+  sortOrder: 1
+
+ForeignGovt(MOZ):
+  name: Mozambique
+  code: MOZ
+  sortOrder: 1
+
+ForeignGovt(NAM):
+  name: Namibia
+  code: NAM
+  sortOrder: 1
+
+ForeignGovt(NRU):
+  name: Nauru
+  code: NRU
+  sortOrder: 1
+
+ForeignGovt(NPL):
+  name: Nepal
+  code: NPL
+  sortOrder: 1
+
+ForeignGovt(NLD):
+  name: Netherlands
+  code: NLD
+  sortOrder: 1
+
+ForeignGovt(ANT):
+  name: Netherlands Antilles
+  code: ANT
+  sortOrder: 1
+
+ForeignGovt(NCL):
+  name: New Caledonia
+  code: NCL
+  sortOrder: 1
+
+ForeignGovt(NZL):
+  name: New Zealand
+  code: NZL
+  sortOrder: 1
+
+ForeignGovt(NIC):
+  name: Nicaragua
+  code: NIC
+  sortOrder: 1
+
+ForeignGovt(NER):
+  name: Niger
+  code: NER
+  sortOrder: 1
+
+ForeignGovt(NGA):
+  name: Nigeria
+  code: NGA
+  sortOrder: 1
+
+ForeignGovt(NIU):
+  name: Niue
+  code: NIU
+  sortOrder: 1
+
+ForeignGovt(NFK):
+  name: Norfolk Island
+  code: NFK
+  sortOrder: 1
+
+ForeignGovt(PRK):
+  name: North Korea
+  code: PRK
+  sortOrder: 1
+
+ForeignGovt(MNP):
+  name: Northern Mariana Islands
+  code: MNP
+  sortOrder: 1
+
+ForeignGovt(NOR):
+  name: Norway
+  code: NOR
+  sortOrder: 1
+
+ForeignGovt(OMN):
+  name: Oman
+  code: OMN
+  sortOrder: 1
+
+ForeignGovt(PAK):
+  name: Pakistan
+  code: PAK
+  sortOrder: 1
+
+ForeignGovt(PLW):
+  name: Palau
+  code: PLW
+  sortOrder: 1
+
+ForeignGovt(PAN):
+  name: Panama
+  code: PAN
+  sortOrder: 1
+
+ForeignGovt(PNG):
+  name: Papua New Guinea
+  code: PNG
+  sortOrder: 1
+
+ForeignGovt(PRY):
+  name: Paraguay
+  code: PRY
+  sortOrder: 1
+
+ForeignGovt(PER):
+  name: Peru
+  code: PER
+  sortOrder: 1
+
+ForeignGovt(PHL):
+  name: Philippines
+  code: PHL
+  sortOrder: 1
+
+ForeignGovt(PCN):
+  name: Pitcairn Islands
+  code: PCN
+  sortOrder: 1
+
+ForeignGovt(POL):
+  name: Poland
+  code: POL
+  sortOrder: 1
+
+ForeignGovt(PRT):
+  name: Portugal
+  code: PRT
+  sortOrder: 1
+
+ForeignGovt(PRI):
+  name: Puerto Rico
+  code: PRI
+  sortOrder: 1
+
+ForeignGovt(PRI):
+  name: Puerto Rico
+  code: PRI
+  sortOrder: 1
+
+ForeignGovt(QAT):
+  name: Qatar
+  code: QAT
+  sortOrder: 1
+
+ForeignGovt(COG):
+  name: Republic of the Congo
+  code: COG
+  sortOrder: 1
+
+ForeignGovt(REU):
+  name: Reunion
+  code: REU
+  sortOrder: 1
+
+ForeignGovt(ROU):
+  name: Romania
+  code: ROU
+  sortOrder: 1
+
+ForeignGovt(RUS):
+  name: Russia
+  code: RUS
+  sortOrder: 1
+
+ForeignGovt(RWA):
+  name: Rwanda
+  code: RWA
+  sortOrder: 1
+
+ForeignGovt(BLM):
+  name: Saint Barthelemy
+  code: BLM
+  sortOrder: 1
+
+ForeignGovt(SHN):
+  name: Saint Helena
+  code: SHN
+  sortOrder: 1
+
+ForeignGovt(KNA):
+  name: Saint Kitts and Nevis
+  code: KNA
+  sortOrder: 1
+
+ForeignGovt(LCA):
+  name: Saint Lucia
+  code: LCA
+  sortOrder: 1
+
+ForeignGovt(MAF):
+  name: Saint Martin
+  code: MAF
+  sortOrder: 1
+
+ForeignGovt(SPM):
+  name: Saint Pierre and Miquelon
+  code: SPM
+  sortOrder: 1
+
+ForeignGovt(VCT):
+  name: Saint Vincent and the Grenadines
+  code: VCT
+  sortOrder: 1
+
+ForeignGovt(WSM):
+  name: Samoa
+  code: WSM
+  sortOrder: 1
+
+ForeignGovt(SMR):
+  name: San Marino
+  code: SMR
+  sortOrder: 1
+
+ForeignGovt(STP):
+  name: Sao Tome and Principe
+  code: STP
+  sortOrder: 1
+
+ForeignGovt(SAU):
+  name: Saudi Arabia
+  code: SAU
+  sortOrder: 1
+
+ForeignGovt(SEN):
+  name: Senegal
+  code: SEN
+  sortOrder: 1
+
+ForeignGovt(SRB):
+  name: Serbia
+  code: SRB
+  sortOrder: 1
+
+ForeignGovt(SYC):
+  name: Seychelles
+  code: SYC
+  sortOrder: 1
+
+ForeignGovt(SLE):
+  name: Sierra Leone
+  code: SLE
+  sortOrder: 1
+
+ForeignGovt(SGP):
+  name: Singapore
+  code: SGP
+  sortOrder: 1
+
+ForeignGovt(SVK):
+  name: Slovakia
+  code: SVK
+  sortOrder: 1
+
+ForeignGovt(SVN):
+  name: Slovenia
+  code: SVN
+  sortOrder: 1
+
+ForeignGovt(SLB):
+  name: Solomon Islands
+  code: SLB
+  sortOrder: 1
+
+ForeignGovt(SOM):
+  name: Somalia
+  code: SOM
+  sortOrder: 1
+
+ForeignGovt(ZAF):
+  name: South Africa
+  code: ZAF
+  sortOrder: 1
+
+ForeignGovt(SGS):
+  name: South Georgia and the Islands
+  code: SGS
+  sortOrder: 1
+
+ForeignGovt(KOR):
+  name: South Korea
+  code: KOR
+  sortOrder: 1
+
+ForeignGovt(SDN):
+  name: South Sudan
+  code: SDN
+  sortOrder: 1
+
+ForeignGovt(ESP):
+  name: Spain
+  code: ESP
+  sortOrder: 1
+
+ForeignGovt(LKA):
+  name: Sri Lanka
+  code: LKA
+  sortOrder: 1
+
+ForeignGovt(SDN):
+  name: Sudan
+  code: SDN
+  sortOrder: 1
+
+ForeignGovt(SUR):
+  name: Suriname
+  code: SUR
+  sortOrder: 1
+
+ForeignGovt(SJM):
+  name: Svalbard
+  code: SJM
+  sortOrder: 1
+
+ForeignGovt(SWZ):
+  name: Swaziland
+  code: SWZ
+  sortOrder: 1
+
+ForeignGovt(SWE):
+  name: Sweden
+  code: SWE
+  sortOrder: 1
+
+ForeignGovt(CHE):
+  name: Switzerland
+  code: CHE
+  sortOrder: 1
+
+ForeignGovt(SYR):
+  name: Syria
+  code: SYR
+  sortOrder: 1
+
+ForeignGovt(TWN):
+  name: Taiwan
+  code: TWN
+  sortOrder: 1
+
+ForeignGovt(TJK):
+  name: Tajikistan
+  code: TJK
+  sortOrder: 1
+
+ForeignGovt(TZA):
+  name: Tanzania
+  code: TZA
+  sortOrder: 1
+
+ForeignGovt(THA):
+  name: Thailand
+  code: THA
+  sortOrder: 1
+
+ForeignGovt(TLS):
+  name: Timor-Leste
+  code: TLS
+  sortOrder: 1
+
+ForeignGovt(TGO):
+  name: Togo
+  code: TGO
+  sortOrder: 1
+
+ForeignGovt(TKL):
+  name: Tokelau
+  code: TKL
+  sortOrder: 1
+
+ForeignGovt(TON):
+  name: Tonga
+  code: TON
+  sortOrder: 1
+
+ForeignGovt(TTO):
+  name: Trinidad and Tobago
+  code: TTO
+  sortOrder: 1
+
+ForeignGovt(TUN):
+  name: Tunisia
+  code: TUN
+  sortOrder: 1
+
+ForeignGovt(TUR):
+  name: Turkey
+  code: TUR
+  sortOrder: 1
+
+ForeignGovt(TKM):
+  name: Turkmenistan
+  code: TKM
+  sortOrder: 1
+
+ForeignGovt(TCA):
+  name: Turks and Caicos Islands
+  code: TCA
+  sortOrder: 1
+
+ForeignGovt(TUV):
+  name: Tuvalu
+  code: TUV
+  sortOrder: 1
+
+ForeignGovt(UGA):
+  name: Uganda
+  code: UGA
+  sortOrder: 1
+
+ForeignGovt(UKR):
+  name: Ukraine
+  code: UKR
+  sortOrder: 1
+
+ForeignGovt(ARE):
+  name: United Arab Emirates
+  code: ARE
+  sortOrder: 1
+
+ForeignGovt(GBR):
+  name: United Kingdom
+  code: GBR
+  sortOrder: 1
+
+ForeignGovt(USA):
+  name: United States
+  code: USA
+  sortOrder: 1
+
+ForeignGovt(URY):
+  name: Uruguay
+  code: URY
+  sortOrder: 1
+
+ForeignGovt(UZB):
+  name: Uzbekistan
+  code: UZB
+  sortOrder: 1
+
+ForeignGovt(VUT):
+  name: Vanuatu
+  code: VUT
+  sortOrder: 1
+
+ForeignGovt(VEN):
+  name: Venezuela
+  code: VEN
+  sortOrder: 1
+
+ForeignGovt(VNM):
+  name: Vietnam
+  code: VNM
+  sortOrder: 1
+
+ForeignGovt(VIR):
+  name: Virgin Islands
+  code: VIR
+  sortOrder: 1
+
+ForeignGovt(WLF):
+  name: Wallis and Futuna
+  code: WLF
+  sortOrder: 1
+
+ForeignGovt(PSE):
+  name: West Bank
+  code: PSE
+  sortOrder: 1
+
+ForeignGovt(ESH):
+  name: Western Sahara
+  code: ESH
+  sortOrder: 1
+
+ForeignGovt(WWW):
+  name: World
+  code: WWW
+  sortOrder: 1
+
+ForeignGovt(YEM):
+  name: Yemen
+  code: YEM
+  sortOrder: 1
+
+ForeignGovt(ZMB):
+  name: Zambia
+  code: ZMB
+  sortOrder: 1
+
+ForeignGovt(ZWE):
+  name: Zimbabwe
+  code: ZWE
+  sortOrder: 1
+

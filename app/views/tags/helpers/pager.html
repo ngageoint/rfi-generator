@@ -1,0 +1,48 @@
+%{
+//q = request.params.all().clone()
+q = request.params
+
+/*qs = {
+    q ->  q.collect { k,v -> "$k="+v.flatten() }.join('&')
+}*/
+}%
+
+#{if _totalPages > 1}
+
+<div class='pagination pagination-small'>
+    <ul>
+        <li class='#{if _curPage == 0}disabled#{/if}'>
+            %{ q.put("page", (_curPage-1).toString()) }%
+            <a href='${_route}?${q.urlEncode()}'>Previous</a>
+        </li>
+        
+        #{list items:1.._totalPages, as:'i'}
+            <li class='#{if _curPage+1 == i}active#{/if}'>
+                %{ q.put("page", (i-1).toString()) }%
+                <a href='${_route}?${q.urlEncode()}'>${i}</a>
+            </li>
+        #{/list}
+        
+        <li class='#{if _curPage == _totalPages-1}disabled#{/if}'>
+            %{ q.put("page", (_curPage+1).toString()) }%
+            <a href='${_route}?${q.urlEncode()}'>Next</a>
+        </li>
+    </ul>
+</div>
+
+#{if _showPageCount}
+<p>Page ${_curPage+1} of ${_totalPages}</p>
+#{/if}
+
+#{/if}
+
+#{if !_noPagesize}
+#{if _totalPages != 0}
+<label for='pageSize'>Page size:</label>
+<select name="pageSize" data-select2enabled>
+    <option value="10" #{if _pageSize == 10}selected#{/if}>10</option>
+    <option value="25" #{if _pageSize == 25}selected#{/if}>25</option>
+    <option value="50" #{if _pageSize == 50}selected#{/if}>50</option>
+</select>
+#{/if}
+#{/if}

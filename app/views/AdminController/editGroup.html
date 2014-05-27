@@ -1,0 +1,59 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{get 'moreScripts'/}
+<script type="text/javascript">
+$(function() {
+$(".selectMove").click(function() {
+    var $t = $(this);
+    var $src = $(_.template(".<%= src %> option:selected", {src: $t.data("src")}));
+    var $dst = $(_.template(".<%= dest %>", { dest: $t.data("dest")}));
+    $src.remove();
+    $src.each(function() {
+        var $me = $(this);
+        var pos = $me.text();
+        console.log(pos);
+        var $higherItems = $dst.children().filter(function() {
+            return $(this).text().toLowerCase() < pos;
+        });
+        console.log($higherItems);
+        if ( $higherItems.length == 0) {
+            $dst.prepend($me);
+        }
+        else {
+            $me.insertAfter($higherItems.last());
+        }
+    });
+    return false;
+});
+
+$("#groupForm").bind("submit", function() {
+    $(".destinationGroupManagers").find("option").attr("selected", "selected");
+});
+
+$("#delete").click(function() {
+    if ( confirm("Are you sure you want to permanently delete this Group?  All RFIs/Events/Users/other Groups associated w/ this group will no longer have an associated group.")) {
+        $.ajax({url: globals.route.Admin.deleteGroup({id:$(this).data("group")}), type: "DELETE"})
+        .done(function() {
+            window.location = "@{groups()}";
+        });
+    }
+    return false;
+});
+
+});
+</script>
+#{/set}
+
+#{form @updateGroup(), id: 'groupForm', enctype:'multipart/form-data', class: "edit form-horizontal adminForm"}
+<input type="hidden" name="ret" value="${ret}"/>
+#{group.AdminGroupForm g:g/}
+<br/>
+<div class='input left clear'>
+    <input type="submit" value="${isNew?'Create Group':'Update Group'}" class='btn btn-primary'/>
+    #{if g}
+    <a id="delete" href='#' class='btn btn-danger' data-group='${g.id}'>Delete</a>
+    #{/if}
+    <a href='#{if ret}${ret}#{/if}#{else}@{groups()}#{/else}' class='btn btn'>Cancel</a>
+</div>
+#{/form}

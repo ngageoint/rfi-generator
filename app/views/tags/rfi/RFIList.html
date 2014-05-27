@@ -1,0 +1,87 @@
+<table class='sortable rfiList table' rel='${_rel}'>
+    <thead>
+        <tr>
+            <th class="sortable"><div><a href='#' rel="id">ID</a></div></th>
+            <th class="sortable"><div><a href='#' rel="title">Title</a></div></th>
+            <th class="sortable"><div><a href='#' rel="dateRequested">Date Requested</a></div></th>
+            <th class="sortable"><div><a href='#' rel="dateRequired">Date Required</a></div></th>
+            <th class="sortable"><div><a href='#' rel="dateCompleted">Date Completed</a></div></th>
+            <th class="sortable"><div><a href='#' rel="event_name">Event</a></div></th>
+            <th class="sortable"><div><a href='#' rel="requestor">Requestor</a></div></th>
+            <th class="sortable"><div><a href='#' rel="assignedTo">Assigned To</a></div></th>
+            <th class="sortable"><div><a href='#' rel="organization">Organization</a></div></th>
+            <th class="sortable"><div><a href='#' rel="status">Status</a></div></th>
+            <th>Related Items</th>
+        </tr>
+    </thead>
+    <tbody>
+#{list items:_items, as: 'r'}
+    <tr class='${helpers.ApplicationHelpers.statusToCssClass(r)}' id='${r.networkID}'>
+        <td width="5%" class='nolinkify'>
+            <div style='position: relative;'>
+                #{if _showMyIcon && r.isMine(controllers.Master.getUser())}
+                    <i class='icon-user' style='position: absolute; left: -26px;' title="RFI Assigned to you/requested by you"></i>
+                #{/if}
+                #{if _showArchivedIcon && r.isArchived() && !_showMyIcon}
+                    <img title='Archived' style='position: absolute; left: -26px;' src="@{'/public/images/crossbones.png'}"/>
+                #{/if}
+                #{deadbolt.restrict roles:[["Analyst"],["Management"]]}
+                <a href='@{edit(r.id,request.path + "?" + request.querystring)}'>${r.networkID}</a>
+                #{/deadbolt.restrict}
+                #{deadbolt.restrict roles:[["Field"]]}
+                ${r.networkID}
+                #{/deadbolt.restrict}
+            </div>
+        </td>
+        <td>
+            <a href='#' rel='popover' data-placement='right' data-trigger='manual' data-original-title="${r.title}" data-content="${helpers.ApplicationHelpers.sanitize(helpers.ApplicationHelpers.linkify(r.instructions))}">${r.title}</a>
+        </td>
+        <td>
+            ${r.dateRequested.format('MM/dd/yyyy')}
+        </td>
+        <td>
+            ${r.dateRequired?.format('MM/dd/yyyy')}
+        </td>
+        <td>
+            ${r.dateCompleted?.format('MM/dd/yyyy')}
+        </td>
+        <td>
+            ${r.event.name}
+        </td>
+        <td>
+            ${r.requestorFirstName + " " + r.requestorLastName}
+        </td>
+        <td>
+            #{if r.assignedTo}
+            ${r.assignedTo.split(helpers.ApplicationHelpers.mailSplit).join("<br/>").raw()}
+            #{/if}
+        </td>
+        <td>
+            ${r.organization}
+        </td>
+        <td>
+            ${r.status}
+        </td>
+        <td class='nolinkify'>
+            #{if r.relatedItems && r.relatedItems.size() > 0}
+                %{
+                    relProducts = r.relatedItems.findAll { it.itemType == "PRODUCT"}.collect { helpers.ApplicationHelpers.linkify(it.text)}
+                    relLinks = r.relatedItems.findAll { it.itemType == "WEBLINK"}.collect { helpers.ApplicationHelpers.linkify(it.text)}
+                }%
+                #{if relProducts}
+                    <a href='#' rel='popover' data-placement='left' data-trigger='manual' data-original-title='Product Links' data-content='${relProducts.join("<br/>")}'>Product links</a>
+                #{/if}
+                #{if relLinks}
+                    <a href='#' rel='popover' data-placement='left' data-trigger='manual' data-original-title='Web Links' data-content='${relLinks.join("<br/>")}'>Web links</a>
+                #{/if}
+            #{/if}
+        </td>
+    </tr>
+#{/list}
+#{else}
+    <tr>
+        <td colspan="10">No RFIs found</td>
+    </tr>
+#{/else}
+    </tbody>
+</table>

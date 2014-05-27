@@ -1,0 +1,214 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{press.script 'sortable.js'/}
+<script type="text/javascript">
+$(function() {
+    $("td").not(":first-child, :nth-child(2), .nolinkify").linkify();
+    $("#filterForm select[name='filterEvent'], #filterForm select[name='active'], #filterForm select[name='filterEventActivity']").bind("change", function() {
+        $(this).closest("form").submit();
+    });
+    $(".advSearch").click(function() {
+        $("."+$(this).attr("rel")).toggle();
+    });
+    $(".clear").click(function() {
+        $("#filterForm input[type='text'], #filterForm input[type='date'], #filterForm select").val("");
+        $(this).closest("form").submit();
+    });
+    
+    $(window).on('hashchange', function() {
+        $(".rfiList").find("tr").removeClass("selected");
+        $(window.location.hash).addClass("selected");
+    });
+    
+    $(window).trigger('hashchange');
+});
+</script>
+#{/set}
+
+<div style='margin-bottom: 0;'>
+    %{
+        request.params.put("page", 0.toString())
+        q = request.params.all().clone()
+        q.remove("active")
+        q.remove("body")
+        qs = q.collect { k,v -> "$k="+v.flatten() }.join('&')
+        
+        // FML
+        showAdv = request.params.filterTitle || request.params.startDate || request.params.endDate || request.params.filterOrganization || request.params.filterInstructions || request.params.filterCity || request.params.filterComment || request.params.filterRequestorFirstName || request.params.filterRequestorLastName || request.params.filterAssigned || request.params.filterID || request.params.filterCountry || request.params.filterBE || request.params.filterStatus || request.params.filterProduct
+    }%
+    <a class='btn' href='@{newRFI()}'><strong>New RFI</strong></a>
+    #{deadbolt.restrict roles:[["Analyst"], ["Management"]]}
+    <a class='btn' href='@{importExport()}'><strong>Import/export RFIs</strong></a><br/>
+    #{/deadbolt.restrict}
+    <form id='filterForm' class='form-horizontal'>
+        <div style='margin-top: 8px;'>
+            <label class='control-label' for='active'>Archived/Non-archived:</label>
+            <div class='controls'>
+                <select id='archivedFilter' name='active' data-select2enabled>
+                    <option value=''>All RFIs</option>
+                    <option value='true' #{if request.params.active == "true"}selected#{/if}>Non-Archived RFIs</option>
+                    <option value='false' #{if request.params.active == "false"}selected#{/if}>Archived RFIs</option>
+                </select><br/>
+            </div>
+        </div>
+        <div style='margin-top: 8px;'>
+            <label class='control-label' for='active'>Event:</label>
+            <div class='controls'>
+                #{select "filterEvent", items:models.Event.getAll(), value:request.params.filterEvent, labelProperty:"name", 'data-select2enabled':''}
+                    #{option value:''}All Events#{/option}
+                #{/select}
+            </div>
+        </div>
+        %{
+            aid = request.params.filterEventActivity
+            eid = request.params.filterEvent
+            evt = models.Event.findById(eid ? eid.toLong():0L)
+        }%
+        #{if eid && evt && evt.eventActivities.size() > 0}
+        <div style='margin-top: 8px;'>
+            <label class='control-label' for='active'>Activity:</label>
+            <div class='controls'>
+                #{select "filterEventActivity", items:evt.eventActivities, value:aid, labelProperty:"name", 'data-select2enabled':''}
+                    #{option value:''}All Activities#{/option}
+                #{/select}
+            </div>
+        </div>
+        #{/if}
+        <div style='margin-top: 8px;'>
+            <a href='#' class='advSearch' rel='filters'>Advanced filtering...</a>
+        </div>
+        
+        <div class='filters #{if !showAdv}hide#{/if}'>
+            <input type="hidden" name="filterSearch" value="${request.params.filterSearch}"/>
+            <div class='control-group'>
+                
+            </div>
+            <div class='control-group'>
+                <label class='control-label' for='startDate'>Date range:</label>
+                <div class='controls'>
+                    <input type="date" name="startDate" value="${request.params.startDate}"/> - <input type="date" name="endDate" value="${request.params.endDate}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterOrganization'>Organization:</label>
+                <div class='controls'>
+                    <input type="text" name="filterOrganization" value="${request.params.filterOrganization}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterTitle'>Title:</label>
+                <div class='controls'>
+                    <input type="text" name="filterTitle" value="${request.params.filterTitle}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterInstructions'>Instructions:</label>
+                <div class='controls'>
+                    <input type="text" name="filterInstructions" value="${request.params.filterInstructions}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterCity'>City name:</label>
+                <div class='controls'>
+                    <input type="text" name="filterCity" value="${request.params.filterCity}"/><br/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterComment'>Comment text:</label>
+                <div class='controls'>
+                    <input type="text" name="filterComment" value="${request.params.filterComment}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterRequestorFirstName'>Requestor First Name:</label>
+                <div class='controls'>
+                    <input type="text" name="filterRequestorFirstName" value="${request.params.filterRequestorFirstName}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterRequestorLastName'>Requestor Last Name:</label>
+                <div class='controls'>
+                    <input type="text" name="filterRequestorLastName" value="${request.params.filterRequestorLastName}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterAssignee'>Assigned to:</label>
+                <div class='controls'>
+                    <input type="text" name="filterAssignee" value="${request.params.filterAssignee}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterID'>ID:</label>
+                <div class='controls'>
+                    <input type="text" name="filterID" value="${request.params.filterID}"/>
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterCountry'>Country/Region:</label>
+                <div class='controls'>
+                    #{select "filterCountry", items:models.Country.all().fetch().sort({a,b->a.sortOrder<=>b.sortOrder}), value: request.params.filterCountry, labelProperty:"name", valueProperty:'code', 'data-select2enabled':''}
+                        #{option value:''}All Countries/Regions#{/option}
+                    #{/select}
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterStatus'>Status:</label>
+                <div class='controls'>
+                    #{select "filterStatus", items:helpers.ApplicationHelpers.getStatuses(), value: request.params.filterStatus, 'data-select2enabled':''}
+                        #{option value:''}All Statuses#{/option}
+                    #{/select}
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterProduct'>Product Format:</label>
+                <div class='controls'>
+                    #{select "filterProduct", items: helpers.RFIHelpers.getAllProductFormats(), value: request.params.filterProduct, 'data-select2enabled':''}
+                        #{option ''}Select one...#{/option}
+                    #{/select}
+                </div>
+            </div>
+            <div class='control-group' style='float: left;'>
+                <label class='control-label' for='filterBE'>BE #:</label>
+                <div class='controls'>
+                    <input type="text" name="filterBE" value="${request.params.filterBE}"/>
+                </div>
+            </div>
+            <input type='submit' class='submit btn' value='Search' style='float: left; clear: both;margin-bottom: 8px;'/>
+            <a href='#' class='btn clear' style='float: left;margin-left: 8px;'>Clear</a>
+            <hr style='clear: both;'/>
+        </div>
+    </form>
+</div>
+<h2>#{if pageName}${pageName}#{/if}#{else}RFIs#{/else}</h2>
+
+%{
+pending_overdue = pending_rfis.findAll { it.isOverdue() }
+active_overdue = active_rfis.findAll { it.isOverdue() }
+}%
+
+#{helpers.collapser text:"Pending", rel:"pending", small: true,
+    boxes: [
+        [text:pending_rfis.size(), subText: "Total"],
+        [text:pending_overdue.size(), subText: "Past", class: "red"]
+    ]/}
+<div data-collapser="pending">
+#{rfi.RFIList items:pending_rfis, showArchivedIcon:true/}
+</div>
+
+#{helpers.collapser text:"Active", rel:"active", small: true,
+    boxes: [
+        [text:active_rfis.size(), subText: "Total"],
+        [text:active_overdue.size(), subText: "Past", class: "red"]
+    ]/}
+<div data-collapser="active">
+#{rfi.RFIList items:active_rfis, showArchivedIcon:true/}
+</div>
+
+#{helpers.collapser text:"Completed", rel:"completed", small: true, 
+    boxes: [
+        [text:completed_rfis.size()]
+    ]/}
+<div data-collapser="completed">
+#{rfi.RFIList items:completed_rfis, showArchivedIcon:true/}
+</div>

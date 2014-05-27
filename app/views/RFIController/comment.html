@@ -1,0 +1,68 @@
+#{if request.params.full}
+#{extends "shell.html"/}
+#{/if}
+
+<script type="text/javascript">
+    $(function() {
+        var $parent = #{if request.params.full}$("body");#{/if}#{else}$("#comment_rfi_modal");#{/else}
+        
+        $parent.find("blockquote, .alert").linkify();
+        
+        #{if !request.params.full}
+        $parent.find("form").bind("submit", function() {
+            var ths = $(this);
+            $.ajax({url: ths.attr("action"), type: "POST", data: ths.serialize()})
+            .done(function(res, status, xhr) {
+                var warning = xhr.getResponseHeader("FormErrors");
+                if ( !warning) {
+                    $parent.modal("hide");
+                    globals.refreshRFIs().done(function(res,status,xhr) {
+                        globals.rfis = res;
+                        globals._refreshRFIs();
+                    });
+                    globals.addToast("Comment created", "success");
+                }
+                else {
+                    var $body = $parent.find(".modal-body");
+                    $body.empty();
+                    $body.append(res);
+                    $body.scrollTop(0);
+                }
+            });
+            
+            return false;
+        });
+        #{/if}
+        
+        $parent.find("input[placeholder], textarea[placeholder]").each(function() {
+            $(this).watermark($(this).attr("placeholder"));
+        });
+    });
+</script>
+
+#{ifErrors}
+<div class='alert alert-error'>
+    <p><strong>There were some validation errors submitting the comment, please see below for details</strong></p>
+    <ul>
+    #{errors}
+        #{if !error.getKey().equals("c")}
+        <li>&{error.getKey()}</li>
+        #{/}
+    #{/errors}
+    </ul>
+</div>
+#{/ifErrors}
+
+#{rfi.RFIView r:rfi /}
+#{if rfi.comments.size() > 0}
+    <h4>Comments</h4>
+    #{list items:rfi.comments, as:'comment'}
+        <div class='alert alert-info'>
+        #{comment.CommentView c:comment /}
+        </div>
+    #{/list}
+#{/if}
+<hr/>
+#{form @RFIController.createComment(), id: 'RFIForm', enctype:'multipart/form-data'}
+#{comment.CommentForm rfi:rfi/}
+#{/form}

@@ -1,0 +1,57 @@
+#{extends 'admin.html'/}
+
+#{set 'moreScripts'}
+#{press.script 'sortable.js'/}
+<script type="text/javascript">
+$(function() {
+    $("td").not(":first-child").linkify();
+});
+</script>
+#{/set}
+
+<a class='btn' href='@{newGroup()}'><strong>New Group</strong></a>
+
+<h2>Groups <span>- (total: ${totalCount} groups#{if totalPages > 0}, page ${page+1} of ${totalPages}#{/if})</span></h2>
+<table class='sortable groupList table table-striped' rel='@{groups()}'>
+    <thead>
+        <tr>
+            <th class='sortable'><div><a href='#' rel='name'>Name</a></div></th>
+            <th>Manager(s)</th>
+            <th>User(s)</th>
+            <th>Hierarchy</th>
+            <th>Default group</th>
+        </tr>
+    </thead>
+    <tbody>
+#{list items:groups, as: 'g'}
+    <tr>
+        <td>
+            <a href='@{editGroup(g.id, request.path + "?" + request.querystring)}'>${g.name}</a>
+        </td>
+        <td>
+            #{list items:g.groupManagers, as:'gm'}
+            <a href='@{editUser(gm.id, request.path + "?" + request.querystring)}'>${gm.userName}</a><br/>
+            #{/list}
+        </td>
+        <td>
+            #{list items:g.users, as:'u'}
+            <a href='@{editUser(u.id, request.path + "?" + request.querystring)}'>${u.userName}</a><br/>
+            #{/list}
+        </td>
+        <td>
+            ${g.hierarchy()}
+        </td>
+        <td>
+            ${g.defaultGroup ? "yes": "no"}
+        </td>
+    </tr>
+#{/list}
+#{else}
+    <tr>
+        <td colspan='2'>No groups found</td>
+    </tr>
+#{/else}
+    </tbody>
+</table>
+
+#{helpers.pager totalPages:totalPages, curPage: page, pageSize: pageSize, route: @groups()/}

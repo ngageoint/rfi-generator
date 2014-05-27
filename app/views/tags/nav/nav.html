@@ -1,0 +1,218 @@
+#{set 'moreScripts'}
+#{get 'moreScripts'/}
+<script type="text/javascript">
+$(function() {
+    $(".navbar-search input.search-query").autocomplete({
+        minLength: 2, 
+        customSources: [globals._rfis],
+        source: globals.search,
+        filter: globals.session.event,
+        open: function(evt,ui) {
+            $(this).autocomplete('widget').css('z-index', 1000);
+            $(evt.target).parent().find(".add-on:first-child").addClass("hideOverride");
+        },
+        close: function(evt,ui) {
+        },
+        delay: 1000,
+        select: function(event, ui) {
+            if ( ui.item.value) {
+                var pos = ui.item.otherdata.pos;
+                console.log(pos);
+                if ( pos.region) {
+                    globals.moveTo({region: pos.region});
+                }
+                else if ( pos.polyline) {
+                    globals.moveTo({region: pos.polyline});
+                }
+                else if ( ui.item.otherdata.nonSpatial) {
+                    if ( confirm("This is a non-spatial RFI, would you like to open the edit form?")) {
+                        globals.editRFI(ui.item.otherdata.id);
+                    }
+                }
+                else {
+                    globals.moveTo({lat: pos.lat, lng: pos.lng});
+                }
+            }
+        },
+        search: function(evt, ui) {
+            $(evt.target).parent().find(".add-on:first-child").removeClass("hideOverride");
+        }
+    });
+    
+    $(".navbar-search input.search-query").watermark("Search RFIs");
+    var displaySearchResults = function() {
+        $("#grid_modal input[name='filterSearch']").val($("input.search-query").val());
+        $("#grid_modal").modal("show");
+        return false;
+    };
+    $("form.navbar-search").bind("submit", displaySearchResults);
+    $("form.navbar-search a").click(function() { $(this).closest("form").submit();});
+    
+    $(".disableRegionClicking").click(function() {
+        globals.enableRegionClicks(false);
+        $(".enableRegionClicking").addClass("shown");
+        $(this).removeClass("shown");
+    });
+    
+    $(".enableRegionClicking").click(function() {
+        globals.enableRegionClicks(true);
+        $(".disableRegionClicking").addClass("shown");
+        $(this).removeClass("shown");
+    });
+    
+    $(".navbar .nav-collapse a").click(function() {
+        $(this).closest(".nav-collapse").removeClass("in").css({height: 0});
+    });
+});
+</script>
+#{/set}
+
+<div class='navbar'>
+    <div class='navbar-inner'>
+        <div class='container'>
+            <a class='btn btn-navbar' data-toggle="collapse" data-target=".nav-collapse">
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+            </a>
+            <a href='@{Application.index()}' class='nga'>
+                <img src="@{'/public/images/nga_logo_40.png'}" height="35" width="35" class='pull-left' alt="NGA"/>
+            </a>
+            <h3>
+                <a class='brand' href='@{Application.index()}'>
+                    RFI Generator
+                </a>
+            </h3>
+            <div class='nav-collapse'>
+                <ul class='nav'>
+                    <li class='dropdown'>
+                        <a href='#' class='dropdown-toggle' data-toggle='dropdown'>Overviews<b class='caret'></b></a>
+                        <ul class='dropdown-menu'>
+                            <li>
+                                <a href='#my_rfis_modal' data-toggle="modal">My RFIs</a>
+                            </li>
+                            <li>
+                                <a href='#grid_modal' data-toggle='modal'>Show RFI list</a>
+                            </li>
+                            #{deadbolt.restrict roles:[['Management'],['Analyst']]}
+                            <li class='mobileHide'>
+                                <a href='#bi_modal' data-toggle='modal'>Business Intelligence</a>
+                            </li>
+                            <li>
+                                <a href='#event_grid_modal' data-toggle='modal'>Show event list</a>
+                            </li>
+                            #{/deadbolt.restrict}
+                            #{deadbolt.restrict roles:[['Management']]}
+                            <li>
+                                <a href='#user_grid_modal' data-toggle='modal'>Show user list</a>
+                            </li>
+                            #{/deadbolt.restrict}
+                            <li>
+                                <a href='@{AdminController.index(request.params.event)}'>Go to the admin view</a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class='dropdown'>
+                        <a href='#' class='dropdown-toggle' data-toggle='dropdown'>Actions<b class='caret'></b></a>
+                        <ul class='dropdown-menu'>
+                            <li>
+                                <a href='#' class='newRFIPoint'>Create RFI at point</a>
+                            </li>
+                            <li>
+                                <a href='#' class='newRFIRegion'>Create RFI from polygon</a>
+                            </li>
+                            <li>
+                                <a href='#' class='newRFIPolyline'>Create RFI from polyline</a>
+                            </li>
+                            <li>
+                                <a href='#' class='newNonSpatial'>Create non-spatial RFI</a>
+                            </li>
+                            #{deadbolt.restrict roles:[['Analyst'],['Management']]}
+                            <li>
+                                <a href='#' class='newEventRegion'>Create Event from polygon</a>
+                            </li>
+                            #{/deadbolt.restrict}
+                        </ul>
+                    </li>
+                    #{if session.get('event')}
+                    %{ evt = Long.parseLong(session.get('event'))
+                        evtModel = models.Event.findById(evt)
+                    }%
+                    <li class='dropdown eventFilter'>
+                        <a href='#' class='dropdown-toggle eventActive' data-toggle='dropdown'>${evtModel.name} ${evtModel.archived ? "(ARCHIVED)":""}<b class='caret'></b></a>
+                        <ul class='dropdown-menu'>
+                            #{list items:controllers.EventController.getActiveEvents(), as:"event"}
+                                #{if !evt.equals(event.id)}
+                                <li><a href='#' rel='${event.id}'>${event.name} ${event.archived ? "(ARCHIVED)":""}</a></li>
+                                #{/if}
+                                #{else}
+                                <li><a class='selected' href='#' rel='${event.id}'>Go back to ${event.name}</a></li>
+                                #{/else}
+                            #{/list}
+                            <li><a href='@{Application.index(null,null,_isAdmin)}'>Clear filter</a></li>
+                        </ul>
+                    </li> 
+                    #{/if}
+                    #{else}
+                    <li class='dropdown eventFilter'>
+                        <a href='#' class='dropdown-toggle' data-toggle='dropdown'>Event Filter<b class='caret'></b></a>
+                        <ul class='dropdown-menu'>
+                            #{list items:controllers.EventController.getActiveEvents(), as:"event"}
+                            <li><a href='#' rel='${event.id}' data-toggle='modal'>${event.name} ${event.archived ? "(ARCHIVED)":""}</a></li>
+                            #{/list}
+                        </ul>
+                    </li>  
+                    #{/else}
+                </ul>
+                <form class='navbar-search pull-left mobileHide'>
+                    <div class='controls'>
+                        <div class='input-prepend input-append'>
+                            <span class='add-on hideOverride' style='margin-right: -4px;'><img src="@{'/public/images/ajax-loader.gif'}" /></span>
+                            <input class='search-query span2' type="text" placeholder="Search"/>
+                            <a href='#' class='add-on' style='margin-left: -5px;'><i class='icon-search'></i></a>
+                        </div>
+                    </div>
+                </form>
+                <ul class='nav pull-right'>
+                    <li>
+                        <a href='#copyright_modal' data-toggle="modal" class='lessPadding'><i class='icon-question-sign icon-white'></i></a>
+                    </li>
+                    <li class='dropdown'>
+                        <a class='dropdown-toggle' data-toggle="dropdown" href='#'>${_user.userName} - ${_user.role.name}<b class='caret'></b></a>
+                        <ul class='dropdown-menu'>
+                            <li><a href='#update_my_info_modal' data-toggle='modal'>Edit my information</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class='nav secondary-nav'>
+                    <li>
+                        <div>
+                            <a class='btn exitRegionMode' href='#'>Exit drawing mode</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <a class='btn enableRegionClicking' href='#'>Re-enable polygon clicking</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <a class='btn shown' href='#grid_modal' data-toggle='modal'>RFI List</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <a class='btn newNonSpatial shown' href='#'>New non-spatial RFI</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <a class='btn shown' href='${helpers.ConfigurationHelpers.getFeedbackUrl(request)}' target="_blank">Feedback</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

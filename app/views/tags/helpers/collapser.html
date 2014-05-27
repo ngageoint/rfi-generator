@@ -1,0 +1,15 @@
+<div class='collapser #{if _small}small#{/if}' rel="${_rel}">
+    <div class='handle'>[-]</div>
+    #{if _small}
+        <h3 #{if _noRightMargin}class='noRightMargin'#{/if}>${_text}</h3>
+    #{/if}
+    #{else}
+        <h2 #{if _noRightMargin}class='noRightMargin'#{/if}>${_text}</h2>
+    #{/else}
+    #{if _boxes}
+        #{helpers.informationalBoxes boxes:_boxes/}
+    #{/if}
+</div>
+#{if !_noClear}
+<div style='clear:both;height:0;'></div>
+#{/if}
