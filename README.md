@@ -18,6 +18,9 @@ MySQL under GPL license
 Java under GPL license
 
 ###Installation Instructions (for a *nix-based host):
+
+Use the [rfi-generator-chef-installer](https://github.com/ngageoint/rfi-generator-chef-installer) OR follow the directions below:
+
 •	Clone the rfi_gen repo to your development machine
 
 •	Download and install the Play! Framework (version 1.2.4) at http://downloads.typesafe.com/releases/play-1.2.4.zip
