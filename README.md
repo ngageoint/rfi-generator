@@ -17,6 +17,9 @@ MySQL under GPL license
 
 Java under GPL license
 
+####In the News
+[Government Computer News story on RFI Generator](http://gcn.com/Articles/2014/07/02/NGA-RFI-generator.aspx?Page=1)
+
 ###Installation Instructions (for a *nix-based host):
 
 Use the [rfi-generator-chef-installer](https://github.com/ngageoint/rfi-generator-chef-installer) OR follow the directions below:
