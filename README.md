@@ -18,7 +18,7 @@ MySQL under GPL license
 Java under GPL license
 
 ####In the News
-[Government Computer News story on RFI Generator](http://gcn.com/Articles/2014/07/02/NGA-RFI-generator.aspx?Page=1)
+[Government Computer News story] (http://gcn.com/Articles/2014/07/02/NGA-RFI-generator.aspx?Page=1) on RFI Generator 
 
 ###Installation Instructions (for a *nix-based host):
 
