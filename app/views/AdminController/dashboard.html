@@ -242,10 +242,7 @@ $(function() {
 </script>
 #{/set}
 
-#{helpers.informationalBoxes class:'huge', boxes:[
-    [text:"${_created == null ? "0":_created}", subText:"RFIs created", class:"huge"],
-    [text:"${_avgValidation == null ? 'N/A':_avgValidation.toString() + 'h'}", subText:"Avg Validation", class:"huge"],
-    [text:"${_avgCompletion == null ? 'N/A':_avgCompletion.toString() + 'h'}", subText:"Avg Completion", class:"huge"]]/}
+#{helpers.informationalBoxes class:'huge', boxes:[[text:"${_created == null ? "0":_created}", subText:"RFIs created", class:"huge"],[text:"${_avgValidation == null ? 'N/A':_avgValidation.toString() + 'h'}", subText:"Avg Validation", class:"huge"],[text:"${_avgCompletion == null ? 'N/A':_avgCompletion.toString() + 'h'}", subText:"Avg Completion", class:"huge"]]/}
 <div class='dateSelection'>
     Start Date: <input type="date" name="startDate" value="${_start.format('yyyy-MM-dd')}"/>
     <a href='#' rel='popover' data-placement="bottom" data-trigger='manual' data-original-title="Start/End date filtering" data-content="By default, the start/end date will encompass the entire range of RFIs submitted for the selected event (if specified in the 'Event Filter' dropdown) or all events by default.  The metrics on the left/right are the only items that will recalculate when modifying the start/end date, the RFI grids below will display ALL RFIs for the selected event.  The graph on the right takes multiple snapshots per day for RFI counts and data points are &lt;strong&gt;averaged&lt;/strong&gt; over each day."><i class='icon-question-sign'></i></a><br/>
@@ -297,11 +294,7 @@ Group filter:
 </div>
 <hr style='clear:both;margin:10px 0;'/>
 
-#{helpers.collapser text:"Pending", rel:"pending",
-    boxes:[
-        [text:pending_rfis.size(), subText: "Total"],
-        [text:pending_rfis.findAll {it.isOverdue()}.size(), subText: "Past", class: "red"]
-    ]/}
+#{helpers.collapser text:"Pending", rel:"pending", boxes:[[text:pending_rfis.size(), subText: "Total"],[text:pending_rfis.findAll {it.isOverdue()}.size(), subText: "Past", class: "red"]]/}
 <div data-collapser='pending'>
 #{rfi.RFIList items:pending_rfis, showMyIcon:true /}
 </div>
@@ -310,20 +303,12 @@ Group filter:
 overdueCount = active_rfis.findAll { it.isOverdue()}.size()
 }%
 
-#{helpers.collapser text:"Active", rel:"active",
-    boxes:[
-        [text:active_rfis.size(),subText:"Total"],
-        [text:overdueCount, subText:"Past",class:"red"]
-    ]
-/}
+#{helpers.collapser text:"Active", rel:"active", boxes:[[text:active_rfis.size(),subText:"Total"],[text:overdueCount, subText:"Past",class:"red"]]/}
 <div data-collapser="active">
 #{rfi.RFIList items:active_rfis, showMyIcon:true /}
 </div>
 
-#{helpers.collapser text:"Completed", rel:"completed",
-    boxes: [
-        [text:completed_rfis.size()]
-    ]/}
+#{helpers.collapser text:"Completed", rel:"completed", boxes: [[text:completed_rfis.size()]]/}
 <div data-collapser="completed">
 #{rfi.RFIList items:completed_rfis, showMyIcon:true /}
 </div>

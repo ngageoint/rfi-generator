@@ -39,26 +39,15 @@ directAssigned_pending_overdue = directAssigned_pending.findAll { it.isOverdue()
 directAssigned_active_overdue = directAssigned_active.findAll { it.isOverdue() }
 }%
 <h2>RFIs assigned to/submitted by you</h2>
-#{helpers.collapser text:"Pending", rel:"my_pending", small: true,
-    boxes: [
-        [text:directAssigned_pending.size(), subText: "Total"],
-        [text:directAssigned_pending_overdue.size(), subText: "Past", class: "red"]
-    ]/}
+#{helpers.collapser text:"Pending", rel:"my_pending", small: true, boxes: [[text:directAssigned_pending.size(), subText: "Total"],[text:directAssigned_pending_overdue.size(), subText: "Past", class: "red"]]/}
 <div data-collapser="my_pending">
 #{rfi.RFIList items:directAssigned_pending, rel:actionBridge.myRFIs(null), showMyIcon:false /}
 </div>
-#{helpers.collapser text:"Active", rel:"my_active", small: true,
-    boxes: [
-        [text:directAssigned_active.size(), subText: "Total"],
-        [text:directAssigned_active_overdue.size(), subText: "Past", class: "red"]
-    ]/}
+#{helpers.collapser text:"Active", rel:"my_active", small: true, boxes: [[text:directAssigned_active.size(), subText: "Total"], [text:directAssigned_active_overdue.size(), subText: "Past", class: "red"]]/}
 <div data-collapser="my_active">
 #{rfi.RFIList items:directAssigned_active, rel:actionBridge.myRFIs(null), showMyIcon:false /}
 </div>
-#{helpers.collapser text:"Completed", rel:"my_completed", small: true,
-    boxes: [
-        [text:directAssigned_completed.size()]
-    ]/}
+#{helpers.collapser text:"Completed", rel:"my_completed", small: true, boxes: [[text:directAssigned_completed.size()]]/}
 <div data-collapser="my_completed">
 #{rfi.RFIList items:directAssigned_completed, rel:actionBridge.myRFIs(null), showMyIcon:false /}
 </div>
@@ -71,26 +60,15 @@ inMyGroup_active_overdue = inMyGroup_active.findAll { it.isOverdue() }
 #{if myGroups}
 <hr/>
 <h2>RFIs in my group #{if myGroups}(${myGroups.collect({it.name}).join(",").raw()})#{/if}</h2>
-#{helpers.collapser text:"Pending", rel:"group_pending", small: true,
-    boxes: [
-        [text:inMyGroup_pending.size(), subText: "Total"],
-        [text:inMyGroup_pending_overdue.size(), subText: "Past", class: "red"]
-    ]/}
+#{helpers.collapser text:"Pending", rel:"group_pending", small: true, boxes: [[text:inMyGroup_pending.size(), subText: "Total"], [text:inMyGroup_pending_overdue.size(), subText: "Past", class: "red"]]/}
 <div data-collapser="group_pending">
 #{rfi.RFIList items:inMyGroup_pending, rel:actionBridge.myRFIs(null), showMyIcon:false/}
 </div>
-#{helpers.collapser text:"Active", rel:"group_active", small: true,
-    boxes: [
-        [text:inMyGroup_active.size(), subText: "Total"],
-        [text:inMyGroup_active_overdue.size(), subText: "Past", class: "red"]
-    ]/}
+#{helpers.collapser text:"Active", rel:"group_active", small: true, boxes: [[text:inMyGroup_active.size(), subText: "Total"], [text:inMyGroup_active_overdue.size(), subText: "Past", class: "red"]]/}
 <div data-collapser="group_active">
 #{rfi.RFIList items:inMyGroup_active, rel:actionBridge.myRFIs(null), showMyIcon:false/}
 </div>
-#{helpers.collapser text:"Completed", rel:"group_completed", small: true,
-    boxes: [
-        [text:inMyGroup_completed.size(), subText: "Total"]
-    ]/}
+#{helpers.collapser text:"Completed", rel:"group_completed", small: true, boxes: [[text:inMyGroup_completed.size(), subText: "Total"]]/}
 <div data-collapser="group_completed">
 #{rfi.RFIList items:inMyGroup_completed, rel:actionBridge.myRFIs(null), showMyIcon:false/}
 </div>

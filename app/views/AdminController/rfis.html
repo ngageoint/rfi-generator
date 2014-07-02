@@ -187,28 +187,17 @@ pending_overdue = pending_rfis.findAll { it.isOverdue() }
 active_overdue = active_rfis.findAll { it.isOverdue() }
 }%
 
-#{helpers.collapser text:"Pending", rel:"pending", small: true,
-    boxes: [
-        [text:pending_rfis.size(), subText: "Total"],
-        [text:pending_overdue.size(), subText: "Past", class: "red"]
-    ]/}
+#{helpers.collapser text:"Pending", rel:"pending", small: true, boxes: [[text:pending_rfis.size(), subText: "Total"],[text:pending_overdue.size(), subText: "Past", class: "red"]]/}
 <div data-collapser="pending">
 #{rfi.RFIList items:pending_rfis, showArchivedIcon:true/}
 </div>
 
-#{helpers.collapser text:"Active", rel:"active", small: true,
-    boxes: [
-        [text:active_rfis.size(), subText: "Total"],
-        [text:active_overdue.size(), subText: "Past", class: "red"]
-    ]/}
+#{helpers.collapser text:"Active", rel:"active", small: true, boxes: [[text:active_rfis.size(), subText: "Total"],[text:active_overdue.size(), subText: "Past", class: "red"]]/}
 <div data-collapser="active">
 #{rfi.RFIList items:active_rfis, showArchivedIcon:true/}
 </div>
 
-#{helpers.collapser text:"Completed", rel:"completed", small: true, 
-    boxes: [
-        [text:completed_rfis.size()]
-    ]/}
+#{helpers.collapser text:"Completed", rel:"completed", small: true, boxes: [[text:completed_rfis.size()]]/}
 <div data-collapser="completed">
 #{rfi.RFIList items:completed_rfis, showArchivedIcon:true/}
 </div>
