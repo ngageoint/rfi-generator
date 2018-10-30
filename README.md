@@ -9,17 +9,17 @@ The RFI Generator software was developed at the National Geospatial-Intelligence
 
 Software source code previously released under an open source license and then modified by NGA staff is considered a "joint work" (see 17 USC § 101); it is partially copyrighted, partially public domain, and as a whole is protected by the copyrights of the non-government authors and must be released according to the terms of the original open source license.
 
-###This software uses:
+### This software uses:
 Play! Framework 1.2.4 under Apache 2.0
 
 MySQL under GPL license
 
 Java under GPL license
 
-####In the News
-[Government Computer News story] (http://gcn.com/Articles/2014/07/02/NGA-RFI-generator.aspx?Page=1) on RFI Generator 
+#### In the News
+[Government Computer News story](http://gcn.com/Articles/2014/07/02/NGA-RFI-generator.aspx?Page=1) on RFI Generator 
 
-###Installation Instructions (for a *nix-based host):
+### Installation Instructions (for a *nix-based host):
 
 Use the [rfi-generator-chef-installer](https://github.com/ngageoint/rfi-generator-chef-installer) OR follow the directions below:
 
@@ -39,7 +39,7 @@ Use the [rfi-generator-chef-installer](https://github.com/ngageoint/rfi-generato
 
 •	Open http://localhost:9000 to view the RFI Generator in your local web browser
 
-##Development Details and Integration
+## Development Details and Integration
 
 The application consists of two interfaces: a map-based experience as well as an admin experience.
 
@@ -57,7 +57,7 @@ nav will redirect the user to the map experience.
 
 To submit an RFI in the map experience, simply choose the geospatial tool of choice (from the right-hand tools) and draw the area of interest for the request.  After selecting an area, a popup will display with fields used to house RFI information.  After filling out the required fields, clicking "Create" will create the RFI and notify the associated event's administation that an RFI has been submitted. 
 
-###Screenshots
+### Screenshots
 
 
 ![First Responder Map Experience](https://cloud.githubusercontent.com/assets/5178768/3094961/f642754c-e5c1-11e3-81dc-91239e26b2d4.png) First Responder Map Experience
@@ -121,7 +121,7 @@ then you won't need to apply these migrations since the seed data should be up-t
 #### GeoQ Integration
 
 
-[GeoQ] (https://github.com/ngageoint/geoq) integration tasks will fail silently or be ignored completely if no GEOQ related URLs are in the application.conf file.
+[GeoQ](https://github.com/ngageoint/geoq) integration tasks will fail silently or be ignored completely if no GEOQ related URLs are in the application.conf file.
 Pull down the latest GEOQ code and setup the system per the GEOQ install docs (includes installing/setting up geoserver).
 Running GeoQ on the default port *should* allow the rfi generator to hook in...ensure you are using
 a username/password that GEOQ will recognize (stored in application.conf) w/in the GeoQ settings:
